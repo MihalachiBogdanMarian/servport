@@ -1,0 +1,16 @@
+{
+    "name": "servport",
+    "version": "1.0.0",
+    "description": "MERN requests-services portal",
+    "main": "server.js",
+    "scripts": {
+        "start": "node backend/server",
+        "server": "nodemon backend/server",
+        "client": "npm start --prefix frontend",
+        "dev": "concurrently \"npm run server\" \"npm run client\"",
+        "data:import": "node backend/seeder",
+        "data:destroy": "node backend/seeder -d"
+    },
+    "author": "Bogdan Mihalachi",
+    "license": "ISC"
+}
