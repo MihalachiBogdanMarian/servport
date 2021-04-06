@@ -9,7 +9,8 @@
         "client": "npm start --prefix frontend",
         "dev": "concurrently \"npm run server\" \"npm run client\"",
         "data:import": "node backend/seeder",
-        "data:destroy": "node backend/seeder -d"
+        "data:destroy": "node backend/seeder -d",
+        "populate": "concurrently \"node backend/populate/usersPopulate\" \"node backend/populate/servicesPopulate\" \"node backend/populate/requestsPopulate\""
     },
     "author": "Bogdan Mihalachi",
     "license": "ISC",
