@@ -4,6 +4,9 @@ import mongoose from "mongoose";
 import connectDB from "../config/db.js";
 import Service from "../models/Service.js";
 import User from "../models/User.js";
+import formatDate from "../utils/formatDate.js";
+import getAvailabilityPeriods from "../utils/getAvailabilityPeriods.js";
+import { randomSubarray } from "../utils/utilities.js";
 import reviewsData from "./reviews.js";
 import { serviceAddresses, serviceDescriptions } from "./servicesScraped.js";
 import users from "./users.js";
@@ -14,6 +17,7 @@ mongoose;
 Service;
 User;
 colors;
+formatDate;
 users;
 serviceDescriptions;
 serviceAddresses;
@@ -133,55 +137,6 @@ const CLEANING_MAX_PRICE_R = 200;
 
 let services = [];
 let serviceAddressesIndex = 0;
-
-const randomSubarray = (array, num = 1) => {
-    const result = [];
-    for (let i = 0; i < num;) {
-        const random = Math.floor(Math.random() * array.length);
-        if (result.indexOf(array[random]) !== -1) {
-            continue;
-        }
-        result.push(array[random]);
-        i++;
-    }
-    return result;
-};
-
-const generateAvailabilityPeriods = (serviceCategory) => {
-    let availabilityPeriods = [
-        { startTime: new Date("2021-04-10T08:00:00"), endTime: new Date("2021-04-10T09:00:00") },
-        { startTime: new Date("2021-04-11T16:30:00"), endTime: new Date("2021-04-11T17:30:00") },
-    ];
-
-    switch (serviceCategory) {
-        case "Services>Repairs: PC, Electronics, Home Appliances":
-            break;
-        case "Services>Craftsmen&Builders>Sanitary, Thermal, AC Installations":
-            break;
-        case "Services>Craftsmen&Builders>Constructions":
-            break;
-        case "Services>Craftsmen&Builders>Roofs":
-            break;
-        case "Services>Craftsmen&Builders>Interior Design":
-            break;
-        case "Services>Auto&Transportation>Car Services":
-            break;
-        case "Services>Auto&Transportation>Transport Services":
-            break;
-        case "Services>Events>Photo&Video":
-            break;
-        case "Services>Events>Floral Arrangements&Decorations":
-            break;
-        case "Services>Private Lessons":
-            break;
-        case "Services>Cleaning":
-            break;
-        default:
-            break;
-    }
-
-    return availabilityPeriods;
-};
 
 const populateServices = (numServices, serviceCategory, numReviewsPerService) => {
     for (let i = 0; i < numServices; i++) {
@@ -363,7 +318,7 @@ const populateServices = (numServices, serviceCategory, numReviewsPerService) =>
         }
 
         // AVAILABILITY PERIODS
-        availabilityPeriods = generateAvailabilityPeriods(serviceCategory);
+        availabilityPeriods = getAvailabilityPeriods(serviceCategory);
 
         // ADDRESSES
         addresses = [...addresses, serviceAddresses[serviceAddressesIndex].addresses];
@@ -376,9 +331,9 @@ const populateServices = (numServices, serviceCategory, numReviewsPerService) =>
             3
         );
         reviews = reviews.map((review, index) => ({
-            title: review.title,
+            // title: review.title,
+            // rating: review.rating,
             comment: review.comment,
-            rating: review.rating,
             user: userIdsRandomSubarray[index],
         }));
 
