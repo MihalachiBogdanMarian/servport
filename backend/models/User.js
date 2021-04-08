@@ -39,6 +39,7 @@ const UserSchema = new mongoose.Schema({
     },
     avatar: {
         type: String,
+        default: "default-avatar.jpg",
     },
     address: {
         type: String,
@@ -62,6 +63,11 @@ const UserSchema = new mongoose.Schema({
         state: String,
         zipcode: String,
         country: String,
+    },
+    trustScore: {
+        type: Number,
+        required: true,
+        default: 0.0,
     },
 }, {
     timestamps: true,

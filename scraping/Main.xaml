@@ -1,4 +1,4 @@
-<Activity mc:Ignorable="sap sap2010" x:Class="Main" mva:VisualBasic.Settings="{x:Null}" sap:VirtualizedContainerService.HintSize="1257,2185" sap2010:WorkflowViewState.IdRef="ActivityBuilder_1" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=mscorlib" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+<Activity mc:Ignorable="sap sap2010" x:Class="Main" mva:VisualBasic.Settings="{x:Null}" sap:VirtualizedContainerService.HintSize="872.8,2208.8" sap2010:WorkflowViewState.IdRef="ActivityBuilder_1" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=mscorlib" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <TextExpression.NamespacesForImplementation>
     <sco:Collection x:TypeArguments="x:String">
       <x:String>System.Activities</x:String>
@@ -57,26 +57,18 @@
       <AssemblyReference>UiPath.System.Activities.Design</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
-  <Sequence DisplayName="Olx Scraping" sap:VirtualizedContainerService.HintSize="376,2120" sap2010:WorkflowViewState.IdRef="Sequence_1">
+  <Sequence DisplayName="Olx Scraping" sap:VirtualizedContainerService.HintSize="376,2144" sap2010:WorkflowViewState.IdRef="Sequence_1">
     <sap:WorkflowViewStateService.ViewState>
       <scg:Dictionary x:TypeArguments="x:String, x:Object">
         <x:Boolean x:Key="IsExpanded">True</x:Boolean>
       </scg:Dictionary>
     </sap:WorkflowViewStateService.ViewState>
-    <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" sap2010:Annotation.AnnotationText="PC Repairs - Electronics - Home Appliances" DisplayName="Invoke OlxScraping.xaml" sap:VirtualizedContainerService.HintSize="334,143" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_1" UnSafe="False" WorkflowFileName="OlxScraping.xaml">
+    <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" sap2010:Annotation.AnnotationText="PC Repairs - Electronics - Home Appliances" DisplayName="Invoke OlxScraping.xaml" sap:VirtualizedContainerService.HintSize="334.4,144.8" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_1" UnSafe="False" WorkflowFileName="OlxScraping.xaml">
       <ui:InvokeWorkflowFile.Arguments>
-        <InArgument x:TypeArguments="x:String" x:Key="in_OlxCategoryURL">
-          <Literal x:TypeArguments="x:String">https://www.olx.ro/servicii-afaceri-colaborari/reparatii-it-electronice-electro/</Literal>
-        </InArgument>
-        <InArgument x:TypeArguments="x:Int32" x:Key="in_NoOfOffersToBeScraped">
-          <Literal x:TypeArguments="x:Int32" Value="10" />
-        </InArgument>
-        <InArgument x:TypeArguments="x:String" x:Key="in_FileName">
-          <Literal x:TypeArguments="x:String">services-json-files\services-repairs.json</Literal>
-        </InArgument>
-        <InArgument x:TypeArguments="x:String" x:Key="in_Category">
-          <Literal x:TypeArguments="x:String">Services&gt;Repairs: PC, Electronics, Home Appliances</Literal>
-        </InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_OlxCategoryURL">https://www.olx.ro/servicii-afaceri-colaborari/reparatii-it-electronice-electro/</InArgument>
+        <InArgument x:TypeArguments="x:Int32" x:Key="in_NoOfOffersToBeScraped">10</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_FileName">services-json-files\services-repairs.json</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Category">Services&gt;Repairs: PC, Electronics, Home Appliances</InArgument>
       </ui:InvokeWorkflowFile.Arguments>
       <sap:WorkflowViewStateService.ViewState>
         <scg:Dictionary x:TypeArguments="x:String, x:Object">
@@ -84,20 +76,12 @@
         </scg:Dictionary>
       </sap:WorkflowViewStateService.ViewState>
     </ui:InvokeWorkflowFile>
-    <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" sap2010:Annotation.AnnotationText="Craftsmen - Builders -&gt; Sanitary, thermal, AC installations" DisplayName="Invoke OlxScraping.xaml" sap:VirtualizedContainerService.HintSize="334,154" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_2" UnSafe="False" WorkflowFileName="OlxScraping.xaml">
+    <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" sap2010:Annotation.AnnotationText="Craftsmen - Builders -&gt; Sanitary, thermal, AC installations" DisplayName="Invoke OlxScraping.xaml" sap:VirtualizedContainerService.HintSize="334.4,157.6" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_2" UnSafe="False" WorkflowFileName="OlxScraping.xaml">
       <ui:InvokeWorkflowFile.Arguments>
-        <InArgument x:TypeArguments="x:String" x:Key="in_OlxCategoryURL">
-          <Literal x:TypeArguments="x:String">https://www.olx.ro/servicii-afaceri-colaborari/meseriasi-constructori/instalatii-sanitare-termice/</Literal>
-        </InArgument>
-        <InArgument x:TypeArguments="x:Int32" x:Key="in_NoOfOffersToBeScraped">
-          <Literal x:TypeArguments="x:Int32" Value="10" />
-        </InArgument>
-        <InArgument x:TypeArguments="x:String" x:Key="in_FileName">
-          <Literal x:TypeArguments="x:String">services-json-files\services-builders-installations.json</Literal>
-        </InArgument>
-        <InArgument x:TypeArguments="x:String" x:Key="in_Category">
-          <Literal x:TypeArguments="x:String">Services&gt;Craftsmen&amp;Builders&gt;Sanitary, Thermal, AC Installations</Literal>
-        </InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_OlxCategoryURL">https://www.olx.ro/servicii-afaceri-colaborari/meseriasi-constructori/instalatii-sanitare-termice/</InArgument>
+        <InArgument x:TypeArguments="x:Int32" x:Key="in_NoOfOffersToBeScraped">10</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_FileName">services-json-files\services-builders-installations.json</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Category">Services&gt;Craftsmen&amp;Builders&gt;Sanitary, Thermal, AC Installations</InArgument>
       </ui:InvokeWorkflowFile.Arguments>
       <sap:WorkflowViewStateService.ViewState>
         <scg:Dictionary x:TypeArguments="x:String, x:Object">
@@ -105,20 +89,12 @@
         </scg:Dictionary>
       </sap:WorkflowViewStateService.ViewState>
     </ui:InvokeWorkflowFile>
-    <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" sap2010:Annotation.AnnotationText="Craftsmen - Builders -&gt; Constructions all over the country" DisplayName="Invoke OlxScraping.xaml" sap:VirtualizedContainerService.HintSize="334,154" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_3" UnSafe="False" WorkflowFileName="OlxScraping.xaml">
+    <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" sap2010:Annotation.AnnotationText="Craftsmen - Builders -&gt; Constructions all over the country" DisplayName="Invoke OlxScraping.xaml" sap:VirtualizedContainerService.HintSize="334.4,157.6" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_3" UnSafe="False" WorkflowFileName="OlxScraping.xaml">
       <ui:InvokeWorkflowFile.Arguments>
-        <InArgument x:TypeArguments="x:String" x:Key="in_OlxCategoryURL">
-          <Literal x:TypeArguments="x:String">https://www.olx.ro/servicii-afaceri-colaborari/meseriasi-constructori/constructii/</Literal>
-        </InArgument>
-        <InArgument x:TypeArguments="x:Int32" x:Key="in_NoOfOffersToBeScraped">
-          <Literal x:TypeArguments="x:Int32" Value="10" />
-        </InArgument>
-        <InArgument x:TypeArguments="x:String" x:Key="in_FileName">
-          <Literal x:TypeArguments="x:String">services-json-files\services-builders-constructions.json</Literal>
-        </InArgument>
-        <InArgument x:TypeArguments="x:String" x:Key="in_Category">
-          <Literal x:TypeArguments="x:String">Services&gt;Craftsmen&amp;Builders&gt;Constructions</Literal>
-        </InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_OlxCategoryURL">https://www.olx.ro/servicii-afaceri-colaborari/meseriasi-constructori/constructii/</InArgument>
+        <InArgument x:TypeArguments="x:Int32" x:Key="in_NoOfOffersToBeScraped">10</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_FileName">services-json-files\services-builders-constructions.json</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Category">Services&gt;Craftsmen&amp;Builders&gt;Constructions</InArgument>
       </ui:InvokeWorkflowFile.Arguments>
       <sap:WorkflowViewStateService.ViewState>
         <scg:Dictionary x:TypeArguments="x:String, x:Object">
@@ -128,18 +104,10 @@
     </ui:InvokeWorkflowFile>
     <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" sap2010:Annotation.AnnotationText="Craftsmen - Builders -&gt; Roofs all over the country" DisplayName="Invoke OlxScraping.xaml" sap:VirtualizedContainerService.HintSize="334,143" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_4" UnSafe="False" WorkflowFileName="OlxScraping.xaml">
       <ui:InvokeWorkflowFile.Arguments>
-        <InArgument x:TypeArguments="x:String" x:Key="in_OlxCategoryURL">
-          <Literal x:TypeArguments="x:String">https://www.olx.ro/servicii-afaceri-colaborari/meseriasi-constructori/acoperisuri/</Literal>
-        </InArgument>
-        <InArgument x:TypeArguments="x:Int32" x:Key="in_NoOfOffersToBeScraped">
-          <Literal x:TypeArguments="x:Int32" Value="10" />
-        </InArgument>
-        <InArgument x:TypeArguments="x:String" x:Key="in_FileName">
-          <Literal x:TypeArguments="x:String">services-json-files\services-builders-roofs.json</Literal>
-        </InArgument>
-        <InArgument x:TypeArguments="x:String" x:Key="in_Category">
-          <Literal x:TypeArguments="x:String">Services&gt;Craftsmen&amp;Builders&gt;Roofs</Literal>
-        </InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_OlxCategoryURL">https://www.olx.ro/servicii-afaceri-colaborari/meseriasi-constructori/acoperisuri/</InArgument>
+        <InArgument x:TypeArguments="x:Int32" x:Key="in_NoOfOffersToBeScraped">10</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_FileName">services-json-files\services-builders-roofs.json</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Category">Services&gt;Craftsmen&amp;Builders&gt;Roofs</InArgument>
       </ui:InvokeWorkflowFile.Arguments>
       <sap:WorkflowViewStateService.ViewState>
         <scg:Dictionary x:TypeArguments="x:String, x:Object">
@@ -149,18 +117,10 @@
     </ui:InvokeWorkflowFile>
     <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" sap2010:Annotation.AnnotationText="Craftsmen - Builders -&gt; Interior design throughout the country" DisplayName="Invoke OlxScraping.xaml" sap:VirtualizedContainerService.HintSize="334,154" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_5" UnSafe="False" WorkflowFileName="OlxScraping.xaml">
       <ui:InvokeWorkflowFile.Arguments>
-        <InArgument x:TypeArguments="x:String" x:Key="in_OlxCategoryURL">
-          <Literal x:TypeArguments="x:String">https://www.olx.ro/servicii-afaceri-colaborari/meseriasi-constructori/amenajari-interioare/</Literal>
-        </InArgument>
-        <InArgument x:TypeArguments="x:Int32" x:Key="in_NoOfOffersToBeScraped">
-          <Literal x:TypeArguments="x:Int32" Value="10" />
-        </InArgument>
-        <InArgument x:TypeArguments="x:String" x:Key="in_FileName">
-          <Literal x:TypeArguments="x:String">services-json-files\services-builders-interior.json</Literal>
-        </InArgument>
-        <InArgument x:TypeArguments="x:String" x:Key="in_Category">
-          <Literal x:TypeArguments="x:String">Services&gt;Craftsmen&amp;Builders&gt;Interior Design</Literal>
-        </InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_OlxCategoryURL">https://www.olx.ro/servicii-afaceri-colaborari/meseriasi-constructori/amenajari-interioare/</InArgument>
+        <InArgument x:TypeArguments="x:Int32" x:Key="in_NoOfOffersToBeScraped">10</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_FileName">services-json-files\services-builders-interior.json</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Category">Services&gt;Craftsmen&amp;Builders&gt;Interior Design</InArgument>
       </ui:InvokeWorkflowFile.Arguments>
       <sap:WorkflowViewStateService.ViewState>
         <scg:Dictionary x:TypeArguments="x:String, x:Object">
@@ -168,20 +128,12 @@
         </scg:Dictionary>
       </sap:WorkflowViewStateService.ViewState>
     </ui:InvokeWorkflowFile>
-    <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" sap2010:Annotation.AnnotationText="Car Services - Transportation -&gt; CAR SERVICES" DisplayName="Invoke OlxScraping.xaml" sap:VirtualizedContainerService.HintSize="334,143" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_6" UnSafe="False" WorkflowFileName="OlxScraping.xaml">
+    <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" sap2010:Annotation.AnnotationText="Car Services - Transportation -&gt; CAR SERVICES" DisplayName="Invoke OlxScraping.xaml" sap:VirtualizedContainerService.HintSize="334.4,144.8" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_6" UnSafe="False" WorkflowFileName="OlxScraping.xaml">
       <ui:InvokeWorkflowFile.Arguments>
-        <InArgument x:TypeArguments="x:String" x:Key="in_OlxCategoryURL">
-          <Literal x:TypeArguments="x:String">https://www.olx.ro/servicii-afaceri-colaborari/servicii-auto-transporturi/servicii-auto/</Literal>
-        </InArgument>
-        <InArgument x:TypeArguments="x:Int32" x:Key="in_NoOfOffersToBeScraped">
-          <Literal x:TypeArguments="x:Int32" Value="10" />
-        </InArgument>
-        <InArgument x:TypeArguments="x:String" x:Key="in_FileName">
-          <Literal x:TypeArguments="x:String">services-json-files\services-auto-auto.json</Literal>
-        </InArgument>
-        <InArgument x:TypeArguments="x:String" x:Key="in_Category">
-          <Literal x:TypeArguments="x:String">Services&gt;Auto&amp;Transportation&gt;Car Services</Literal>
-        </InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_OlxCategoryURL">https://www.olx.ro/servicii-afaceri-colaborari/servicii-auto-transporturi/servicii-auto/</InArgument>
+        <InArgument x:TypeArguments="x:Int32" x:Key="in_NoOfOffersToBeScraped">10</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_FileName">services-json-files\services-auto-auto.json</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Category">Services&gt;Auto&amp;Transportation&gt;Car Services</InArgument>
       </ui:InvokeWorkflowFile.Arguments>
       <sap:WorkflowViewStateService.ViewState>
         <scg:Dictionary x:TypeArguments="x:String, x:Object">
@@ -189,20 +141,12 @@
         </scg:Dictionary>
       </sap:WorkflowViewStateService.ViewState>
     </ui:InvokeWorkflowFile>
-    <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" sap2010:Annotation.AnnotationText="Car Services - Transportation -&gt; TRANSPORT SERVICES" DisplayName="Invoke OlxScraping.xaml" sap:VirtualizedContainerService.HintSize="334,143" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_7" UnSafe="False" WorkflowFileName="OlxScraping.xaml">
+    <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" sap2010:Annotation.AnnotationText="Car Services - Transportation -&gt; TRANSPORT SERVICES" DisplayName="Invoke OlxScraping.xaml" sap:VirtualizedContainerService.HintSize="334.4,144.8" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_7" UnSafe="False" WorkflowFileName="OlxScraping.xaml">
       <ui:InvokeWorkflowFile.Arguments>
-        <InArgument x:TypeArguments="x:String" x:Key="in_OlxCategoryURL">
-          <Literal x:TypeArguments="x:String">https://www.olx.ro/servicii-afaceri-colaborari/servicii-auto-transporturi/servicii-de-transport/</Literal>
-        </InArgument>
-        <InArgument x:TypeArguments="x:Int32" x:Key="in_NoOfOffersToBeScraped">
-          <Literal x:TypeArguments="x:Int32" Value="10" />
-        </InArgument>
-        <InArgument x:TypeArguments="x:String" x:Key="in_FileName">
-          <Literal x:TypeArguments="x:String">services-json-files\services-auto-transport.json</Literal>
-        </InArgument>
-        <InArgument x:TypeArguments="x:String" x:Key="in_Category">
-          <Literal x:TypeArguments="x:String">Services&gt;Auto&amp;Transportation&gt;Transport Services</Literal>
-        </InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_OlxCategoryURL">https://www.olx.ro/servicii-afaceri-colaborari/servicii-auto-transporturi/servicii-de-transport/</InArgument>
+        <InArgument x:TypeArguments="x:Int32" x:Key="in_NoOfOffersToBeScraped">10</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_FileName">services-json-files\services-auto-transport.json</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Category">Services&gt;Auto&amp;Transportation&gt;Transport Services</InArgument>
       </ui:InvokeWorkflowFile.Arguments>
       <sap:WorkflowViewStateService.ViewState>
         <scg:Dictionary x:TypeArguments="x:String, x:Object">
@@ -210,20 +154,12 @@
         </scg:Dictionary>
       </sap:WorkflowViewStateService.ViewState>
     </ui:InvokeWorkflowFile>
-    <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" sap2010:Annotation.AnnotationText="Weddings - Baptisms - Events -&gt; Photo and video services throughout the country" DisplayName="Invoke OlxScraping.xaml" sap:VirtualizedContainerService.HintSize="334,154" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_8" UnSafe="False" WorkflowFileName="OlxScraping.xaml">
+    <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" sap2010:Annotation.AnnotationText="Weddings - Baptisms - Events -&gt; Photo and video services throughout the country" DisplayName="Invoke OlxScraping.xaml" sap:VirtualizedContainerService.HintSize="334.4,157.6" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_8" UnSafe="False" WorkflowFileName="OlxScraping.xaml">
       <ui:InvokeWorkflowFile.Arguments>
-        <InArgument x:TypeArguments="x:String" x:Key="in_OlxCategoryURL">
-          <Literal x:TypeArguments="x:String">https://www.olx.ro/servicii-afaceri-colaborari/nunti-botezuri-evenimente/servicii-foto-video/</Literal>
-        </InArgument>
-        <InArgument x:TypeArguments="x:Int32" x:Key="in_NoOfOffersToBeScraped">
-          <Literal x:TypeArguments="x:Int32" Value="10" />
-        </InArgument>
-        <InArgument x:TypeArguments="x:String" x:Key="in_FileName">
-          <Literal x:TypeArguments="x:String">services-json-files\services-events-photo.json</Literal>
-        </InArgument>
-        <InArgument x:TypeArguments="x:String" x:Key="in_Category">
-          <Literal x:TypeArguments="x:String">Services&gt;Events&gt;Photo&amp;Video</Literal>
-        </InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_OlxCategoryURL">https://www.olx.ro/servicii-afaceri-colaborari/nunti-botezuri-evenimente/servicii-foto-video/</InArgument>
+        <InArgument x:TypeArguments="x:Int32" x:Key="in_NoOfOffersToBeScraped">10</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_FileName">services-json-files\services-events-photo.json</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Category">Services&gt;Events&gt;Photo&amp;Video</InArgument>
       </ui:InvokeWorkflowFile.Arguments>
       <sap:WorkflowViewStateService.ViewState>
         <scg:Dictionary x:TypeArguments="x:String, x:Object">
@@ -231,20 +167,12 @@
         </scg:Dictionary>
       </sap:WorkflowViewStateService.ViewState>
     </ui:InvokeWorkflowFile>
-    <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" sap2010:Annotation.AnnotationText="Weddings - Baptisms - Events -&gt; Floral arrangements and decorations throughout the country" DisplayName="Invoke OlxScraping.xaml" sap:VirtualizedContainerService.HintSize="334,154" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_9" UnSafe="False" WorkflowFileName="OlxScraping.xaml">
+    <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" sap2010:Annotation.AnnotationText="Weddings - Baptisms - Events -&gt; Floral arrangements and decorations throughout the country" DisplayName="Invoke OlxScraping.xaml" sap:VirtualizedContainerService.HintSize="334.4,157.6" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_9" UnSafe="False" WorkflowFileName="OlxScraping.xaml">
       <ui:InvokeWorkflowFile.Arguments>
-        <InArgument x:TypeArguments="x:String" x:Key="in_OlxCategoryURL">
-          <Literal x:TypeArguments="x:String">https://www.olx.ro/servicii-afaceri-colaborari/nunti-botezuri-evenimente/aranjamente-florale-decoratiuni/</Literal>
-        </InArgument>
-        <InArgument x:TypeArguments="x:Int32" x:Key="in_NoOfOffersToBeScraped">
-          <Literal x:TypeArguments="x:Int32" Value="10" />
-        </InArgument>
-        <InArgument x:TypeArguments="x:String" x:Key="in_FileName">
-          <Literal x:TypeArguments="x:String">services-json-files\services-events-decorations.json</Literal>
-        </InArgument>
-        <InArgument x:TypeArguments="x:String" x:Key="in_Category">
-          <Literal x:TypeArguments="x:String">Services&gt;Events&gt;Floral Arrangements&amp;Decorations</Literal>
-        </InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_OlxCategoryURL">https://www.olx.ro/servicii-afaceri-colaborari/nunti-botezuri-evenimente/aranjamente-florale-decoratiuni/</InArgument>
+        <InArgument x:TypeArguments="x:Int32" x:Key="in_NoOfOffersToBeScraped">10</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_FileName">services-json-files\services-events-decorations.json</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Category">Services&gt;Events&gt;Floral Arrangements&amp;Decorations</InArgument>
       </ui:InvokeWorkflowFile.Arguments>
       <sap:WorkflowViewStateService.ViewState>
         <scg:Dictionary x:TypeArguments="x:String, x:Object">
@@ -252,7 +180,7 @@
         </scg:Dictionary>
       </sap:WorkflowViewStateService.ViewState>
     </ui:InvokeWorkflowFile>
-    <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" sap2010:Annotation.AnnotationText="Meditations" DisplayName="Invoke OlxScraping.xaml" sap:VirtualizedContainerService.HintSize="334,143" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_10" UnSafe="False" WorkflowFileName="OlxScraping.xaml">
+    <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" sap2010:Annotation.AnnotationText="Private lessons" DisplayName="Invoke OlxScraping.xaml" sap:VirtualizedContainerService.HintSize="334.4,144.8" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_10" UnSafe="False" WorkflowFileName="OlxScraping.xaml">
       <ui:InvokeWorkflowFile.Arguments>
         <InArgument x:TypeArguments="x:String" x:Key="in_OlxCategoryURL">
           <Literal x:TypeArguments="x:String">https://www.olx.ro/servicii-afaceri-colaborari/cursuri-meditatii/meditatii/</Literal>
@@ -261,10 +189,10 @@
           <Literal x:TypeArguments="x:Int32" Value="10" />
         </InArgument>
         <InArgument x:TypeArguments="x:String" x:Key="in_FileName">
-          <Literal x:TypeArguments="x:String">services-json-files\services-meditations.json</Literal>
+          <Literal x:TypeArguments="x:String">services-json-files\services-lessons.json</Literal>
         </InArgument>
         <InArgument x:TypeArguments="x:String" x:Key="in_Category">
-          <Literal x:TypeArguments="x:String">Services&gt;Meditations</Literal>
+          <Literal x:TypeArguments="x:String">Services&gt;Private Lessons</Literal>
         </InArgument>
       </ui:InvokeWorkflowFile.Arguments>
       <sap:WorkflowViewStateService.ViewState>
@@ -273,20 +201,12 @@
         </scg:Dictionary>
       </sap:WorkflowViewStateService.ViewState>
     </ui:InvokeWorkflowFile>
-    <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" sap2010:Annotation.AnnotationText="Cleaning services throughout the country" DisplayName="Invoke OlxScraping.xaml" sap:VirtualizedContainerService.HintSize="334,143" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_11" UnSafe="False" WorkflowFileName="OlxScraping.xaml">
+    <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" sap2010:Annotation.AnnotationText="Cleaning services throughout the country" DisplayName="Invoke OlxScraping.xaml" sap:VirtualizedContainerService.HintSize="334.4,144.8" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_11" UnSafe="False" WorkflowFileName="OlxScraping.xaml">
       <ui:InvokeWorkflowFile.Arguments>
-        <InArgument x:TypeArguments="x:String" x:Key="in_OlxCategoryURL">
-          <Literal x:TypeArguments="x:String">https://www.olx.ro/servicii-afaceri-colaborari/servicii-curatenie/</Literal>
-        </InArgument>
-        <InArgument x:TypeArguments="x:Int32" x:Key="in_NoOfOffersToBeScraped">
-          <Literal x:TypeArguments="x:Int32" Value="50" />
-        </InArgument>
-        <InArgument x:TypeArguments="x:String" x:Key="in_FileName">
-          <Literal x:TypeArguments="x:String">services-json-files\services-cleaning.json</Literal>
-        </InArgument>
-        <InArgument x:TypeArguments="x:String" x:Key="in_Category">
-          <Literal x:TypeArguments="x:String">Services&gt;Cleaning</Literal>
-        </InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_OlxCategoryURL">https://www.olx.ro/servicii-afaceri-colaborari/servicii-curatenie/</InArgument>
+        <InArgument x:TypeArguments="x:Int32" x:Key="in_NoOfOffersToBeScraped">50</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_FileName">services-json-files\services-cleaning.json</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Category">Services&gt;Cleaning</InArgument>
       </ui:InvokeWorkflowFile.Arguments>
       <sap:WorkflowViewStateService.ViewState>
         <scg:Dictionary x:TypeArguments="x:String, x:Object">

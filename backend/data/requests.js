@@ -2,12 +2,10 @@ import colors from "colors";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import Request from "../models/Request.js";
-import { AvailabilityPeriod } from "../models/Service.js";
 
-AvailabilityPeriod;
+mongoose;
 Request;
 colors;
-mongoose;
 
 dotenv.config();
 
@@ -20,10 +18,10 @@ dotenv.config();
 //     user: mongoose.Types.ObjectId("606c5e18011ebb2fa8df4f85"),
 //     requestServices: [{
 //         title: "Test Service",
-//         availabilityPeriod: new AvailabilityPeriod({
-//             startTime: new Date("2021-04-08T16:30:00"),
-//             endTime: new Date("2021-04-08T17:30:00"),
-//         }),
+//         availabilityPeriod: {
+//             startTime: new Date("2021-04-10T16:30:00"),
+//             endTime: new Date("2021-04-10T17:30:00"),
+//         },
 //         image: "no-image.jpg",
 //         price: 500,
 //         executionAddress: {

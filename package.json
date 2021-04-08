@@ -9,9 +9,12 @@
         "server": "nodemon backend/server",
         "client": "npm start --prefix frontend",
         "dev": "concurrently \"npm run server\" \"npm run client\"",
-        "data:import": "node backend/seeder",
-        "data:destroy": "node backend/seeder -d",
-        "populate": "concurrently \"node backend/populate/usersPopulate\" \"node backend/populate/servicesPopulate\" \"node backend/populate/requestsPopulate\""
+        "data:import": "node --experimental-json-modules backend/seeder",
+        "data:destroy": "node --experimental-json-modules backend/seeder -d",
+        "servicesScraped": "node --experimental-json-modules backend/data/servicesScraped.js",
+        "users": "node --experimental-json-modules backend/data/users.js",
+        "services": "node --experimental-json-modules backend/data/services.js",
+        "requests": "node --experimental-json-modules backend/data/requests.js"
     },
     "author": "Bogdan Mihalachi",
     "license": "ISC",
@@ -37,6 +40,7 @@
         "gravatar": "^1.8.1",
         "helmet": "^4.4.1",
         "hpp": "^0.2.3",
+        "json-merger": "^1.1.5",
         "jsonwebtoken": "^8.5.1",
         "mongoose": "^5.12.3",
         "morgan": "^1.10.0",

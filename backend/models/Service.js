@@ -48,7 +48,7 @@ const ServiceSchema = new mongoose.Schema({
             "Services>Auto&Transportation>Transport Services",
             "Services>Events>Photo&Video",
             "Services>Events>Floral Arrangements&Decorations",
-            "Services>Meditations",
+            "Services>Private Lessons",
             "Services>Cleaning",
         ], // the only values it can have
     },
@@ -56,12 +56,12 @@ const ServiceSchema = new mongoose.Schema({
         minPrice: {
             type: Number,
             required: [true, "Please add a min price"],
-            default: 0,
+            default: 0.0,
         },
         maxPrice: {
             type: Number,
             required: [true, "Please add a max price"],
-            default: 0,
+            default: 0.0,
         },
     },
     images: {
@@ -110,7 +110,7 @@ const ServiceSchema = new mongoose.Schema({
     rating: {
         type: Number,
         required: true,
-        default: 0,
+        default: 0.0,
     },
     numReviews: {
         type: Number,
@@ -133,6 +133,7 @@ const ServiceSchema = new mongoose.Schema({
             required: true,
             ref: "User",
         }, ],
+        default: [],
     },
 }, {
     timestamps: true,
@@ -172,8 +173,7 @@ ServiceSchema.pre("save", async function(next) {
     next();
 });
 
-const AvailabilityPeriod = mongoose.model("AvailabilityPeriod", AvailabilityPeriodSchema);
 const Service = mongoose.model("Service", ServiceSchema);
 
 export default Service;
-export { AvailabilityPeriodSchema, AvailabilityPeriod };
+export { AvailabilityPeriodSchema };
