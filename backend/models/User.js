@@ -2,7 +2,25 @@ import bcrypt from "bcryptjs";
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
+import AvailabilityPeriodSchema from "../models/Service.js";
 import geocoder from "../utils/geocoder.js";
+
+AvailabilityPeriodSchema;
+
+const ScheduleSchema = new mongoose.Schema({
+    title: { type: String, required: true },
+    availabilityPeriod: { type: AvailabilityPeriodSchema, required: true },
+    price: { type: Number, required: true },
+    executionAddress: {
+        type: String,
+        required: [true, "Please add the exact address where the service will be provided"],
+    },
+    service: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: "Service",
+    },
+});
 
 const UserSchema = new mongoose.Schema({
     name: {
@@ -69,6 +87,7 @@ const UserSchema = new mongoose.Schema({
         required: true,
         default: 0.0,
     },
+    schedules: [ScheduleSchema],
 }, {
     timestamps: true,
 });

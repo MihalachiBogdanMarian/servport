@@ -11,6 +11,8 @@ build/
 config/config.env
 config/default.json
 config/production.json
+/scraping/services-json-files/
+/backend/data/reviewsDataset*
 
 ######################
 # Node

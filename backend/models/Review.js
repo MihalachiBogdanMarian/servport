@@ -1,18 +1,18 @@
 import mongoose from "mongoose";
 
 const ReviewSchema = new mongoose.Schema({
-    // title: {
-    //     type: String,
-    //     trim: true,
-    //     required: [true, "Please add a title for the review"],
-    //     maxlength: [300, "Cannot exceed 300 characters"],
-    // },
-    // rating: {
-    //     type: Number,
-    //     min: [1, "Rating must be at least 1"],
-    //     max: [5, "Rating mustn't be more than 5"],
-    //     required: [true, "Please add a rating between 1 and 5"],
-    // },
+    title: {
+        type: String,
+        trim: true,
+        required: [true, "Please add a title for the review"],
+        maxlength: [300, "Cannot exceed 300 characters"],
+    },
+    rating: {
+        type: Number,
+        min: [1, "Rating must be at least 1"],
+        max: [5, "Rating mustn't be more than 5"],
+        // required: [true, "Please add a rating between 1 and 5"],
+    },
     comment: {
         type: String,
         required: [true, "Please add some text"],

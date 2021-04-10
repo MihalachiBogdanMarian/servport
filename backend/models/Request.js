@@ -13,10 +13,8 @@ const RequestSchema = new mongoose.Schema({
         image: { type: String, required: true },
         price: { type: Number, required: true },
         executionAddress: {
-            address: {
-                type: String,
-                required: [true, "Please add the exact address where the service will be provided"],
-            },
+            type: String,
+            required: [true, "Please add the exact address where the service will be provided"],
         },
         service: {
             type: mongoose.Schema.Types.ObjectId,

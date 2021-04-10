@@ -1,3 +1,32 @@
+const breakTimes = {
+    "6h": 60,
+    "6hS": 60,
+    "4h": 45,
+    "4hS": 45,
+    "3h": 30,
+    "3hS": 30,
+    "2h": 20,
+    "2hS": 20,
+    "1h": 20,
+    "1hS": 20,
+    "30min": 15,
+    "30minS": 15,
+};
+const numIntermediaryIntervals = {
+    "6h": 2,
+    "6hS": 2,
+    "4h": 3,
+    "4hS": 3,
+    "3h": 4,
+    "3hS": 4,
+    "2h": 6,
+    "2hS": 6,
+    "1h": 10,
+    "1hS": 10,
+    "30min": 20,
+    "30minS": 20,
+};
+
 const getAvailabilityPeriods = (serviceCategory) => {
     const displayAvailabilityPeriods = (availabilityPeriods) => {
         availabilityPeriods.forEach((availabilityPeriod) =>
@@ -52,34 +81,6 @@ const getAvailabilityPeriods = (serviceCategory) => {
         };
 
         let availabilityPeriods = [];
-        let breakTimes = {
-            "6h": 60,
-            "6hS": 60,
-            "4h": 45,
-            "4hS": 45,
-            "3h": 30,
-            "3hS": 30,
-            "2h": 20,
-            "2hS": 20,
-            "1h": 20,
-            "1hS": 20,
-            "30min": 15,
-            "30minS": 15,
-        };
-        let numIntermediaryIntervals = {
-            "6h": 2,
-            "6hS": 2,
-            "4h": 3,
-            "4hS": 3,
-            "3h": 4,
-            "3hS": 4,
-            "2h": 6,
-            "2hS": 6,
-            "1h": 10,
-            "1hS": 10,
-            "30min": 20,
-            "30minS": 20,
-        };
 
         const addAvailabilityPeriods = (rule, firstWorkDayAfterToday, numIntervals, intervalDistance) => {
             const startHour = Math.floor(Math.random() * 2) === 1 ? 7 : 8;
@@ -151,7 +152,10 @@ const getAvailabilityPeriods = (serviceCategory) => {
         };
 
         const today = new Date(Date.now());
-        const firstWorkDayAfterToday = getNextWorkDay(new Date(today), rule);
+        let firstWorkDayAfterToday = getNextWorkDay(new Date(today), rule);
+        firstWorkDayAfterToday.setDate(firstWorkDayAfterToday.getDate() + 30);
+        if (firstWorkDayAfterToday.getDay() === 6) firstWorkDayAfterToday.setDate(firstWorkDayAfterToday.getDate() + 2);
+        if (firstWorkDayAfterToday.getDay() === 0) firstWorkDayAfterToday.setDate(firstWorkDayAfterToday.getDate() + 1);
 
         let endTime = firstWorkDayAfterToday;
         let startTime = endTime;
