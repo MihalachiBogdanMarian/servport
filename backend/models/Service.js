@@ -1,22 +1,8 @@
 import mongoose from "mongoose";
 import geocoder from "../utils/geocoder.js";
+import AvailabilityPeriodSchema from "./AvailabilityPeriod.js";
 import ReviewSchema from "./Review.js";
-
-const AvailabilityPeriodSchema = new mongoose.Schema({
-    startTime: {
-        type: Date,
-        required: [true, "Please add a start time"],
-        min: [Date.now, "Please add a starting date in the future"],
-    },
-    endTime: {
-        type: Date,
-        required: [true, "Please add an end time"],
-    },
-});
-
-AvailabilityPeriodSchema.path("endTime").validate(function(value) {
-    return this.startTime < value;
-}, "Please add an ending date greater than the starting date");
+import User from "./User.js";
 
 const ServiceSchema = new mongoose.Schema({
     user: {
@@ -107,6 +93,10 @@ const ServiceSchema = new mongoose.Schema({
         country: String,
     }, ],
     reviews: [ReviewSchema],
+    previousRating: {
+        type: Number,
+        default: 0.0,
+    },
     rating: {
         type: Number,
         required: true,
@@ -139,41 +129,89 @@ const ServiceSchema = new mongoose.Schema({
     timestamps: true,
 });
 
-// set service owner as the default user who can proceed to payment
-ServiceSchema.pre("save", async function(next) {
-    this.paymentCanProceedUsers = [...this.paymentCanProceedUsers, this.user];
+ServiceSchema.path("reviews").validate(function(value) {
+    const userIds = value.map((review) => review.user.toString());
+    return new Set(userIds).size === userIds.length;
+}, "A user cannot leave more than one review");
 
-    next();
+// set service owner as the default user who can proceed to payment
+ServiceSchema.pre("save", function(next) {
+    if (!this.isModified("paymentCanProceedUsers")) {
+        next();
+    } else {
+        if (!this.paymentCanProceedUsers.includes(this.user)) {
+            this.paymentCanProceedUsers = [...this.paymentCanProceedUsers, this.user];
+            next();
+        } else {
+            next();
+        }
+    }
 });
 
 // geocode & create locations field
 ServiceSchema.pre("save", async function(next) {
-    const getLocations = () => {
-        const promises = this.addresses.map(async(address) => {
-            const location = await geocoder.geocode(address);
-            return {
-                type: "Point",
-                coordinates: [location[0].longitude, location[0].latitude],
-                formattedAddress: location[0].formattedAddress,
-                street: location[0].streetName,
-                city: location[0].city,
-                state: location[0].stateCode,
-                zipcode: location[0].zipcode,
-                country: location[0].countryCode,
-            };
-        });
-        return Promise.all(promises);
-    };
+    if (!this.isModified("addresses")) {
+        next();
+    } else {
+        const getLocations = () => {
+            const promises = this.addresses.map(async(address) => {
+                const location = await geocoder.geocode(address);
+                return {
+                    type: "Point",
+                    coordinates: [location[0].longitude, location[0].latitude],
+                    formattedAddress: location[0].formattedAddress,
+                    street: location[0].streetName,
+                    city: location[0].city,
+                    state: location[0].stateCode,
+                    zipcode: location[0].zipcode,
+                    country: location[0].countryCode,
+                };
+            });
+            return Promise.all(promises);
+        };
 
-    const locations = await getLocations();
-    this.locations = locations;
+        const locations = await getLocations();
+        this.locations = locations;
 
-    this.addresses = undefined;
+        // this.addresses = undefined;
 
-    next();
+        next();
+    }
+});
+
+// recompute the number of reviews and the main rating when the array of reviews is changing
+ServiceSchema.pre("save", function(next) {
+    if (!this.isModified("reviews")) {
+        next();
+    } else {
+        this.numReviews = this.reviews.length;
+        this.previousRating = this.rating;
+        this.rating = (this.reviews.reduce((sum, currentVal) => sum + currentVal.rating, 0) / this.reviews.length).toFixed(
+            2
+        );
+
+        next();
+    }
+});
+
+// recompute the trust score for the user possessing this service when the rating is changing
+ServiceSchema.post("save", async function(doc, next) {
+    if (this.previousRating === doc.rating) {
+        next();
+    } else {
+        const user = await User.findById(doc.user);
+
+        const userServices = await Service.find({ user: doc.user });
+
+        user.trustScore = (
+            userServices.reduce((sum, currentVal) => sum + currentVal.rating, 0) / userServices.length
+        ).toFixed(2);
+        user.save();
+
+        next();
+    }
 });
 
 const Service = mongoose.model("Service", ServiceSchema);
 
 export default Service;
-export { AvailabilityPeriodSchema };

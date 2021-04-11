@@ -14,7 +14,8 @@
         "servicesScraped": "node --experimental-json-modules backend/data/servicesScraped.js",
         "users": "node --experimental-json-modules backend/data/users.js",
         "services": "node --experimental-json-modules backend/data/services.js",
-        "requests": "node --experimental-json-modules backend/data/requests.js"
+        "requests": "node --experimental-json-modules backend/data/requests.js",
+        "writeReviewsJson": "node --experimental-json-modules backend/utils/writeReviewsJson.js"
     },
     "author": "Bogdan Mihalachi",
     "license": "ISC",

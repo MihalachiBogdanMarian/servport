@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { AvailabilityPeriodSchema } from "../models/Service.js";
+import AvailabilityPeriodSchema from "./AvailabilityPeriod.js";
 
 const RequestSchema = new mongoose.Schema({
     user: {

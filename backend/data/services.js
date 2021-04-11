@@ -7,7 +7,7 @@ import User from "../models/User.js";
 import formatDate from "../utils/formatDate.js";
 import getAvailabilityPeriods from "../utils/getAvailabilityPeriods.js";
 import { randomSubarray } from "../utils/utilities.js";
-import reviewsData from "./reviews.js";
+import reviewsData from "./reviews.json";
 import { serviceAddresses, serviceDescriptions } from "./servicesScraped.js";
 import users from "./users.js";
 
@@ -331,11 +331,15 @@ const populateServices = (numServices, serviceCategory, numReviewsPerService) =>
             3
         );
         reviews = reviews.map((review, index) => ({
-            // title: review.title,
-            // rating: review.rating,
+            title: review.title,
+            rating: review.rating,
             comment: review.comment,
+            createdAt: review.createdAt,
             user: userIdsRandomSubarray[index],
         }));
+        reviews.sort((date1, date2) => {
+            date1.date - date2.date;
+        });
 
         // NUM REVIEWS
         numReviews = reviews.length;

@@ -2,10 +2,8 @@ import bcrypt from "bcryptjs";
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
-import AvailabilityPeriodSchema from "../models/Service.js";
 import geocoder from "../utils/geocoder.js";
-
-AvailabilityPeriodSchema;
+import AvailabilityPeriodSchema from "./AvailabilityPeriod.js";
 
 const ScheduleSchema = new mongoose.Schema({
     title: { type: String, required: true },
@@ -87,7 +85,10 @@ const UserSchema = new mongoose.Schema({
         required: true,
         default: 0.0,
     },
-    schedules: [ScheduleSchema],
+    schedules: {
+        type: [ScheduleSchema],
+        default: [],
+    },
 }, {
     timestamps: true,
 });
@@ -96,31 +97,35 @@ const UserSchema = new mongoose.Schema({
 UserSchema.pre("save", async function(next) {
     if (!this.isModified("password")) {
         next();
+    } else {
+        const salt = await bcrypt.genSalt(10);
+        this.password = await bcrypt.hash(this.password, salt);
+        next();
     }
-
-    const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(this.password, salt);
-    next();
 });
 
 // geocode & create location field
 UserSchema.pre("save", async function(next) {
-    const location = await geocoder.geocode(this.address);
-    this.location = {
-        type: "Point",
-        coordinates: [location[0].longitude, location[0].latitude],
-        formattedAddress: location[0].formattedAddress,
-        street: location[0].streetName,
-        city: location[0].city,
-        state: location[0].stateCode,
-        zipcode: location[0].zipcode,
-        country: location[0].countryCode,
-    };
+    if (!this.isModified("address")) {
+        next();
+    } else {
+        const location = await geocoder.geocode(this.address);
+        this.location = {
+            type: "Point",
+            coordinates: [location[0].longitude, location[0].latitude],
+            formattedAddress: location[0].formattedAddress,
+            street: location[0].streetName,
+            city: location[0].city,
+            state: location[0].stateCode,
+            zipcode: location[0].zipcode,
+            country: location[0].countryCode,
+        };
 
-    // do not save address in the db
-    this.address = undefined; // doesn't get put in the JSON
+        // do not save address in the db
+        // this.address = undefined; // doesn't get put in the JSON
 
-    next();
+        next();
+    }
 });
 
 // cascade delete services when a user is removed
