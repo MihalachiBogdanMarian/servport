@@ -16,17 +16,17 @@ Request;
 Service;
 User;
 
-// REMOVE USER
+/* REMOVE USER */
 // const user = await User.findById("606f6f17942e3d17dc505ac7");
 // await user.remove();
 
-// CHANGE REVIEWS OF A SERVICE USING UPDATEONE
+/* CHANGE REVIEWS OF A SERVICE USING UPDATEONE */
 // const service = await Service.findById("606f6f17942e3d17dc505bfa").populate("reviews");
 // await service.updateOne({
 //     reviews: [{ title: "A", comment: "a", rating: 5, user: "606f6f17942e3d17dc505ac9" }, ...service.reviews],
 // });
 
-// CHANGE REVIEWS OF A SERVICE USING SAVE
+/* CHANGE REVIEWS OF A SERVICE USING SAVE */
 // const service = await Service.findById("606f6f17942e3d17dc505bfa").populate("reviews");
 // service.reviews.unshift({ title: "A", comment: "a", rating: 5, user: "606f6f17942e3d17dc505ac5" });
 // await service.save();

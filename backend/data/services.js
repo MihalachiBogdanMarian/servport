@@ -9,7 +9,6 @@ import getAvailabilityPeriods from "../utils/getAvailabilityPeriods.js";
 import { randomSubarray } from "../utils/utilities.js";
 import reviewsData from "./reviews.json";
 import { serviceAddresses, serviceDescriptions } from "./servicesScraped.js";
-import users from "./users.js";
 
 connectDB();
 
@@ -18,7 +17,7 @@ Service;
 User;
 colors;
 formatDate;
-users;
+const users = await User.find({});
 serviceDescriptions;
 serviceAddresses;
 reviewsData;
@@ -53,30 +52,49 @@ dotenv.config();
 // });
 // await service.save();
 
-const NUM_REPAIRS_SERVICES = 1;
-const NUM_BUILDERS_INSTALLATIONS_SERVICES = 1;
-const NUM_BUILDERS_CONSTRUCTIONS_SERVICES = 1;
-const NUM_BUILDERS_ROOFS_SERVICES = 1;
-const NUM_BUILDERS_INTERIOR_SERVICES = 1;
-const NUM_AUTO_AUTO_SERVICES = 1;
-const NUM_AUTO_TRANSPORT_SERVICES = 1;
-const NUM_EVENTS_PHOTO_SERVICES = 1;
-const NUM_EVENTS_DECORATIONS_SERVICES = 1;
-const NUM_LESSONS_SERVICES = 1;
-const NUM_CLEANING_SERVICES = 1;
+const MAX_NUM_SERVICES_PER_CATEGORY = 900;
 
-const NUM_REVIEWS_PER_SERVICE = 3;
-const NUM_VIEWS_MAX_THRESHOLD = 100;
+// const NUM_REPAIRS_SERVICES = 1;
+// const NUM_BUILDERS_INSTALLATIONS_SERVICES = 1;
+// const NUM_BUILDERS_CONSTRUCTIONS_SERVICES = 1;
+// const NUM_BUILDERS_ROOFS_SERVICES = 1;
+// const NUM_BUILDERS_INTERIOR_SERVICES = 1;
+// const NUM_AUTO_AUTO_SERVICES = 1;
+// const NUM_AUTO_TRANSPORT_SERVICES = 1;
+// const NUM_EVENTS_PHOTO_SERVICES = 1;
+// const NUM_EVENTS_DECORATIONS_SERVICES = 1;
+// const NUM_LESSONS_SERVICES = 1;
+// const NUM_CLEANING_SERVICES = 1;
+
+// const MIN_NUM_REVIEWS_PER_SERVICE = 1;
+// const MAX_NUM_REVIEWS_PER_SERVICE = 3;
+
+const NUM_REPAIRS_SERVICES = 450;
+const NUM_BUILDERS_INSTALLATIONS_SERVICES = 450;
+const NUM_BUILDERS_CONSTRUCTIONS_SERVICES = 450;
+const NUM_BUILDERS_ROOFS_SERVICES = 450;
+const NUM_BUILDERS_INTERIOR_SERVICES = 450;
+const NUM_AUTO_AUTO_SERVICES = 450;
+const NUM_AUTO_TRANSPORT_SERVICES = 450;
+const NUM_EVENTS_PHOTO_SERVICES = 450;
+const NUM_EVENTS_DECORATIONS_SERVICES = 450;
+const NUM_LESSONS_SERVICES = 450;
+const NUM_CLEANING_SERVICES = 450;
+
+const MIN_NUM_REVIEWS_PER_SERVICE = 3;
+const MAX_NUM_REVIEWS_PER_SERVICE = 100;
+const NUM_VIEWS_MIN_THRESHOLD = 200;
+const NUM_VIEWS_MAX_THRESHOLD = 500;
 
 const REPAIRS_CATEGORY = "Services>Repairs: PC, Electronics, Home Appliances";
-const BUILDERS_INSTALLATIONS_CATEGORY = "Services>Craftsmen&Builders>Sanitary, Thermal, AC Installations";
-const BUILDERS_CONSTRUCTIONS_CATEGORY = "Services>Craftsmen&Builders>Constructions";
-const BUILDERS_ROOFS_CATEGORY = "Services>Craftsmen&Builders>Roofs";
-const BUILDERS_INTERIOR_CATEGORY = "Services>Craftsmen&Builders>Interior Design";
-const AUTO_AUTO_CATEGORY = "Services>Auto&Transportation>Car Services";
-const AUTO_TRANSPORT_CATEGORY = "Services>Auto&Transportation>Transport Services";
-const EVENTS_PHOTO_CATEGORY = "Services>Events>Photo&Video";
-const EVENTS_DECORATIONS_CATEGORY = "Services>Events>Floral Arrangements&Decorations";
+const BUILDERS_INSTALLATIONS_CATEGORY = "Services>Craftsmen & Builders>Sanitary, Thermal, AC Installations";
+const BUILDERS_CONSTRUCTIONS_CATEGORY = "Services>Craftsmen & Builders>Constructions";
+const BUILDERS_ROOFS_CATEGORY = "Services>Craftsmen & Builders>Roofs";
+const BUILDERS_INTERIOR_CATEGORY = "Services>Craftsmen & Builders>Interior Design";
+const AUTO_AUTO_CATEGORY = "Services>Auto & Transportation>Car Services";
+const AUTO_TRANSPORT_CATEGORY = "Services>Auto & Transportation>Transport Services";
+const EVENTS_PHOTO_CATEGORY = "Services>Events>Photo & Video";
+const EVENTS_DECORATIONS_CATEGORY = "Services>Events>Floral Arrangements & Decorations";
 const LESSONS_CATEGORY = "Services>Private Lessons";
 const CLEANING_CATEGORY = "Services>Cleaning";
 
@@ -138,7 +156,8 @@ const CLEANING_MAX_PRICE_R = 200;
 let services = [];
 let serviceAddressesIndex = 0;
 
-const populateServices = (numServices, serviceCategory, numReviewsPerService) => {
+const populateServices = (numServices, serviceCategory) => {
+    let index = 0;
     for (let i = 0; i < numServices; i++) {
         let user = null;
         let title = "";
@@ -155,16 +174,22 @@ const populateServices = (numServices, serviceCategory, numReviewsPerService) =>
         let numReviews = 0;
         let numViews = 0;
         let numInterested = 0;
+        let paymentCanProceedUsers = [];
 
         // USER
         user = users[(Math.random() * users.length) | 0]._id;
 
         // TITLE
-        title = serviceDescriptions.filter((serviceAttributes) => serviceAttributes.category === serviceCategory)[i].title;
+        index = Math.floor(Math.random() * MAX_NUM_SERVICES_PER_CATEGORY);
+        title =
+            serviceDescriptions.filter((serviceAttributes) => serviceAttributes.category === serviceCategory)[index].title ||
+            "Service";
 
         // DESCRIPTION
-        description = serviceDescriptions.filter((serviceAttributes) => serviceAttributes.category === serviceCategory)[i]
-            .description;
+        index = Math.floor(Math.random() * MAX_NUM_SERVICES_PER_CATEGORY);
+        description =
+            serviceDescriptions.filter((serviceAttributes) => serviceAttributes.category === serviceCategory)[index]
+            .description || "-";
 
         // PRICE
         switch (serviceCategory) {
@@ -176,7 +201,7 @@ const populateServices = (numServices, serviceCategory, numReviewsPerService) =>
                     REPAIRS_MAX_PRICE_L),
                 (price = { minPrice, maxPrice });
                 break;
-            case "Services>Craftsmen&Builders>Sanitary, Thermal, AC Installations":
+            case "Services>Craftsmen & Builders>Sanitary, Thermal, AC Installations":
                 (minPrice =
                     Math.floor(Math.random() * (BUILDERS_INSTALLATIONS_MIN_PRICE_R - BUILDERS_INSTALLATIONS_MIN_PRICE_L + 1)) +
                     BUILDERS_INSTALLATIONS_MIN_PRICE_L),
@@ -186,7 +211,7 @@ const populateServices = (numServices, serviceCategory, numReviewsPerService) =>
                     BUILDERS_INSTALLATIONS_MAX_PRICE_L),
                 (price = { minPrice, maxPrice });
                 break;
-            case "Services>Craftsmen&Builders>Constructions":
+            case "Services>Craftsmen & Builders>Constructions":
                 (minPrice =
                     Math.floor(Math.random() * (BUILDERS_CONSTRUCTIONS_MIN_PRICE_R - BUILDERS_CONSTRUCTIONS_MIN_PRICE_L + 1)) +
                     BUILDERS_CONSTRUCTIONS_MIN_PRICE_L),
@@ -196,7 +221,7 @@ const populateServices = (numServices, serviceCategory, numReviewsPerService) =>
                     BUILDERS_CONSTRUCTIONS_MAX_PRICE_L),
                 (price = { minPrice, maxPrice });
                 break;
-            case "Services>Craftsmen&Builders>Roofs":
+            case "Services>Craftsmen & Builders>Roofs":
                 (minPrice =
                     Math.floor(Math.random() * (BUILDERS_ROOFS_MIN_PRICE_R - BUILDERS_ROOFS_MIN_PRICE_L + 1)) +
                     BUILDERS_ROOFS_MIN_PRICE_L),
@@ -206,7 +231,7 @@ const populateServices = (numServices, serviceCategory, numReviewsPerService) =>
                     BUILDERS_ROOFS_MAX_PRICE_L),
                 (price = { minPrice, maxPrice });
                 break;
-            case "Services>Craftsmen&Builders>Interior Design":
+            case "Services>Craftsmen & Builders>Interior Design":
                 (minPrice =
                     Math.floor(Math.random() * (BUILDERS_INTERIOR_MIN_PRICE_R - BUILDERS_INTERIOR_MIN_PRICE_L + 1)) +
                     BUILDERS_INTERIOR_MIN_PRICE_L),
@@ -216,7 +241,7 @@ const populateServices = (numServices, serviceCategory, numReviewsPerService) =>
                     BUILDERS_INTERIOR_MAX_PRICE_L),
                 (price = { minPrice, maxPrice });
                 break;
-            case "Services>Auto&Transportation>Car Services":
+            case "Services>Auto & Transportation>Car Services":
                 (minPrice =
                     Math.floor(Math.random() * (AUTO_AUTO_MIN_PRICE_R - AUTO_AUTO_MIN_PRICE_L + 1)) + AUTO_AUTO_MIN_PRICE_L),
                 (maxPrice =
@@ -225,7 +250,7 @@ const populateServices = (numServices, serviceCategory, numReviewsPerService) =>
                     AUTO_AUTO_MAX_PRICE_L),
                 (price = { minPrice, maxPrice });
                 break;
-            case "Services>Auto&Transportation>Transport Services":
+            case "Services>Auto & Transportation>Transport Services":
                 (minPrice =
                     Math.floor(Math.random() * (AUTO_TRANSPORT_MIN_PRICE_R - AUTO_TRANSPORT_MIN_PRICE_L + 1)) +
                     AUTO_TRANSPORT_MIN_PRICE_L),
@@ -235,7 +260,7 @@ const populateServices = (numServices, serviceCategory, numReviewsPerService) =>
                     AUTO_TRANSPORT_MAX_PRICE_L),
                 (price = { minPrice, maxPrice });
                 break;
-            case "Services>Events>Photo&Video":
+            case "Services>Events>Photo & Video":
                 (minPrice =
                     Math.floor(Math.random() * (EVENTS_PHOTO_MIN_PRICE_R - EVENTS_PHOTO_MIN_PRICE_L + 1)) +
                     EVENTS_PHOTO_MIN_PRICE_L),
@@ -245,7 +270,7 @@ const populateServices = (numServices, serviceCategory, numReviewsPerService) =>
                     EVENTS_PHOTO_MAX_PRICE_L),
                 (price = { minPrice, maxPrice });
                 break;
-            case "Services>Events>Floral Arrangements&Decorations":
+            case "Services>Events>Floral Arrangements & Decorations":
                 (minPrice =
                     Math.floor(Math.random() * (EVENTS_DECORATIONS_MIN_PRICE_R - EVENTS_DECORATIONS_MIN_PRICE_L + 1)) +
                     EVENTS_DECORATIONS_MIN_PRICE_L),
@@ -282,28 +307,28 @@ const populateServices = (numServices, serviceCategory, numReviewsPerService) =>
             case "Services>Repairs: PC, Electronics, Home Appliances":
                 images = [...images, "repairs.jpg"];
                 break;
-            case "Services>Craftsmen&Builders>Sanitary, Thermal, AC Installations":
+            case "Services>Craftsmen & Builders>Sanitary, Thermal, AC Installations":
                 images = [...images, "builders-installations.jpg"];
                 break;
-            case "Services>Craftsmen&Builders>Constructions":
+            case "Services>Craftsmen & Builders>Constructions":
                 images = [...images, "builders-constructions.jpg"];
                 break;
-            case "Services>Craftsmen&Builders>Roofs":
+            case "Services>Craftsmen & Builders>Roofs":
                 images = [...images, "builders-roofs.jpg"];
                 break;
-            case "Services>Craftsmen&Builders>Interior Design":
+            case "Services>Craftsmen & Builders>Interior Design":
                 images = [...images, "builders-interior.jpg"];
                 break;
-            case "Services>Auto&Transportation>Car Services":
+            case "Services>Auto & Transportation>Car Services":
                 images = [...images, "auto-auto.jpg"];
                 break;
-            case "Services>Auto&Transportation>Transport Services":
+            case "Services>Auto & Transportation>Transport Services":
                 images = [...images, "auto-transport.jpg"];
                 break;
-            case "Services>Events>Photo&Video":
+            case "Services>Events>Photo & Video":
                 images = [...images, "events-photo.jpg"];
                 break;
-            case "Services>Events>Floral Arrangements&Decorations":
+            case "Services>Events>Floral Arrangements & Decorations":
                 images = [...images, "events-arrangements.jpg"];
                 break;
             case "Services>Private Lessons":
@@ -325,21 +350,22 @@ const populateServices = (numServices, serviceCategory, numReviewsPerService) =>
         serviceAddressesIndex++;
 
         // REVIEWS
+        const numReviewsPerService =
+            Math.floor(Math.random() * (MAX_NUM_REVIEWS_PER_SERVICE - MIN_NUM_REVIEWS_PER_SERVICE + 1)) +
+            MIN_NUM_REVIEWS_PER_SERVICE;
         reviews = randomSubarray(reviewsData, numReviewsPerService);
         const userIdsRandomSubarray = randomSubarray(
             users.map((user) => user._id),
-            3
+            numReviewsPerService
         );
         reviews = reviews.map((review, index) => ({
-            title: review.title,
-            rating: review.rating,
-            comment: review.comment,
+            title: review.title || "Review",
+            rating: review.rating || 3,
+            comment: review.comment || "Empty comment",
             createdAt: review.createdAt,
             user: userIdsRandomSubarray[index],
         }));
-        reviews.sort((date1, date2) => {
-            date1.date - date2.date;
-        });
+        reviews.sort((r1, r2) => new Date(r2.createdAt) - new Date(r1.createdAt));
 
         // NUM REVIEWS
         numReviews = reviews.length;
@@ -348,7 +374,10 @@ const populateServices = (numServices, serviceCategory, numReviewsPerService) =>
         rating = (reviews.reduce((sum, currentVal) => sum + currentVal.rating, 0) / numReviews).toFixed(2);
 
         // NUM VIEWS
-        numViews = Math.floor(Math.random() * (numReviews + NUM_VIEWS_MAX_THRESHOLD - numReviews + 1)) + numReviews;
+        numViews =
+            Math.floor(Math.random() * (NUM_VIEWS_MAX_THRESHOLD - NUM_VIEWS_MIN_THRESHOLD + 1)) +
+            NUM_VIEWS_MIN_THRESHOLD +
+            numReviews;
 
         // NUM INTERESTED
         numInterested = Math.floor(Math.random() * (numViews + 1));
@@ -367,23 +396,24 @@ const populateServices = (numServices, serviceCategory, numReviewsPerService) =>
             numReviews,
             numViews,
             numInterested,
+            paymentCanProceedUsers,
         });
 
         services = [...services, service];
     }
 };
 
-populateServices(NUM_REPAIRS_SERVICES, REPAIRS_CATEGORY, NUM_REVIEWS_PER_SERVICE);
-populateServices(NUM_BUILDERS_INSTALLATIONS_SERVICES, BUILDERS_INSTALLATIONS_CATEGORY, NUM_REVIEWS_PER_SERVICE);
-populateServices(NUM_BUILDERS_CONSTRUCTIONS_SERVICES, BUILDERS_CONSTRUCTIONS_CATEGORY, NUM_REVIEWS_PER_SERVICE);
-populateServices(NUM_BUILDERS_ROOFS_SERVICES, BUILDERS_ROOFS_CATEGORY, NUM_REVIEWS_PER_SERVICE);
-populateServices(NUM_BUILDERS_INTERIOR_SERVICES, BUILDERS_INTERIOR_CATEGORY, NUM_REVIEWS_PER_SERVICE);
-populateServices(NUM_AUTO_AUTO_SERVICES, AUTO_AUTO_CATEGORY, NUM_REVIEWS_PER_SERVICE);
-populateServices(NUM_AUTO_TRANSPORT_SERVICES, AUTO_TRANSPORT_CATEGORY, NUM_REVIEWS_PER_SERVICE);
-populateServices(NUM_EVENTS_PHOTO_SERVICES, EVENTS_PHOTO_CATEGORY, NUM_REVIEWS_PER_SERVICE);
-populateServices(NUM_EVENTS_DECORATIONS_SERVICES, EVENTS_DECORATIONS_CATEGORY, NUM_REVIEWS_PER_SERVICE);
-populateServices(NUM_LESSONS_SERVICES, LESSONS_CATEGORY, NUM_REVIEWS_PER_SERVICE);
-populateServices(NUM_CLEANING_SERVICES, CLEANING_CATEGORY, NUM_REVIEWS_PER_SERVICE);
+// populateServices(NUM_REPAIRS_SERVICES, REPAIRS_CATEGORY);
+// populateServices(NUM_BUILDERS_INSTALLATIONS_SERVICES, BUILDERS_INSTALLATIONS_CATEGORY);
+// populateServices(NUM_BUILDERS_CONSTRUCTIONS_SERVICES, BUILDERS_CONSTRUCTIONS_CATEGORY);
+// populateServices(NUM_BUILDERS_ROOFS_SERVICES, BUILDERS_ROOFS_CATEGORY);
+// populateServices(NUM_BUILDERS_INTERIOR_SERVICES, BUILDERS_INTERIOR_CATEGORY);
+// populateServices(NUM_AUTO_AUTO_SERVICES, AUTO_AUTO_CATEGORY);
+// populateServices(NUM_AUTO_TRANSPORT_SERVICES, AUTO_TRANSPORT_CATEGORY);
+// populateServices(NUM_EVENTS_PHOTO_SERVICES, EVENTS_PHOTO_CATEGORY);
+// populateServices(NUM_EVENTS_DECORATIONS_SERVICES, EVENTS_DECORATIONS_CATEGORY);
+// populateServices(NUM_LESSONS_SERVICES, LESSONS_CATEGORY);
+populateServices(NUM_CLEANING_SERVICES, CLEANING_CATEGORY);
 
 // console.log(services);
 

@@ -26,14 +26,14 @@ const ServiceSchema = new mongoose.Schema({
         maxlength: [100, "Cannot exceed 100 characters"],
         enum: [
             "Services>Repairs: PC, Electronics, Home Appliances",
-            "Services>Craftsmen&Builders>Sanitary, Thermal, AC Installations",
-            "Services>Craftsmen&Builders>Constructions",
-            "Services>Craftsmen&Builders>Roofs",
-            "Services>Craftsmen&Builders>Interior Design",
-            "Services>Auto&Transportation>Car Services",
-            "Services>Auto&Transportation>Transport Services",
-            "Services>Events>Photo&Video",
-            "Services>Events>Floral Arrangements&Decorations",
+            "Services>Craftsmen & Builders>Sanitary, Thermal, AC Installations",
+            "Services>Craftsmen & Builders>Constructions",
+            "Services>Craftsmen & Builders>Roofs",
+            "Services>Craftsmen & Builders>Interior Design",
+            "Services>Auto & Transportation>Car Services",
+            "Services>Auto & Transportation>Transport Services",
+            "Services>Events>Photo & Video",
+            "Services>Events>Floral Arrangements & Decorations",
             "Services>Private Lessons",
             "Services>Cleaning",
         ], // the only values it can have
@@ -119,9 +119,16 @@ const ServiceSchema = new mongoose.Schema({
     },
     paymentCanProceedUsers: {
         type: [{
-            type: mongoose.Schema.Types.ObjectId,
-            required: true,
-            ref: "User",
+            user: {
+                type: mongoose.Schema.Types.ObjectId,
+                required: true,
+                ref: "User",
+            },
+            hasPaid: {
+                type: Boolean,
+                required: true,
+                default: false,
+            },
         }, ],
         default: [],
     },
@@ -140,7 +147,7 @@ ServiceSchema.pre("save", function(next) {
         next();
     } else {
         if (!this.paymentCanProceedUsers.includes(this.user)) {
-            this.paymentCanProceedUsers = [...this.paymentCanProceedUsers, this.user];
+            this.paymentCanProceedUsers = [...this.paymentCanProceedUsers, { user: this.user, hasPaid: true }];
             next();
         } else {
             next();
@@ -148,30 +155,34 @@ ServiceSchema.pre("save", function(next) {
     }
 });
 
-// geocode & create locations field
+// geocode & create locations field (provided more request to the API can be made)
 ServiceSchema.pre("save", async function(next) {
     if (!this.isModified("addresses")) {
         next();
     } else {
-        const getLocations = () => {
-            const promises = this.addresses.map(async(address) => {
-                const location = await geocoder.geocode(address);
-                return {
-                    type: "Point",
-                    coordinates: [location[0].longitude, location[0].latitude],
-                    formattedAddress: location[0].formattedAddress,
-                    street: location[0].streetName,
-                    city: location[0].city,
-                    state: location[0].stateCode,
-                    zipcode: location[0].zipcode,
-                    country: location[0].countryCode,
-                };
-            });
-            return Promise.all(promises);
-        };
+        try {
+            const getLocations = () => {
+                const promises = this.addresses.map(async(address) => {
+                    const location = await geocoder.geocode(address);
+                    return {
+                        type: "Point",
+                        coordinates: [location[0].longitude, location[0].latitude],
+                        formattedAddress: location[0].formattedAddress,
+                        street: location[0].streetName,
+                        city: location[0].city,
+                        state: location[0].stateCode,
+                        zipcode: location[0].zipcode,
+                        country: location[0].countryCode,
+                    };
+                });
+                return Promise.all(promises);
+            };
 
-        const locations = await getLocations();
-        this.locations = locations;
+            const locations = await getLocations();
+            this.locations = locations;
+        } catch (error) {
+            console.log(error.message);
+        }
 
         // this.addresses = undefined;
 

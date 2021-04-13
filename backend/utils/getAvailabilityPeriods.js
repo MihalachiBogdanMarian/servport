@@ -251,31 +251,31 @@ const getAvailabilityPeriods = (serviceCategory) => {
             possibleRules = ["1h", "1hS", "2h", "2hS", "3h", "3hS", "4h", "4hS", "6h", "6hS", "1d", "1dS"];
             availabilityPeriods = generateAvailabilityPeriods(possibleRules[(Math.random() * possibleRules.length) | 0]);
             break;
-        case "Services>Craftsmen&Builders>Sanitary, Thermal, AC Installations":
+        case "Services>Craftsmen & Builders>Sanitary, Thermal, AC Installations":
             possibleRules = ["1d", "1dS", "2d", "2dS", "3d", "3dS", "4d", "4dS", "1wS"];
             availabilityPeriods = generateAvailabilityPeriods(possibleRules[(Math.random() * possibleRules.length) | 0]);
             break;
-        case "Services>Craftsmen&Builders>Constructions":
+        case "Services>Craftsmen & Builders>Constructions":
             possibleRules = ["1mS", "3mS", "6mS"];
             availabilityPeriods = generateAvailabilityPeriods(possibleRules[(Math.random() * possibleRules.length) | 0]);
             break;
-        case "Services>Craftsmen&Builders>Roofs":
+        case "Services>Craftsmen & Builders>Roofs":
             possibleRules = ["2wS", "1mS", "3mS"];
             availabilityPeriods = generateAvailabilityPeriods(possibleRules[(Math.random() * possibleRules.length) | 0]);
             break;
-        case "Services>Craftsmen&Builders>Interior Design":
+        case "Services>Craftsmen & Builders>Interior Design":
             possibleRules = ["1d", "1dS", "2d", "2dS", "3d", "3dS", "4d", "4dS", "1wS"];
             availabilityPeriods = generateAvailabilityPeriods(possibleRules[(Math.random() * possibleRules.length) | 0]);
             break;
-        case "Services>Auto&Transportation>Car Services":
+        case "Services>Auto & Transportation>Car Services":
             possibleRules = ["6h", "6hS", "1d", "1dS", "2d", "2dS", "3d", "3dS", "4d", "4dS"];
             availabilityPeriods = generateAvailabilityPeriods(possibleRules[(Math.random() * possibleRules.length) | 0]);
             break;
-        case "Services>Auto&Transportation>Transport Services":
+        case "Services>Auto & Transportation>Transport Services":
             possibleRules = ["1h", "1hS", "2h", "2hS", "3h", "3hS", "4h", "4hS", "6h", "6hS", "1d", "1dS"];
             availabilityPeriods = generateAvailabilityPeriods(possibleRules[(Math.random() * possibleRules.length) | 0]);
             break;
-        case "Services>Events>Photo&Video":
+        case "Services>Events>Photo & Video":
             possibleRules = [
                 "1h",
                 "1hS",
@@ -296,7 +296,7 @@ const getAvailabilityPeriods = (serviceCategory) => {
             ];
             availabilityPeriods = generateAvailabilityPeriods(possibleRules[(Math.random() * possibleRules.length) | 0]);
             break;
-        case "Services>Events>Floral Arrangements&Decorations":
+        case "Services>Events>Floral Arrangements & Decorations":
             possibleRules = ["3h", "3hS", "4h", "4hS", "6h", "6hS", "1d", "1dS"];
             availabilityPeriods = generateAvailabilityPeriods(possibleRules[(Math.random() * possibleRules.length) | 0]);
             break;

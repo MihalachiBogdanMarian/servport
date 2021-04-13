@@ -409,7 +409,7 @@
                                       <OutArgument x:TypeArguments="x:Int32">[listingIndex]</OutArgument>
                                     </Assign.To>
                                     <Assign.Value>
-                                      <InArgument x:TypeArguments="x:Int32">[listingIndex + 38]</InArgument>
+                                      <InArgument x:TypeArguments="x:Int32">[listingIndex + 1]</InArgument>
                                     </Assign.Value>
                                   </Assign>
                                 </Sequence>

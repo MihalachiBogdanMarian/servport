@@ -109,17 +109,21 @@ UserSchema.pre("save", async function(next) {
     if (!this.isModified("address")) {
         next();
     } else {
-        const location = await geocoder.geocode(this.address);
-        this.location = {
-            type: "Point",
-            coordinates: [location[0].longitude, location[0].latitude],
-            formattedAddress: location[0].formattedAddress,
-            street: location[0].streetName,
-            city: location[0].city,
-            state: location[0].stateCode,
-            zipcode: location[0].zipcode,
-            country: location[0].countryCode,
-        };
+        try {
+            const location = await geocoder.geocode(this.address);
+            this.location = {
+                type: "Point",
+                coordinates: [location[0].longitude, location[0].latitude],
+                formattedAddress: location[0].formattedAddress,
+                street: location[0].streetName,
+                city: location[0].city,
+                state: location[0].stateCode,
+                zipcode: location[0].zipcode,
+                country: location[0].countryCode,
+            };
+        } catch (error) {
+            console.log(error.message);
+        }
 
         // do not save address in the db
         // this.address = undefined; // doesn't get put in the JSON

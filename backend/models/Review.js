@@ -11,7 +11,7 @@ const ReviewSchema = new mongoose.Schema({
         type: Number,
         min: [1, "Rating must be at least 1"],
         max: [5, "Rating mustn't be more than 5"],
-        // required: [true, "Please add a rating between 1 and 5"],
+        // required: [true, "Please add a rating between 1 and 5"], // computed by the RNN
     },
     comment: {
         type: String,
