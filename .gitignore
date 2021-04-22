@@ -17,6 +17,9 @@ config/production.json
 /uploads
 /uploads/*
 /datascience/nlp/glove*
+/datascience/nlp/sentiment_analysis_model
+/datascience/nlp/__pycache__
+/datascience/clustering/__pycache__
 
 ######################
 # Node
