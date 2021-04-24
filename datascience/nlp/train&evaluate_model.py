@@ -33,7 +33,7 @@ loss, accuracy = model.evaluate(X_test_indices, Y_test_oh)
 
 print("\nTest accuracy = ", accuracy)
 
-# confusion matrix
+# plot confusion matrix
 plot_confusion_matrix(
     Y_test, np.argmax(model.predict(X_test_indices), axis=1)[[..., None]]
 )

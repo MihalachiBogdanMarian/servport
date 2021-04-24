@@ -15,8 +15,17 @@ from nltk.stem import PorterStemmer, WordNetLemmatizer
 
 config = dotenv_values(".env")
 
+sentiments_dictionary = {
+    0: "Poor",
+    1: "Fair",
+    2: "Good",
+    3: "Very Good",
+    4: "Excellent",
+}
+
 
 def read_glove_vectors(glove_file):
+    # read the pre-trained GloVe word embedding from glove.6B.50d.txt
     with open(os.path.join(sys.path[0], glove_file), "r", encoding="utf8") as f:
         words = set()
         words_to_vectors_mapping = {}
@@ -48,16 +57,24 @@ def add_word_index_vector(
 ):
     ps = PorterStemmer()
     vector = np.zeros((glove_vector_size,))
+    # get next word index
     next_index = max(words_to_indices.values()) + 1
 
     if ps.stem(word) in words_to_indices:
+        # the stem for the word is in the dictionary
         vector = words_to_vectors_mapping[ps.stem(word)]
     else:
         if len(word) > 4:
+            # find ngrams of the word which are in the vocabulary and pick a random embedding
+            ngrams = []
             for n in range(4, len(word)):
                 for ngram in [word[i : i + n] for i in range(len(word) - n + 1)]:
                     if ngram in words_to_indices:
-                        vector = words_to_vectors_mapping[ngram]
+                        ngrams.append(ngram)
+            if ngrams:
+                vector = words_to_vectors_mapping[random.choice(ngrams)]
+
+            # else let the 0 embedding be set
 
     words_to_indices[word] = next_index
     indices_to_words[next_index] = word
@@ -84,9 +101,12 @@ def preprocess_comment(comment):
     # remove multiple spaces
     comment = re.sub(r"\s+", " ", comment)
 
+    # get tokens
     tokens = comment.split()
+    # lemmatize all words
     tokens = [wnl.lemmatize(word) for word in tokens]
 
+    # reform the preprocessed sentence
     return (" ".join(tokens)).lower()
 
 
@@ -147,15 +167,6 @@ def label_to_sentiment(label):
     return sentiments_dictionary[label]
 
 
-sentiments_dictionary = {
-    0: "Poor",
-    1: "Fair",
-    2: "Good",
-    3: "Very Good",
-    4: "Excellent",
-}
-
-
 def plot_confusion_matrix(
     Y_actual, Y_predicted, title="Confusion Matrix", cmap=plt.cm.gray_r
 ):
@@ -190,7 +201,6 @@ def plot_confusion_matrix(
     tick_marks = np.arange(len(df_confusion.columns))
     plt.xticks(tick_marks, df_confusion.columns, rotation=45)
     plt.yticks(tick_marks, df_confusion.index)
-    # plt.tight_layout()
     plt.ylabel(df_confusion.index.name)
     plt.xlabel(df_confusion.columns.name)
     plt.show()

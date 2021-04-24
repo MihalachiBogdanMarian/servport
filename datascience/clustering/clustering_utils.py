@@ -8,6 +8,8 @@ from dotenv import dotenv_values
 from IPython.display import display
 from pymongo import MongoClient
 from scipy.spatial import distance
+from sklearn.manifold import TSNE  # T-Distributed Stochastic Neighbor Embedding
+from sklearn.preprocessing import StandardScaler  # used for feature scaling
 
 config = dotenv_values(".env")
 
@@ -19,13 +21,14 @@ def get_service_vectors():
     # }
 
     client = MongoClient(config["MONGO_URI"])
+
     db = client.servport
 
     services = db.services
 
     service_vectors = {}
 
-    for service in services.find():
+    for service in services.find().limit(100):
         service_vector = np.zeros([6], dtype="float")
 
         # AVG_PRICE
@@ -107,7 +110,7 @@ def get_services_dataframe():
         ]
     )
 
-    for service in services.find():
+    for service in services.find().limit(100):
         services_df = services_df.append(
             {
                 "Id": str(service["_id"]),
@@ -128,13 +131,25 @@ def get_services_dataframe():
     return services_df
 
 
-def get_distance(service_vector1, service_vector2, distance_metric, minkowski_r=2):
+def get_distance(x, centroids, distance_metric, minkowski_r=2):
     if distance_metric == "minkowski":
-        return distance.minkowski(service_vector1, service_vector2, minkowski_r)
+        return ((x - centroids) ** minkowski_r).sum(axis=centroids.ndim - 1) ** (
+            1 / minkowski_r
+        )
     elif distance_metric == "cosine":
-        return 1 - distance.cosine(service_vector1, service_vector2)
+        x = np.transpose(x[..., None])
+        centroids = np.transpose(centroids)
+        return np.squeeze(np.dot(x, centroids)) / (
+            np.linalg.norm(x) * np.linalg.norm(centroids)
+        )
     elif distance_metric == "pearson":
-        return 1 - distance.correlation(service_vector1, service_vector2)
+        x = x - np.average(x)
+        x = np.transpose(x[..., None])
+        centroids = centroids - centroids.mean(axis=1, keepdims=True)
+        centroids = np.transpose(centroids)
+        return np.squeeze(np.dot(x, centroids)) / (
+            np.linalg.norm(x) * np.linalg.norm(centroids)
+        )
 
 
 def timer_decorator(function):
@@ -147,3 +162,22 @@ def timer_decorator(function):
         return result
 
     return wrapper
+
+
+def plot_data_t_sne():
+    df = get_services_dataframe()
+    df = df.drop("Id", axis=1)
+
+    plotX = df
+    plotX.columns = df.columns
+
+    # set the perplexity
+    perplexity = 50
+
+    # T-SNE with two dimensions
+    tsne_2d = TSNE(n_components=2, perplexity=perplexity)
+
+    return 0
+
+
+plot_data_t_sne()

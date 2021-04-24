@@ -1,10 +1,3 @@
-from birch_library import *
-from clustering_utils import *
-from kmeans_library import *
-from my_kmeans import *
-
-print(__doc__)
-
 from itertools import cycle
 from time import time
 
@@ -13,6 +6,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.cluster import Birch, MiniBatchKMeans
 from sklearn.datasets import make_blobs
+
+from birch_library import *
+from clustering_utils import *
+from kmeans_library import *
+from my_kmeans2 import *
 
 # Generate centers for the blobs so that it forms a 10 X 10 grid.
 xx = np.linspace(-22, 22, 10)

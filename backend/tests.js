@@ -1,3 +1,4 @@
+import tfjsnode from "@tensorflow/tfjs-node";
 import colors from "colors";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
@@ -10,6 +11,7 @@ dotenv.config();
 
 connectDB();
 
+tfjsnode;
 mongoose;
 colors;
 Request;
@@ -78,3 +80,17 @@ User;
 //         process.exit(1);
 //     }
 // })();
+
+/* LOAD KERAS MODEL AND PREDICT */
+// let model;
+// (async() => {
+//     try {
+//         model = await tf.loadLayersModel("file://../datascience/nlp/sentiment_analysis_model_js/model.json");
+//     } catch (error) {
+//         console.error(error);
+//     }
+// })();
+
+// const sentence = "Horrible product, simply awful!";
+// const prediction = await model.predict(sentence);
+// console.log(prediction);

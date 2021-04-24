@@ -6,7 +6,7 @@ from clustering_utils import *
 
 
 @timer_decorator
-def my_k_means(data, k, cluster_cols=None, tol=0.01, plot_cols=None, plot=True):
+def my_k_means(data, k, cluster_cols=None):
     # extract the columns which enters clustering
     df = data.copy() if cluster_cols is None else data[cluster_cols].copy()
     df = df.drop("Id", axis=1)
@@ -65,13 +65,10 @@ def my_k_means(data, k, cluster_cols=None, tol=0.01, plot_cols=None, plot=True):
         )
         seeds = new_seeds.copy()
 
-    # plotting
-    if plot:
-        sb.pairplot(df, hue="cluster", vars=plot_cols)
-        sb.plt.show()
-
     df["Id"] = data["Id"]
     return df
 
 
-print(my_k_means(get_services_dataframe(), k=3, plot=True))
+clustered_data = my_k_means(get_services_dataframe(), k=3)
+print(clustered_data)
+print(clustered_data.groupby(["Cluster"]).agg(["count"]))

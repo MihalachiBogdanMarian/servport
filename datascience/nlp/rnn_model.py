@@ -11,6 +11,8 @@ X_train, Y_train, X_test, Y_test = read_preprocessed_dataset(
     "backend/data/reviews.json"
 )
 
+# get the max length of a sentence from the dataset
+# sentences introduced by users, longer than the max length, will be cropped by the RNN
 sentence_max_len = len(max(np.concatenate((X_train, X_test)), key=len).split())
 
 words_to_indices, indices_to_words, words_to_vectors_mapping = read_glove_vectors(
@@ -28,7 +30,7 @@ def sentences_to_indices(X, words_to_indices, sentence_max_len):
     # for each training example
     for i in range(m):
         # get list of words
-        sentence_words = X[i].split()
+        sentence_words = X[i].lower().split()
 
         j = 0
 
@@ -64,7 +66,7 @@ def pretrained_embedding_layer(words_to_vectors_mapping, words_to_indices):
     # initialize embedding matrix
     embedding_matrix = np.zeros([vocabulary_length, embedding_dimensionality])
 
-    # fills in the rows of the embedding matrix with the vector representations of each word
+    # fill in the rows of the embedding matrix with the vector representations of each word
     for word, index in words_to_indices.items():
         embedding_matrix[index, :] = words_to_vectors_mapping[word]
 
@@ -85,17 +87,17 @@ def pretrained_embedding_layer(words_to_vectors_mapping, words_to_indices):
 
 
 def sentiment_analysis_model(input_shape, words_to_vectors_mapping, words_to_indices):
-    # creates the sentiment analysis model graph
+    # create the sentiment analysis model graph
 
     # input of the graph
     sentence_indices = Input(input_shape, dtype="int32")
 
-    # embedding layer pretrained with GloVe Vectors
+    # Embedding layer pretrained with GloVe vectors
     embedding_layer = pretrained_embedding_layer(
         words_to_vectors_mapping, words_to_indices
     )
 
-    # propagates sentence_indices through your embedding layer
+    # propagate sentence_indices through the embedding layer
     embeddings = embedding_layer(sentence_indices)
 
     # LSTM layer with 128-dimensional hidden state (the returned output is a batch of sequences)
@@ -116,7 +118,7 @@ def sentiment_analysis_model(input_shape, words_to_vectors_mapping, words_to_ind
     # softmax Activation
     X = Activation("softmax")(X)
 
-    # Model - converts sentence_indices into X
+    # Model - convert sentence_indices into X
     model = Model(inputs=sentence_indices, outputs=X)
 
     return model

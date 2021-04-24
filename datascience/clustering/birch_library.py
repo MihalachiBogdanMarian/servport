@@ -17,7 +17,7 @@ def birch_lib(data, k):
     return data
 
 
-# clustered_data = birch_lib(get_service_vectors(), k=3)
+# clustered_data = birch_lib(np.stack(data_cl.values(), axis=0), k=3)
 # print(len([x for x in clustered_data.values() if x[6] == 0.0]))
 # print(len([x for x in clustered_data.values() if x[6] == 1.0]))
 # print(len([x for x in clustered_data.values() if x[6] == 2.0]))
