@@ -1,6 +1,7 @@
 import pprint
 import time
 
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from bson.objectid import ObjectId
@@ -180,4 +181,44 @@ def plot_data_t_sne():
     return 0
 
 
-plot_data_t_sne()
+def find_best_k_elbow_method():
+    service_vectors = get_service_vectors()
+    sse = []
+    for k in range(2, 11):
+        _, _, sse_value = my_k_means(service_vectors, k)
+        sse.append(sse_value)
+
+    plt.style.use("fivethirtyeight")
+    plt.plot(range(2, 11), sse)
+    plt.xticks(range(2, 11))
+    plt.xlabel("Number of Clusters")
+    plt.ylabel("SSE")
+    plt.show()
+
+    kl = KneeLocator(range(2, 11), sse, curve="convex", direction="decreasing")
+
+    return kl.elbow
+
+
+def find_best_k_silhouette_coefficient():
+    service_vectors = get_service_vectors()
+    service_vectors_arrays = np.stack(service_vectors.values(), axis=0)
+    silhouette_coefficients = []
+
+    for k in range(2, 11):
+        _, assigned_centroids, _ = my_k_means(service_vectors, k)
+        score = silhouette_score(service_vectors_arrays, assigned_centroids)
+        silhouette_coefficients.append(score)
+
+    plt.style.use("fivethirtyeight")
+    plt.plot(range(2, 11), silhouette_coefficients)
+    plt.xticks(range(2, 11))
+    plt.xlabel("Number of Clusters")
+    plt.ylabel("Silhouette Coefficient")
+    plt.show()
+
+
+# plot_data_t_sne()
+
+# print(find_best_k_elbow_method())
+# find_best_k_silhouette_coefficient()

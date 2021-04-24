@@ -1,3 +1,4 @@
+import tf from "@tensorflow/tfjs";
 import tfjsnode from "@tensorflow/tfjs-node";
 import colors from "colors";
 import dotenv from "dotenv";
@@ -82,15 +83,19 @@ User;
 // })();
 
 /* LOAD KERAS MODEL AND PREDICT */
-// let model;
-// (async() => {
-//     try {
-//         model = await tf.loadLayersModel("file://../datascience/nlp/sentiment_analysis_model_js/model.json");
-//     } catch (error) {
-//         console.error(error);
-//     }
-// })();
+let model;
+(async() => {
+    try {
+        model = await tf.loadLayersModel("file://../datascience/nlp/sentiment_analysis_model_js/model.json");
+    } catch (error) {
+        console.error(error);
+    }
+})();
 
-// const sentence = "Horrible product, simply awful!";
-// const prediction = await model.predict(sentence);
-// console.log(prediction);
+const sentence = "Horrible product, simply awful!";
+
+let prediction;
+(async() => {
+    prediction = await model.predict(sentence);
+})();
+console.log(prediction);
