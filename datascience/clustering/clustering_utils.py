@@ -1,21 +1,28 @@
 import pprint
+import random
 import time
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import plotly.graph_objs as go
+import seaborn as sns
 from bson.objectid import ObjectId
 from dotenv import dotenv_values
 from IPython.display import display
+from kneed import KneeLocator
+from plotly.offline import iplot
 from pymongo import MongoClient
 from scipy.spatial import distance
 from sklearn.manifold import TSNE  # T-Distributed Stochastic Neighbor Embedding
+from sklearn.metrics import silhouette_score
 from sklearn.preprocessing import StandardScaler  # used for feature scaling
 
 config = dotenv_values(".env")
 
 
-def get_service_vectors():
+def get_service_vectors(with_clusters=False):
+    # turn all services into feature vectors and store them in a dict with the service ids as keys
     # {
     #   ID: [AVG_PRICE, RATING, NUM_REVIEWS, NUM_VIEWS, NUM_INTERESTED, NUM_AVAILABILITY_PERIODS]
     #   ...
@@ -29,8 +36,11 @@ def get_service_vectors():
 
     service_vectors = {}
 
-    for service in services.find().limit(100):
-        service_vector = np.zeros([6], dtype="float")
+    for service in services.find():
+        if not with_clusters:
+            service_vector = np.zeros([6], dtype="float")
+        else:
+            service_vector = np.zeros([7], dtype="float")
 
         # AVG_PRICE
         service_vector[0] = float(
@@ -52,6 +62,10 @@ def get_service_vectors():
         # NUM_AVAILABILITY_PERIODS
         service_vector[5] = float(len(service["availabilityPeriods"]))
 
+        if with_clusters:
+            if "cluster" in service:
+                service_vector[6] = service["cluster"]
+
         # ID
         service_vectors[str(service["_id"])] = service_vector
 
@@ -61,6 +75,8 @@ def get_service_vectors():
 
 
 def get_service_vector(service_id):
+    # get feature vector for one particular service given by id
+
     client = MongoClient(config["MONGO_URI"])
     db = client.servport
 
@@ -93,12 +109,90 @@ def get_service_vector(service_id):
     return service_vector
 
 
-def get_services_dataframe():
+def get_services_dataframe(with_clusters=False):
+    # get data points in the form of pandas dataframe
+
     client = MongoClient(config["MONGO_URI"])
     db = client.servport
 
     services = db.services
 
+    services_df = None
+    if not with_clusters:
+        services_df = pd.DataFrame(
+            columns=[
+                "Id",
+                "AvgPrice",
+                "Rating",
+                "NumReviews",
+                "NumViews",
+                "NumInterested",
+                "NumAvailabilityPeriods",
+            ]
+        )
+    else:
+        services_df = pd.DataFrame(
+            columns=[
+                "Id",
+                "AvgPrice",
+                "Rating",
+                "NumReviews",
+                "NumViews",
+                "NumInterested",
+                "NumAvailabilityPeriods",
+                "Cluster",
+            ]
+        )
+
+    for service in services.find():
+        if not with_clusters:
+            services_df = services_df.append(
+                {
+                    "Id": str(service["_id"]),
+                    "AvgPrice": float(
+                        (service["price"]["minPrice"] + service["price"]["maxPrice"])
+                        / 2
+                    ),
+                    "Rating": float(service["rating"]),
+                    "NumReviews": float(len(service["reviews"])),
+                    "NumViews": float(service["numViews"]),
+                    "NumInterested": float(service["numInterested"]),
+                    "NumAvailabilityPeriods": float(
+                        len(service["availabilityPeriods"])
+                    ),
+                },
+                ignore_index=True,
+            )
+        else:
+            if "cluster" in service:
+                services_df = services_df.append(
+                    {
+                        "Id": str(service["_id"]),
+                        "AvgPrice": float(
+                            (
+                                service["price"]["minPrice"]
+                                + service["price"]["maxPrice"]
+                            )
+                            / 2
+                        ),
+                        "Rating": float(service["rating"]),
+                        "NumReviews": float(len(service["reviews"])),
+                        "NumViews": float(service["numViews"]),
+                        "NumInterested": float(service["numInterested"]),
+                        "NumAvailabilityPeriods": float(
+                            len(service["availabilityPeriods"])
+                        ),
+                        "Cluster": float(service["cluster"]),
+                    },
+                    ignore_index=True,
+                )
+
+    client.close()
+
+    return services_df
+
+
+def turn_clustered_data_into_dataframe(clustered_data):
     services_df = pd.DataFrame(
         columns=[
             "Id",
@@ -111,28 +205,26 @@ def get_services_dataframe():
         ]
     )
 
-    for service in services.find().limit(100):
+    for service_id, clustered_feature_vector in clustered_data.items():
         services_df = services_df.append(
             {
-                "Id": str(service["_id"]),
-                "AvgPrice": float(
-                    (service["price"]["minPrice"] + service["price"]["maxPrice"]) / 2
-                ),
-                "Rating": float(service["rating"]),
-                "NumReviews": float(len(service["reviews"])),
-                "NumViews": float(service["numViews"]),
-                "NumInterested": float(service["numInterested"]),
-                "NumAvailabilityPeriods": float(len(service["availabilityPeriods"])),
+                "Id": service_id,
+                "AvgPrice": clustered_feature_vector[0],
+                "Rating": clustered_feature_vector[1],
+                "NumReviews": clustered_feature_vector[2],
+                "NumViews": clustered_feature_vector[3],
+                "NumInterested": clustered_feature_vector[4],
+                "NumAvailabilityPeriods": clustered_feature_vector[5],
+                "Cluster": clustered_feature_vector[6],
             },
             ignore_index=True,
         )
-
-    client.close()
 
     return services_df
 
 
 def get_distance(x, centroids, distance_metric, minkowski_r=2):
+    # similarity measures
     if distance_metric == "minkowski":
         return ((x - centroids) ** minkowski_r).sum(axis=centroids.ndim - 1) ** (
             1 / minkowski_r
@@ -153,6 +245,28 @@ def get_distance(x, centroids, distance_metric, minkowski_r=2):
         )
 
 
+def get_closest_centroid(x, centroids):
+    # get distances between the data point and all centroids
+    dist = get_distance(x, centroids, "minkowski", minkowski_r=2)
+
+    # get the index of the centroid with the smallest distance to the data point
+    closest_centroid_index = np.argmin(dist, axis=1)
+
+    return closest_centroid_index
+
+
+def compute_sse(data, centroids, assigned_centroids):
+    # initialise Sum of Squared Errors
+    sse = 0
+
+    # compute sse
+    sse = get_distance(
+        data, centroids[assigned_centroids], "minkowski", minkowski_r=2
+    ).sum() / len(data)
+
+    return sse
+
+
 def timer_decorator(function):
     # adds timer functionality to function (for how long did it run)
     def wrapper(*args, **kwargs):
@@ -165,60 +279,112 @@ def timer_decorator(function):
     return wrapper
 
 
-def plot_data_t_sne():
-    df = get_services_dataframe()
-    df = df.drop("Id", axis=1)
+def plot_separate_clustered_attributes(clustered_data):
+    service_vectors_clustered = np.stack(clustered_data.values(), axis=0)
+    titles = {
+        0: "average price",
+        1: "rating",
+        2: "num. of reviews",
+        3: "num. of views",
+        4: "num. of interested",
+        5: "num. of availability periods",
+    }
+    clusters = [int(service_vector[6]) for service_vector in service_vectors_clustered]
 
-    plotX = df
-    plotX.columns = df.columns
+    val = 0.0
+    _, axs = plt.subplots(nrows=2, ncols=3, constrained_layout=True)
+    i = 0
+    for ax in axs.flat:
+        scatter = ax.scatter(
+            service_vectors_clustered[:, i],
+            np.zeros_like(service_vectors_clustered[:, i]) + val,
+            c=clusters,
+        )
+        ax.set_xlabel("value", fontsize=8)
+        ax.set_title(titles[i], fontsize=10)
 
-    # set the perplexity
-    perplexity = 50
+        legend = ax.legend(
+            *scatter.legend_elements(), loc="upper left", title="Clusters"
+        )
+        ax.add_artist(legend)
+
+        i += 1
+
+    plt.show()
+
+
+def plot_data_t_sne(clustered_dataframe, verbose=1, perplexity=50, n_iter=300):
+    df = clustered_dataframe.drop("Id", axis=1)
 
     # T-SNE with two dimensions
-    tsne_2d = TSNE(n_components=2, perplexity=perplexity)
+    tsne_2d = TSNE(
+        n_components=2, verbose=verbose, perplexity=perplexity, n_iter=n_iter
+    )
+    # the two dimensions values, built by T-SNE
+    tsne_2d_results = pd.DataFrame(tsne_2d.fit_transform(df.drop("Cluster", axis=1)))
+    tsne_2d_results.columns = ["TSNE_2D_one", "TSNE_2D_two"]
 
-    return 0
+    df = pd.concat([df, tsne_2d_results], axis=1, join="inner")
+
+    plotting_data = []
+
+    for cluster_index in df["Cluster"].unique():
+        cluster = df[df["Cluster"] == cluster_index]
+
+        r = random.randint(0, 255)
+        g = random.randint(0, 255)
+        b = random.randint(0, 255)
+
+        trace = go.Scatter(
+            x=cluster["TSNE_2D_one"],
+            y=cluster["TSNE_2D_two"],
+            mode="markers",
+            name="cluster " + str(int(cluster_index)),
+            marker=dict(
+                line=dict(
+                    color="rgba(" + str(r) + "," + str(g) + "," + str(b) + ",0.8)",
+                    width=10,
+                )
+            ),
+            text=None,
+        )
+
+        plotting_data.append(trace)
+
+    title = (
+        "visualizing clusters in 2 dimensions using T-SNE (perplexity = "
+        + str(perplexity)
+        + ")"
+    )
+
+    layout = dict(
+        title=title,
+        xaxis=dict(title="TSNE_2D_one", ticklen=5, zeroline=False),
+        yaxis=dict(title="TSNE_2D_two", ticklen=5, zeroline=False),
+    )
+
+    fig = dict(data=plotting_data, layout=layout)
+
+    iplot(fig)
 
 
-def find_best_k_elbow_method():
-    service_vectors = get_service_vectors()
-    sse = []
-    for k in range(2, 11):
-        _, _, sse_value = my_k_means(service_vectors, k)
-        sse.append(sse_value)
+# labels assigned to each cluster/service due to previous manual observations/analysis
+def clusters_to_labels(k):
+    # clusters_to_labels = {
+    #     0: {"label": "label 0"},
+    #     1: {"label": "label 1"},
+    #     2: {"label": "label 2"},
+    #     3: {"label": "label 3"},
+    #     4: {"label": "label 4"},
+    #     5: {"label": "label 5"},
+    #     6: {"label": "label 6"},
+    #     7: {"label": "label 7"},
+    #     8: {"label": "label 8"},
+    #     9: {"label": "label 9"},
+    # }
 
-    plt.style.use("fivethirtyeight")
-    plt.plot(range(2, 11), sse)
-    plt.xticks(range(2, 11))
-    plt.xlabel("Number of Clusters")
-    plt.ylabel("SSE")
-    plt.show()
+    clusters_to_labels = {}
+    for i in range(0, k):
+        clusters_to_labels[i] = {"label": "label " + str(i)}
 
-    kl = KneeLocator(range(2, 11), sse, curve="convex", direction="decreasing")
-
-    return kl.elbow
-
-
-def find_best_k_silhouette_coefficient():
-    service_vectors = get_service_vectors()
-    service_vectors_arrays = np.stack(service_vectors.values(), axis=0)
-    silhouette_coefficients = []
-
-    for k in range(2, 11):
-        _, assigned_centroids, _ = my_k_means(service_vectors, k)
-        score = silhouette_score(service_vectors_arrays, assigned_centroids)
-        silhouette_coefficients.append(score)
-
-    plt.style.use("fivethirtyeight")
-    plt.plot(range(2, 11), silhouette_coefficients)
-    plt.xticks(range(2, 11))
-    plt.xlabel("Number of Clusters")
-    plt.ylabel("Silhouette Coefficient")
-    plt.show()
-
-
-# plot_data_t_sne()
-
-# print(find_best_k_elbow_method())
-# find_best_k_silhouette_coefficient()
+    return clusters_to_labels

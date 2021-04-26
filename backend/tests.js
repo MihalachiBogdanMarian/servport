@@ -1,8 +1,10 @@
 import tf from "@tensorflow/tfjs";
-import tfjsnode from "@tensorflow/tfjs-node";
+// import tfjsnode from "@tensorflow/tfjs-node";
+import { spawn } from "child_process";
 import colors from "colors";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
+import path from "path";
 import connectDB from "./config/db.js";
 import Request from "./models/Request.js";
 import Service from "./models/Service.js";
@@ -12,7 +14,10 @@ dotenv.config();
 
 connectDB();
 
-tfjsnode;
+tf;
+// tfjsnode;
+spawn;
+path;
 mongoose;
 colors;
 Request;
