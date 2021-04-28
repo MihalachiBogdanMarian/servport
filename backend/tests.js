@@ -40,67 +40,72 @@ User;
 // await service.save();
 
 /* CALL PYTHON SCRIPT */
-// const logOutput = (name) => (message) => console.log(`[${name}] ${message}`);
+const logOutput = (name) => (message) => console.log(`[${name}] ${message}`);
 
-// function run() {
-//     return new Promise((resolve, reject) => {
-//         const process = spawn("python", [
-//             path.join(path.resolve(path.dirname("")), "/datascience/nlp/sentiment_analysis.py"),
-//             "Perfect service!",
-//         ]);
+function run() {
+    return new Promise((resolve, reject) => {
+        // const process = spawn("python", [
+        //     path.join(path.resolve(path.dirname("")), "/datascience/nlp/sentiment_analysis.py"),
+        //     "Perfect service!",
+        // ]);
+        const process = spawn("python", [
+            path.join(path.resolve(path.dirname("")), "/datascience/clustering/knn.py"),
+            "60841adf5a226330888f7070",
+        ]);
 
-//         const out = [];
-//         process.stdout.on("data", (data) => {
-//             out.push(data.toString());
-//             logOutput("stdout")(data);
-//         });
+        const out = [];
+        process.stdout.on("data", (data) => {
+            out.push(data.toString());
+            logOutput("stdout")(data);
+        });
 
-//         const err = [];
-//         process.stderr.on("data", (data) => {
-//             err.push(data.toString());
-//             logOutput("stderr")(data);
-//         });
+        const err = [];
+        process.stderr.on("data", (data) => {
+            err.push(data.toString());
+            logOutput("stderr")(data);
+        });
 
-//         process.on("exit", (code, signal) => {
-//             logOutput("exit")(`${code} (${signal})`);
-//             if (code !== 0) {
-//                 reject(new Error(err.join("\n")));
-//                 return;
-//             }
-//             try {
-//                 resolve(JSON.parse(out[0]));
-//             } catch (e) {
-//                 reject(e);
-//             }
-//         });
-//     });
-// }
+        process.on("exit", (code, signal) => {
+            logOutput("exit")(`${code} (${signal})`);
+            if (code !== 0) {
+                reject(new Error(err.join("\n")));
+                return;
+            }
+            try {
+                console.log(out);
+                resolve(JSON.parse(out[0]));
+            } catch (e) {
+                reject(e);
+            }
+        });
+    });
+}
 
-// (async() => {
-//     try {
-//         const output = await run();
-//         logOutput("main")(output.message);
-//         process.exit(0);
-//     } catch (e) {
-//         console.error("Error during script execution ", e.stack);
-//         process.exit(1);
-//     }
-// })();
-
-/* LOAD KERAS MODEL AND PREDICT */
-let model;
 (async() => {
     try {
-        model = await tf.loadLayersModel("file://../datascience/nlp/sentiment_analysis_model_js/model.json");
-    } catch (error) {
-        console.error(error);
+        const output = await run();
+        logOutput("main")(output);
+        process.exit(0);
+    } catch (e) {
+        console.error("Error during script execution ", e.stack);
+        process.exit(1);
     }
 })();
 
-const sentence = "Horrible product, simply awful!";
+/* LOAD KERAS MODEL AND PREDICT */
+// let model;
+// (async() => {
+//     try {
+//         model = await tf.loadLayersModel("file://../datascience/nlp/sentiment_analysis_model_js/model.json");
+//     } catch (error) {
+//         console.error(error);
+//     }
+// })();
 
-let prediction;
-(async() => {
-    prediction = await model.predict(sentence);
-})();
-console.log(prediction);
+// const sentence = "Horrible product, simply awful!";
+
+// let prediction;
+// (async() => {
+//     prediction = await model.predict(sentence);
+// })();
+// console.log(prediction);

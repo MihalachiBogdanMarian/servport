@@ -1,11 +1,14 @@
+import os
 import pprint
 import random
+import sys
 import time
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import plotly.graph_objs as go
+import plotly.io as pio
 import seaborn as sns
 from bson.objectid import ObjectId
 from dotenv import dotenv_values
@@ -19,6 +22,18 @@ from sklearn.metrics import silhouette_score
 from sklearn.preprocessing import StandardScaler  # used for feature scaling
 
 config = dotenv_values(".env")
+
+
+def timer_decorator(function):
+    # adds timer functionality to function (for how long did it run)
+    def wrapper(*args, **kwargs):
+        t_start = time.time()
+        result = function(*args, **kwargs)
+        t_end = time.time() - t_start
+        print("{} ran for {} secs \n".format(function.__name__, t_end))
+        return result
+
+    return wrapper
 
 
 def get_service_vectors(with_clusters=False):
@@ -36,7 +51,7 @@ def get_service_vectors(with_clusters=False):
 
     service_vectors = {}
 
-    for service in services.find():
+    for service in services.find().limit(100):
         if not with_clusters:
             service_vector = np.zeros([6], dtype="float")
         else:
@@ -144,7 +159,7 @@ def get_services_dataframe(with_clusters=False):
             ]
         )
 
-    for service in services.find():
+    for service in services.find().limit(100):
         if not with_clusters:
             services_df = services_df.append(
                 {
@@ -223,10 +238,10 @@ def turn_clustered_data_into_dataframe(clustered_data):
     return services_df
 
 
-def get_distance(x, centroids, distance_metric, minkowski_r=2):
+def compute_distance(x, centroids, distance_metric, minkowski_r=2):
     # similarity measures
     if distance_metric == "minkowski":
-        return ((x - centroids) ** minkowski_r).sum(axis=centroids.ndim - 1) ** (
+        return ((x - centroids) ** minkowski_r).sum(axis=x.ndim - 1) ** (
             1 / minkowski_r
         )
     elif distance_metric == "cosine":
@@ -245,40 +260,6 @@ def get_distance(x, centroids, distance_metric, minkowski_r=2):
         )
 
 
-def get_closest_centroid(x, centroids):
-    # get distances between the data point and all centroids
-    dist = get_distance(x, centroids, "minkowski", minkowski_r=2)
-
-    # get the index of the centroid with the smallest distance to the data point
-    closest_centroid_index = np.argmin(dist, axis=1)
-
-    return closest_centroid_index
-
-
-def compute_sse(data, centroids, assigned_centroids):
-    # initialise Sum of Squared Errors
-    sse = 0
-
-    # compute sse
-    sse = get_distance(
-        data, centroids[assigned_centroids], "minkowski", minkowski_r=2
-    ).sum() / len(data)
-
-    return sse
-
-
-def timer_decorator(function):
-    # adds timer functionality to function (for how long did it run)
-    def wrapper(*args, **kwargs):
-        t_start = time.time()
-        result = function(*args, **kwargs)
-        t_end = time.time() - t_start
-        print("{} ran for {} secs \n".format(function.__name__, t_end))
-        return result
-
-    return wrapper
-
-
 def plot_separate_clustered_attributes(clustered_data):
     service_vectors_clustered = np.stack(clustered_data.values(), axis=0)
     titles = {
@@ -292,9 +273,29 @@ def plot_separate_clustered_attributes(clustered_data):
     clusters = [int(service_vector[6]) for service_vector in service_vectors_clustered]
 
     val = 0.0
-    _, axs = plt.subplots(nrows=2, ncols=3, constrained_layout=True)
-    i = 0
-    for ax in axs.flat:
+
+    # _, axs = plt.subplots(nrows=2, ncols=3, constrained_layout=True)
+    # i = 0
+    # for ax in axs.flat:
+    #     scatter = ax.scatter(
+    #         service_vectors_clustered[:, i],
+    #         np.zeros_like(service_vectors_clustered[:, i]) + val,
+    #         c=clusters,
+    #     )
+    #     ax.set_xlabel("value", fontsize=8)
+    #     ax.set_title(titles[i], fontsize=10)
+
+    #     legend = ax.legend(
+    #         *scatter.legend_elements(), loc="upper left", title="Clusters"
+    #     )
+    #     ax.add_artist(legend)
+
+    #     i += 1
+
+    # plt.show()
+
+    for i in range(0, 6):
+        _, ax = plt.subplots()
         scatter = ax.scatter(
             service_vectors_clustered[:, i],
             np.zeros_like(service_vectors_clustered[:, i]) + val,
@@ -308,9 +309,7 @@ def plot_separate_clustered_attributes(clustered_data):
         )
         ax.add_artist(legend)
 
-        i += 1
-
-    plt.show()
+        plt.show()
 
 
 def plot_data_t_sne(clustered_dataframe, verbose=1, perplexity=50, n_iter=300):
@@ -363,28 +362,28 @@ def plot_data_t_sne(clustered_dataframe, verbose=1, perplexity=50, n_iter=300):
         yaxis=dict(title="TSNE_2D_two", ticklen=5, zeroline=False),
     )
 
-    fig = dict(data=plotting_data, layout=layout)
+    fig = go.Figure(data=plotting_data, layout=layout)
 
-    iplot(fig)
+    fig.write_html(os.path.join(sys.path[0], "t_sne.html"), auto_open=True)
 
 
 # labels assigned to each cluster/service due to previous manual observations/analysis
 def clusters_to_labels(k):
-    # clusters_to_labels = {
-    #     0: {"label": "label 0"},
-    #     1: {"label": "label 1"},
-    #     2: {"label": "label 2"},
-    #     3: {"label": "label 3"},
-    #     4: {"label": "label 4"},
-    #     5: {"label": "label 5"},
-    #     6: {"label": "label 6"},
-    #     7: {"label": "label 7"},
-    #     8: {"label": "label 8"},
-    #     9: {"label": "label 9"},
-    # }
+    clusters_to_labels = {
+        0: {"price": "small", "rating": "small", "numReviews": "small"},
+        1: {"price": "medium", "rating": "small", "numReviews": "small"},
+        2: {"price": "large", "rating": "small", "numReviews": "medium"},
+        3: {"price": "small", "rating": "medium", "numReviews": "small"},
+        4: {"price": "medium", "rating": "medium", "numReviews": "large"},
+        5: {"price": "large", "rating": "medium", "numReviews": "small"},
+        6: {"price": "small", "rating": "large", "numReviews": "medium"},
+        7: {"price": "medium", "rating": "large", "numReviews": "medium"},
+        8: {"price": "large", "rating": "large", "numReviews": "large"},
+        9: {"price": "large", "rating": "large", "numReviews": "large"},
+    }
 
-    clusters_to_labels = {}
-    for i in range(0, k):
-        clusters_to_labels[i] = {"label": "label " + str(i)}
+    # clusters_to_labels = {}
+    # for i in range(0, k):
+    #     clusters_to_labels[i] = {"label": "label " + str(i)}
 
     return clusters_to_labels

@@ -5,11 +5,28 @@ from clustering_utils import *
 
 @timer_decorator
 def my_kmeans(data, k):
+    def get_closest_centroid(x, centroids):
+        # get distances between the data point and all centroids
+        dist = compute_distance(x, centroids, "minkowski", minkowski_r=2)
+
+        # get the index of the centroid with the smallest distance to the data point
+        closest_centroid_index = np.argmin(dist, axis=1)
+
+        return closest_centroid_index
+
+    def compute_sse(data, centroids, assigned_centroids):
+        # initialise Sum of Squared Errors
+        sse = 0
+
+        # compute sse
+        sse = compute_distance(
+            data, centroids[assigned_centroids], "minkowski", minkowski_r=2
+        ).sum() / len(data)
+
+        return sse
+
     # turn data dictionary into array of feature vectors
     data_vectors = np.stack(data.values(), axis=0)
-
-    # shuffle data
-    np.random.shuffle(data_vectors)
 
     # initialise centroids (k different values from the dataset)
     centroids = data_vectors[random.sample(range(data_vectors.shape[0]), k)]
@@ -18,7 +35,7 @@ def my_kmeans(data, k):
     assigned_centroids = np.zeros(len(data_vectors), dtype=np.float64)
 
     # list storing sse for each iteration
-    sse_list = []
+    sse_list = [-1]
 
     # main loop (iterations)
     while True:
