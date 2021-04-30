@@ -51,7 +51,7 @@ def get_service_vectors(with_clusters=False):
 
     service_vectors = {}
 
-    for service in services.find().limit(100):
+    for service in services.find():
         if not with_clusters:
             service_vector = np.zeros([6], dtype="float")
         else:
@@ -159,7 +159,7 @@ def get_services_dataframe(with_clusters=False):
             ]
         )
 
-    for service in services.find().limit(100):
+    for service in services.find():
         if not with_clusters:
             services_df = services_df.append(
                 {
