@@ -4,23 +4,25 @@ from clustering_utils import *
 
 
 @timer_decorator
-def my_kmeans(data, k):
-    def get_closest_centroid(x, centroids):
+def my_kmeans(data, k, similarity_measure="minkowski", minkowski_r=2):
+    def get_closest_centroids(X, centroids, similarity_measure="minkowski", minkowski_r=2):
         # get distances between the data point and all centroids
-        dist = compute_distance(x, centroids, "minkowski", minkowski_r=2)
+        dist = compute_distance(X, centroids, similarity_measure, minkowski_r=minkowski_r)
 
         # get the index of the centroid with the smallest distance to the data point
         closest_centroid_index = np.argmin(dist, axis=1)
 
         return closest_centroid_index
 
-    def compute_sse(data, centroids, assigned_centroids):
+    def compute_sse(
+        data, centroids, assigned_centroids, similarity_measure="minkowski", minkowski_r=2
+    ):
         # initialise Sum of Squared Errors
         sse = 0
 
         # compute sse
         sse = compute_distance(
-            data, centroids[assigned_centroids], "minkowski", minkowski_r=2
+            data, centroids[assigned_centroids], similarity_measure, minkowski_r=minkowski_r
         ).sum() / len(data)
 
         return sse
@@ -40,8 +42,8 @@ def my_kmeans(data, k):
     # main loop (iterations)
     while True:
         # get closest centroids to each data point
-        assigned_centroids = get_closest_centroid(
-            data_vectors[:, None, :], centroids[None, :, :]
+        assigned_centroids = get_closest_centroids(
+            data_vectors[:, None, :], centroids[None, :, :], similarity_measure=similarity_measure, minkowski_r=minkowski_r
         )
 
         # compute new centroids
@@ -57,7 +59,7 @@ def my_kmeans(data, k):
 
         # compute sse
         sse = compute_sse(
-            data_vectors.squeeze(), centroids.squeeze(), assigned_centroids
+            data_vectors.squeeze(), centroids.squeeze(), assigned_centroids, similarity_measure=similarity_measure, minkowski_r=minkowski_r
         )
         sse_list.append(sse)
 

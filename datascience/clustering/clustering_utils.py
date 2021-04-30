@@ -238,25 +238,25 @@ def turn_clustered_data_into_dataframe(clustered_data):
     return services_df
 
 
-def compute_distance(x, centroids, distance_metric, minkowski_r=2):
+def compute_distance(X, centroids, distance_metric, minkowski_r=2):
     # similarity measures
     if distance_metric == "minkowski":
-        return ((x - centroids) ** minkowski_r).sum(axis=x.ndim - 1) ** (
+        return ((X - centroids) ** minkowski_r).sum(axis=X.ndim - 1) ** (
             1 / minkowski_r
         )
     elif distance_metric == "cosine":
-        x = np.transpose(x[..., None])
+        X = np.transpose(X[..., None])
         centroids = np.transpose(centroids)
-        return np.squeeze(np.dot(x, centroids)) / (
-            np.linalg.norm(x) * np.linalg.norm(centroids)
+        return np.squeeze(np.dot(X, centroids)) / (
+            np.linalg.norm(X) * np.linalg.norm(centroids)
         )
     elif distance_metric == "pearson":
-        x = x - np.average(x)
-        x = np.transpose(x[..., None])
+        X = X - np.average(X)
+        X = np.transpose(X[..., None])
         centroids = centroids - centroids.mean(axis=1, keepdims=True)
         centroids = np.transpose(centroids)
-        return np.squeeze(np.dot(x, centroids)) / (
-            np.linalg.norm(x) * np.linalg.norm(centroids)
+        return np.squeeze(np.dot(X, centroids)) / (
+            np.linalg.norm(X) * np.linalg.norm(centroids)
         )
 
 

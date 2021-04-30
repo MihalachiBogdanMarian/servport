@@ -6,6 +6,7 @@ from evaluate_algs import *
 data, clusters, _ = my_kmeans(
     get_service_vectors(),
     find_best_k_elbow_method(get_service_vectors(), "kmeans_lib", 2, 11),
+    "minkowski",
 )
 print("num. of clusters: " + str(len(set(clusters))))
 assign_labels_to_clusters_and_store_info_in_database(data, clusters)

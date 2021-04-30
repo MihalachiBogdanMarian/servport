@@ -6,6 +6,6 @@ Database: MongoDB
 
 Data Science: Python
 
-Backend: NodeJS
+Backend: Node.js
 
-Frontend: ReactJS
+Frontend: React.JS

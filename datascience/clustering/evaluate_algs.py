@@ -6,14 +6,26 @@ from kmeans_library import *
 from my_kmeans import *
 
 
-def find_best_k_elbow_method(service_vectors, algorithm, min_k, max_k):
+def find_best_k_elbow_method(
+    service_vectors,
+    algorithm,
+    min_k,
+    max_k,
+    similarity_measure="minkowski",
+    minkowski_r=2,
+):
     sse = []
     for k in range(min_k, max_k):
         sse_value = None
         if algorithm == "kmeans_lib":
             _, _, sse_value = kmeans_lib(service_vectors, k)
         else:
-            _, _, sse_value = my_kmeans(service_vectors, k)
+            _, _, sse_value = my_kmeans(
+                service_vectors,
+                k,
+                similarity_measure=similarity_measure,
+                minkowski_r=minkowski_r,
+            )
         sse.append(sse_value)
 
     plt.style.use("fivethirtyeight")
@@ -28,7 +40,14 @@ def find_best_k_elbow_method(service_vectors, algorithm, min_k, max_k):
     return kl.elbow
 
 
-def find_best_k_silhouette_coefficient(service_vectors, algorithm, min_k, max_k):
+def find_best_k_silhouette_coefficient(
+    service_vectors,
+    algorithm,
+    min_k,
+    max_k,
+    similarity_measure="minkowski",
+    minkowski_r=2,
+):
     service_vectors_arrays = np.stack(service_vectors.values(), axis=0)
     silhouette_coefficients = []
 
@@ -38,7 +57,12 @@ def find_best_k_silhouette_coefficient(service_vectors, algorithm, min_k, max_k)
         elif algorithm == "birch_lib":
             _, assigned_centroids = birch_lib(service_vectors, k)
         else:
-            _, assigned_centroids, _ = my_kmeans(service_vectors, k)
+            _, assigned_centroids, _ = my_kmeans(
+                service_vectors,
+                k,
+                similarity_measure=similarity_measure,
+                minkowski_r=minkowski_r,
+            )
 
         score = silhouette_score(service_vectors_arrays, assigned_centroids)
         silhouette_coefficients.append(score)
