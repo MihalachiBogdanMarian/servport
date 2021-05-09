@@ -28,11 +28,11 @@ dotenv.config();
 // });
 // await user.save();
 
-// const NUM_USERS = 4;
-// const NUM_ADMINS = 1;
+const NUM_USERS = 5;
+const NUM_ADMINS = 1;
 
-const NUM_USERS = 497;
-const NUM_ADMINS = 3;
+// const NUM_USERS = 497;
+// const NUM_ADMINS = 3;
 
 let users = [];
 
@@ -68,14 +68,15 @@ const populateUsers = (numUsers, areAdmins) => {
             (firstName.includes("-") ? firstName.split("-")[0].toLowerCase() : firstName.toLowerCase()) +
             Math.floor(Math.random() * 9000 + 1000) +
             (areAdmins ? ".admin" : "") +
-            "@servport.com";
+            "@yahoo.com";
 
         // PHONE
         phone += Math.floor(Math.random() * 9);
         Array.from(Array(7).keys()).forEach((i) => (phone += Math.floor(Math.random() * 10)));
 
         // PASSWORD
-        Array.from(Array(6).keys()).forEach((i) => (password += Math.floor(Math.random() * 10)));
+        // Array.from(Array(6).keys()).forEach((i) => (password += Math.floor(Math.random() * 10)));
+        Array.from(Array(6).keys()).forEach((i) => (password += i + 1));
 
         // ADDRESS
         address = serviceAddresses[(Math.random() * serviceAddresses.length) | 0].addresses;

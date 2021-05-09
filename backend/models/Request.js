@@ -10,7 +10,6 @@ const RequestSchema = new mongoose.Schema({
     requestServices: [{
         title: { type: String, required: true },
         availabilityPeriod: { type: AvailabilityPeriodSchema, required: true },
-        image: { type: String, required: true },
         price: { type: Number, required: true },
         executionAddress: {
             type: String,
@@ -33,9 +32,8 @@ const RequestSchema = new mongoose.Schema({
         update_time: { type: String },
         email_address: { type: String },
     },
-    totalPrice: {
+    price: {
         type: Number,
-        required: true,
         default: 0.0,
     },
     isPaid: {

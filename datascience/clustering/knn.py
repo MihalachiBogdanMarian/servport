@@ -2,9 +2,12 @@ import json
 import sys
 
 import numpy as np
+from dotenv import dotenv_values
 
 from clustering_utils import *
 from my_kmeans import *
+
+config = dotenv_values(".env")
 
 
 def knn(clustered_data, new_service_id, k):
@@ -49,7 +52,7 @@ execution_start = time.time()
 knn(
     get_service_vectors(with_clusters=True),
     sys.argv[1],
-    9,
+    int(config["KNN_K"]),
 )
 execution_time = time.time() - execution_start
 

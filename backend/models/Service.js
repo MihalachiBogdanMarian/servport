@@ -1,8 +1,12 @@
 import mongoose from "mongoose";
 import geocoder from "../utils/geocoder.js";
+import knn from "../utils/knn.js";
 import AvailabilityPeriodSchema from "./AvailabilityPeriod.js";
 import ReviewSchema from "./Review.js";
 import User from "./User.js";
+
+geocoder;
+knn;
 
 const ServiceSchema = new mongoose.Schema({
     user: {
@@ -124,10 +128,23 @@ const ServiceSchema = new mongoose.Schema({
                 required: true,
                 ref: "User",
             },
+            price: {
+                type: Number,
+            },
             hasPaid: {
                 type: Boolean,
                 required: true,
                 default: false,
+            },
+            addedAt: {
+                type: Date,
+                required: true,
+                default: Date.now(),
+            },
+            expiresAt: {
+                type: Date,
+                required: true,
+                default: new Date(Date.now()).setDate(new Date(Date.now()).getDate() + 1),
             },
         }, ],
         default: [],
@@ -146,7 +163,7 @@ ServiceSchema.pre("save", function(next) {
     if (!this.isModified("paymentCanProceedUsers")) {
         next();
     } else {
-        if (!this.paymentCanProceedUsers.includes(this.user)) {
+        if (!this.paymentCanProceedUsers.some((userWhoCanProceed) => userWhoCanProceed.user === this.user)) {
             this.paymentCanProceedUsers = [...this.paymentCanProceedUsers, { user: this.user, hasPaid: true }];
             next();
         } else {
@@ -205,6 +222,33 @@ ServiceSchema.pre("save", function(next) {
     }
 });
 
+// check if any of the services vector numeric fields has changed
+ServiceSchema.pre("save", function(next) {
+    if (!this.isModified("price") &&
+        !this.isModified("rating") &&
+        !this.isModified("numReviews") &&
+        !this.isModified("numViews") &&
+        !this.isModified("numInterested") &&
+        !this.isModified("availabilityPeriods")
+    ) {
+        this.clusteringFieldsModified = false;
+        next();
+    } else {
+        this.clusteringFieldsModified = true;
+        next();
+    }
+});
+
+// reassign the cluster if any of the services vector numeric fields has changed
+ServiceSchema.post("save", async function(doc, next) {
+    if (doc.clusteringFieldsModified) {
+        await knn(doc._id, next);
+        next();
+    } else {
+        next();
+    }
+});
+
 // recompute the trust score for the user possessing this service when the rating is changing
 ServiceSchema.post("save", async function(doc, next) {
     if (this.previousRating === doc.rating) {
@@ -222,6 +266,8 @@ ServiceSchema.post("save", async function(doc, next) {
         next();
     }
 });
+
+ServiceSchema.index({ title: "text", description: "text" }, { name: "ServiceTextIndex", weights: { animal: 10, description: 7 } });
 
 const Service = mongoose.model("Service", ServiceSchema);
 

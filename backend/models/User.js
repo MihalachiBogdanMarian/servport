@@ -5,6 +5,8 @@ import mongoose from "mongoose";
 import geocoder from "../utils/geocoder.js";
 import AvailabilityPeriodSchema from "./AvailabilityPeriod.js";
 
+geocoder;
+
 const ScheduleSchema = new mongoose.Schema({
     title: { type: String, required: true },
     availabilityPeriod: { type: AvailabilityPeriodSchema, required: true },
@@ -17,6 +19,11 @@ const ScheduleSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: "Service",
+    },
+    completed: {
+        type: Boolean,
+        required: true,
+        default: false,
     },
 });
 
@@ -49,6 +56,16 @@ const UserSchema = new mongoose.Schema({
     resetPasswordToken: String, // reset functionality
     resetPasswordExpire: Date, // expiration date
     isAdmin: {
+        type: Boolean,
+        required: true,
+        default: false,
+    },
+    isWarned: {
+        type: Boolean,
+        required: true,
+        default: false,
+    },
+    isBlocked: {
         type: Boolean,
         required: true,
         default: false,

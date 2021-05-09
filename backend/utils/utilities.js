@@ -11,4 +11,6 @@ const randomSubarray = (array, num = 1) => {
     return result;
 };
 
-export { randomSubarray };
+const logOutput = (name) => (message) => console.log(`[${name}] ${message}`);
+
+export { randomSubarray, logOutput };

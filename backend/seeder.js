@@ -21,21 +21,21 @@ colors;
 
 const importData = async() => {
     try {
-        // await User.deleteMany();
-        // console.log("Users Destroyed!".red.inverse);
-        // await Service.deleteMany();
-        // console.log("Services Destroyed!".red.inverse);
-        // await Request.deleteMany();
-        // console.log("Requests Destroyed!".red.inverse);
+        await User.deleteMany();
+        console.log("Users Destroyed!".red.inverse);
+        await Service.deleteMany();
+        console.log("Services Destroyed!".red.inverse);
+        await Request.deleteMany();
+        console.log("Requests Destroyed!".red.inverse);
 
-        // console.log("Data Destroyed!".red.inverse);
+        console.log("Data Destroyed!".red.inverse);
 
-        // await User.create(users);
-        // console.log("Users Imported!".green.inverse);
+        await User.create(users);
+        console.log("Users Imported!".green.inverse);
         await Service.create(services);
         console.log("Services Imported!".green.inverse);
-        // await Request.create(requests);
-        // console.log("Requests Imported!".green.inverse);
+        await Request.create(requests);
+        console.log("Requests Imported!".green.inverse);
 
         console.log("Data Imported!".green.inverse);
         process.exit();
@@ -49,10 +49,10 @@ const destroyData = async() => {
     try {
         await User.deleteMany();
         console.log("Users Destroyed!".red.inverse);
-        await Service.deleteMany();
-        console.log("Services Destroyed!".red.inverse);
-        await Request.deleteMany();
-        console.log("Requests Destroyed!".red.inverse);
+        await Service.create(services);
+        console.log("Services Imported!".green.inverse);
+        await Request.create(requests);
+        console.log("Requests Imported!".green.inverse);
 
         console.log("Data Destroyed!".red.inverse);
         process.exit();

@@ -10,6 +10,11 @@ const AvailabilityPeriodSchema = new mongoose.Schema({
         type: Date,
         required: [true, "Please add an end time"],
     },
+    scheduled: {
+        type: Boolean,
+        required: true,
+        default: false,
+    },
 });
 
 AvailabilityPeriodSchema.path("endTime").validate(function(value) {
