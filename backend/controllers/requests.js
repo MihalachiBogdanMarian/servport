@@ -121,8 +121,6 @@ const updateRequestToFinishedProvided = asyncHandler(async(req, res, next) => {
 const getMyRequests = asyncHandler(async(req, res, next) => {
     const requests = await Request.find({ user: req.user._id });
 
-    console.log(requests);
-
     res.status(200).json({
         success: true,
         data: requests,
