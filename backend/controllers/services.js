@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import path from "path";
 import asyncHandler from "../middleware/async.js";
 import Service from "../models/Service.js";
+import User from "../models/User.js";
 import ErrorResponse from "../utils/errorResponse.js";
 import geocoder from "../utils/geocoder.js";
 
@@ -185,7 +186,7 @@ const removeAvailabilityPeriods = asyncHandler(async(req, res, next) => {
     }
 
     service.availabilityPeriods = service.availabilityPeriods.filter(
-        (availabilityPeriod) => !availabilityPeriodIds.includes(availabilityPeriod._id)
+        (availabilityPeriod) => !availabilityPeriodIds.includes(availabilityPeriod._id.toString())
     );
 
     await service.save();
@@ -203,18 +204,62 @@ const getPaymentCanProceedUsers = asyncHandler(async(req, res, next) => {
         return next(new ErrorResponse(`Service not found with id of ${req.params.id}`, 404));
     }
 
-    res.status(200).json({ success: true, data: service });
+    const paymentCanProceedUsers = service.paymentCanProceedUsers.filter(
+        (paymentUser) => paymentUser.user != req.user._id.toString()
+    );
+
+    res.status(200).json({ success: true, data: paymentCanProceedUsers });
 });
 
 // @desc    add users to the list of users who can proceed to payment
 // @route   PUT /api/v1/services/:id/payment
 // @access  private
 const addUsersToPayment = asyncHandler(async(req, res, next) => {
-    const service = await Service.findById(req.params.id);
+    const { phonesAndPrices, emailsAndPrices } = req.body;
+
+    let service = await Service.findById(req.params.id);
 
     if (!service) {
         return next(new ErrorResponse(`Service not found with id of ${req.params.id}`, 404));
     }
+
+    const ids = await User.aggregate([{
+            $match: {
+                $or: [
+                    { phone: { $in: phonesAndPrices.map((phoneAndPrice) => phoneAndPrice.phone) } },
+                    { email: { $in: emailsAndPrices.map((emailAndPrice) => emailAndPrice.email) } },
+                ],
+            },
+        },
+        {
+            $project: {
+                _id: 1,
+            },
+        },
+    ]);
+
+    let i = -1;
+    const phoneIdsAndPrices = phonesAndPrices.map((phoneAndPrice) => {
+        i += 1;
+        return { user: ids[i]._id, price: phoneAndPrice.price };
+    });
+    const emailIdsAndPrices = emailsAndPrices.map((emailAndPrice) => {
+        i += 1;
+        return { user: ids[i]._id, price: emailAndPrice.price };
+    });
+
+    const idsAndPrices = phoneIdsAndPrices.concat(emailIdsAndPrices);
+
+    service = await Service.findByIdAndUpdate({ _id: req.params.id }, {
+        $push: {
+            paymentCanProceedUsers: {
+                $each: idsAndPrices,
+                $position: 0,
+            },
+        },
+    });
+
+    service = await Service.findById(req.params.id);
 
     res.status(200).json({ success: true, data: service });
 });
