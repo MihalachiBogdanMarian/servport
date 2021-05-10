@@ -147,11 +147,27 @@ const getPricePercentage = asyncHandler(async(req, res, next) => {
 // @route   POST /api/v1/services/:id/availabilityperiods
 // @access  private
 const addAvailabilityPeriods = asyncHandler(async(req, res, next) => {
-    const service = await Service.findById(req.params.id);
+    const { availabilityPeriods } = req.body;
+
+    let service = await Service.findById(req.params.id);
 
     if (!service) {
         return next(new ErrorResponse(`Service not found with id of ${req.params.id}`, 404));
     }
+
+    availabilityPeriods.forEach((availabilityPeriod) => {
+        const index = service.availabilityPeriods.findIndex((ap) => ap.startTime >= new Date(availabilityPeriod.startTime));
+        if (index === -1) {
+            service.availabilityPeriods.push(availabilityPeriod);
+        } else {
+            service.availabilityPeriods.splice(index, 0, availabilityPeriod);
+        }
+        console.log(service.availabilityPeriods);
+    });
+
+    // service.availabilityPeriods.push(...availabilityPeriods);
+
+    await service.save();
 
     res.status(200).json({ success: true, data: service });
 });
@@ -160,11 +176,19 @@ const addAvailabilityPeriods = asyncHandler(async(req, res, next) => {
 // @route   DELETE /api/v1/services/:id/availabilityperiods
 // @access  private
 const removeAvailabilityPeriods = asyncHandler(async(req, res, next) => {
-    const service = await Service.findById(req.params.id);
+    const { availabilityPeriodIds } = req.body;
+
+    let service = await Service.findById(req.params.id);
 
     if (!service) {
         return next(new ErrorResponse(`Service not found with id of ${req.params.id}`, 404));
     }
+
+    service.availabilityPeriods = service.availabilityPeriods.filter(
+        (availabilityPeriod) => !availabilityPeriodIds.includes(availabilityPeriod._id)
+    );
+
+    await service.save();
 
     res.status(200).json({ success: true, data: service });
 });
@@ -301,6 +325,7 @@ const getServicesByDescription = asyncHandler(async(req, res, next) => {
 
     res.status(200).json({ success: true, count: services.length, data: services });
 });
+
 export {
     getServices,
     addService,
