@@ -111,37 +111,48 @@ const getPricePercentage = asyncHandler(async(req, res, next) => {
 
     const serviceAveragePrice = (service.price.minPrice + service.price.maxPrice) / 2;
 
-    const numServicesGreaterPrice = await Service.aggregate([{
-            $unwind: "$price",
-        },
-        {
-            $addFields: {
-                averagePrice: { $divide: [{ $add: ["$price.minPrice", "$price.maxPrice"] }, 2] },
+    const numServicesGreaterPricePromise = async() => {
+        return await Service.aggregate([{
+                $unwind: "$price",
             },
-        },
-        {
-            $match: {
-                $and: [
-                    { _id: { $ne: mongoose.Types.ObjectId(req.params.id) } },
-                    {
-                        averagePrice: {
-                            $gte: serviceAveragePrice,
+            {
+                $addFields: {
+                    averagePrice: { $divide: [{ $add: ["$price.minPrice", "$price.maxPrice"] }, 2] },
+                },
+            },
+            {
+                $match: {
+                    $and: [
+                        { _id: { $ne: mongoose.Types.ObjectId(req.params.id) } },
+                        {
+                            averagePrice: {
+                                $gte: serviceAveragePrice,
+                            },
                         },
-                    },
-                ],
+                    ],
+                },
             },
-        },
-        {
-            $count: "count",
-        },
-    ]);
+            {
+                $count: "count",
+            },
+        ]);
+    };
 
-    const totalNumServices = await Service.find({}).countDocuments();
+    const totalNumServicesPromise = async() => {
+        return await Service.find({}).countDocuments();
+    };
 
-    res.status(200).json({
-        success: true,
-        data: ((numServicesGreaterPrice[0].count / totalNumServices) * 100).toFixed(2),
-    });
+    await Promise.all([numServicesGreaterPricePromise(), totalNumServicesPromise()])
+        .then((values) => {
+            const [numServicesGreaterPrice, totalNumServices] = values;
+            res.status(200).json({
+                success: true,
+                data: ((numServicesGreaterPrice[0].count / totalNumServices) * 100).toFixed(2),
+            });
+        })
+        .catch((error) => {
+            return next(new ErrorResponse("problem with counting documents", 500));
+        });
 });
 
 // @desc    add availability periods to the service
@@ -215,7 +226,10 @@ const getPaymentCanProceedUsers = asyncHandler(async(req, res, next) => {
 // @route   PUT /api/v1/services/:id/payment
 // @access  private
 const addUsersToPayment = asyncHandler(async(req, res, next) => {
-    const { phonesAndPrices, emailsAndPrices } = req.body;
+    let { phonesAndPrices, emailsAndPrices } = req.body;
+
+    phonesAndPrices = phonesAndPrices || [];
+    emailsAndPrices = emailsAndPrices || [];
 
     let service = await Service.findById(req.params.id);
 

@@ -1,5 +1,6 @@
 import asyncHandler from "../middleware/async.js";
 import Request from "../models/Request.js";
+import Service from "../models/Service.js";
 import ErrorResponse from "../utils/errorResponse.js";
 
 // @desc    get all requests
@@ -77,6 +78,16 @@ const updateRequestToPaid = asyncHandler(async(req, res, next) => {
     if (!request) {
         return next(new ErrorResponse("Error updating paid", 500));
     }
+
+    await Promise.all(
+        request.requestServices.map(async(requestService) => {
+            await Service.findOneAndUpdate({ _id: requestService.service }, { $set: { "paymentCanProceedUsers.$[myEntry].hasPaid": true } }, {
+                arrayFilters: [{
+                    "myEntry.user": req.user,
+                }, ],
+            });
+        })
+    );
 
     request = await Request.findById(req.params.id);
 
