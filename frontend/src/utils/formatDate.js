@@ -1,4 +1,4 @@
-function formatDate(date) {
+const formatDate = (date) => {
     const options = {
         weekday: "long",
         year: "numeric",
@@ -10,6 +10,6 @@ function formatDate(date) {
         hour12: false,
     };
     return new Intl.DateTimeFormat("en-US", options).format(new Date(date));
-}
+};
 
 export default formatDate;

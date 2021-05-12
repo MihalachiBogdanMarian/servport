@@ -4,9 +4,8 @@ import mongoose from "mongoose";
 import connectDB from "../config/db.js";
 import Service from "../models/Service.js";
 import User from "../models/User.js";
-import formatDate from "../utils/formatDate.js";
 import getAvailabilityPeriods from "../utils/getAvailabilityPeriods.js";
-import { randomSubarray } from "../utils/utilities.js";
+import { formatDate, randomSubarray } from "../utils/utilities.js";
 import reviewsData from "./reviews.json";
 import { serviceAddresses, serviceDescriptions } from "./servicesScraped.js";
 

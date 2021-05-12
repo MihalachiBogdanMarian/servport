@@ -5,6 +5,7 @@ import Service from "../models/Service.js";
 import User from "../models/User.js";
 import ErrorResponse from "../utils/errorResponse.js";
 import geocoder from "../utils/geocoder.js";
+import { areDateIntervalsOverlapping } from "../utils/utilities.js";
 
 // @desc    get all services
 // @route   GET /api/v1/services
@@ -41,15 +42,9 @@ const getMyServices = asyncHandler(async(req, res, next) => {
 // @route   GET /api/v1/services/:id
 // @access  public
 const getService = asyncHandler(async(req, res, next) => {
-    const service = await Service.findById(req.params.id).populate("user", "name email phone");
-
-    if (!service) {
-        return next(new ErrorResponse(`No service with the id of ${req.params.id}`, 404));
-    }
-
     res.status(200).json({
         success: true,
-        data: service,
+        data: req.document,
     });
 });
 
@@ -59,11 +54,7 @@ const getService = asyncHandler(async(req, res, next) => {
 const updateService = asyncHandler(async(req, res, next) => {
     const { title, description, category, price, images, availabilityPeriods, addresses } = req.body;
 
-    let service = await Service.findById(req.params.id);
-
-    if (!service) {
-        return next(new ErrorResponse(`No service with the id of ${req.params.id}`, 404));
-    }
+    let service = req.document;
 
     service.title = req.body.title || service.title;
     service.description = req.body.description || service.description;
@@ -85,13 +76,7 @@ const updateService = asyncHandler(async(req, res, next) => {
 // @route   DELETE /api/v1/services/:id
 // @access  private
 const deleteService = asyncHandler(async(req, res, next) => {
-    const service = await Service.findById(req.params.id);
-
-    if (!service) {
-        return next(new ErrorResponse(`No service with the id of ${req.params.id}`, 404));
-    }
-
-    await Service.findByIdAndDelete(req.params.id);
+    await Service.deleteOne({ _id: req.params.id });
 
     res.status(200).json({
         success: true,
@@ -99,15 +84,12 @@ const deleteService = asyncHandler(async(req, res, next) => {
     });
 });
 
-// @desc    get percentage of how many services have the average price greater than the average price of the given service
+// @desc    get percentage of how many services have the average price
+//          greater than the average price of the given service
 // @route   GET /api/v1/services/:id/percentage
 // @access  private
 const getPricePercentage = asyncHandler(async(req, res, next) => {
-    const service = await Service.findById(req.params.id);
-
-    if (!service) {
-        return next(new ErrorResponse(`No service with the id of ${req.params.id}`, 404));
-    }
+    const service = req.document;
 
     const serviceAveragePrice = (service.price.minPrice + service.price.maxPrice) / 2;
 
@@ -151,7 +133,7 @@ const getPricePercentage = asyncHandler(async(req, res, next) => {
             });
         })
         .catch((error) => {
-            return next(new ErrorResponse("problem with counting documents", 500));
+            return next(new ErrorResponse("Problem with counting documents", 500));
         });
 });
 
@@ -161,10 +143,28 @@ const getPricePercentage = asyncHandler(async(req, res, next) => {
 const addAvailabilityPeriods = asyncHandler(async(req, res, next) => {
     const { availabilityPeriods } = req.body;
 
-    let service = await Service.findById(req.params.id);
+    if (availabilityPeriods && availabilityPeriods.length === 0) {
+        res.status(400);
+        return next(new ErrorResponse("No availability periods", 400));
+    }
 
-    if (!service) {
-        return next(new ErrorResponse(`Service not found with id of ${req.params.id}`, 404));
+    let service = req.document;
+
+    let dateIntervalsUnfolded = [];
+    service.availabilityPeriods.forEach((availabilityPeriod) =>
+        dateIntervalsUnfolded.push(availabilityPeriod.startTime, availabilityPeriod.endTime)
+    );
+    availabilityPeriods.forEach((availabilityPeriod) =>
+        dateIntervalsUnfolded.push(new Date(availabilityPeriod.startTime), new Date(availabilityPeriod.endTime))
+    );
+
+    if (areDateIntervalsOverlapping(...dateIntervalsUnfolded)) {
+        return next(
+            new ErrorResponse(
+                "You cannot add availability periods which overlap between them or with the existing availability periods",
+                400
+            )
+        );
     }
 
     availabilityPeriods.forEach((availabilityPeriod) => {
@@ -174,10 +174,7 @@ const addAvailabilityPeriods = asyncHandler(async(req, res, next) => {
         } else {
             service.availabilityPeriods.splice(index, 0, availabilityPeriod);
         }
-        console.log(service.availabilityPeriods);
     });
-
-    // service.availabilityPeriods.push(...availabilityPeriods);
 
     await service.save();
 
@@ -190,11 +187,7 @@ const addAvailabilityPeriods = asyncHandler(async(req, res, next) => {
 const removeAvailabilityPeriods = asyncHandler(async(req, res, next) => {
     const { availabilityPeriodIds } = req.body;
 
-    let service = await Service.findById(req.params.id);
-
-    if (!service) {
-        return next(new ErrorResponse(`Service not found with id of ${req.params.id}`, 404));
-    }
+    let service = req.document;
 
     service.availabilityPeriods = service.availabilityPeriods.filter(
         (availabilityPeriod) => !availabilityPeriodIds.includes(availabilityPeriod._id.toString())
@@ -209,17 +202,9 @@ const removeAvailabilityPeriods = asyncHandler(async(req, res, next) => {
 // @route   GET /api/v1/services/:id/payment
 // @access  private
 const getPaymentCanProceedUsers = asyncHandler(async(req, res, next) => {
-    const service = await Service.findById(req.params.id);
+    const service = req.document;
 
-    if (!service) {
-        return next(new ErrorResponse(`Service not found with id of ${req.params.id}`, 404));
-    }
-
-    const paymentCanProceedUsers = service.paymentCanProceedUsers.filter(
-        (paymentUser) => paymentUser.user != req.user._id.toString()
-    );
-
-    res.status(200).json({ success: true, data: paymentCanProceedUsers });
+    res.status(200).json({ success: true, data: service.paymentCanProceedUsers });
 });
 
 // @desc    add users to the list of users who can proceed to payment
@@ -231,11 +216,7 @@ const addUsersToPayment = asyncHandler(async(req, res, next) => {
     phonesAndPrices = phonesAndPrices || [];
     emailsAndPrices = emailsAndPrices || [];
 
-    let service = await Service.findById(req.params.id);
-
-    if (!service) {
-        return next(new ErrorResponse(`Service not found with id of ${req.params.id}`, 404));
-    }
+    let service = req.document;
 
     const ids = await User.aggregate([{
             $match: {
@@ -264,16 +245,14 @@ const addUsersToPayment = asyncHandler(async(req, res, next) => {
 
     const idsAndPrices = phoneIdsAndPrices.concat(emailIdsAndPrices);
 
-    service = await Service.findByIdAndUpdate({ _id: req.params.id }, {
+    service = await Service.findOneAndUpdate({ _id: req.params.id }, {
         $push: {
             paymentCanProceedUsers: {
                 $each: idsAndPrices,
                 $position: 0,
             },
         },
-    });
-
-    service = await Service.findById(req.params.id);
+    }, { new: true });
 
     res.status(200).json({ success: true, data: service });
 });
@@ -282,11 +261,7 @@ const addUsersToPayment = asyncHandler(async(req, res, next) => {
 // @route   PUT /api/v1/services/:id/images
 // @access  private
 const uploadServiceImages = asyncHandler(async(req, res, next) => {
-    const service = await Service.findById(req.params.id);
-
-    if (!service) {
-        return next(new ErrorResponse(`Service not found with id of ${req.params.id}`, 404));
-    }
+    const service = req.document;
 
     if (!req.files) {
         return next(new ErrorResponse("Please upload a file", 400));

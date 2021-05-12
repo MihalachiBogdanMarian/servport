@@ -9,7 +9,7 @@ import connectDB from "./config/db.js";
 import Request from "./models/Request.js";
 import Service from "./models/Service.js";
 import User from "./models/User.js";
-import formatDate from "./utils/formatDate.js";
+import { formatDate } from "./utils/utilities.js";
 
 dotenv.config();
 

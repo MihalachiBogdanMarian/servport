@@ -18,30 +18,85 @@ import {
 } from "../controllers/services.js";
 import advancedResults from "../middleware/advancedResults.js";
 import { protect } from "../middleware/auth.js";
-import checkObjectIds from "../middleware/checkObjectIds.js";
+import { checkDocumentExistence, checkDocumentOwnership, checkObjectIds } from "../middleware/objectIdsValidations.js";
 import Service from "../models/Service.js";
 
 const router = express.Router({ mergeParams: true });
 
 router.route("/").get(advancedResults(Service), getServices).post(protect, addService);
+
 router.route("/myservices").get(protect, getMyServices);
+
 router
     .route("/:id")
-    .get(checkObjectIds(["id"]), getService)
-    .put(checkObjectIds(["id"]), protect, updateService)
-    .delete(checkObjectIds(["id"]), protect, deleteService);
-router.route("/:id/percentage").get(checkObjectIds(["id"]), protect, getPricePercentage);
+    .get(checkObjectIds(["id"]), checkDocumentExistence(Service, "id", "user", "name phone email"), getService)
+    .put(
+        checkObjectIds(["id"]),
+        protect,
+        checkDocumentExistence(Service, "id"),
+        checkDocumentOwnership(Service),
+        updateService
+    )
+    .delete(
+        checkObjectIds(["id"]),
+        protect,
+        checkDocumentExistence(Service, "id"),
+        checkDocumentOwnership(Service),
+        deleteService
+    );
+
+router
+    .route("/:id/percentage")
+    .get(checkObjectIds(["id"]), protect, checkDocumentExistence(Service, "id"), getPricePercentage);
+
 router
     .route("/:id/availabilityperiods")
-    .post(checkObjectIds(["id"]), protect, addAvailabilityPeriods)
-    .delete(checkObjectIds(["id"]), protect, removeAvailabilityPeriods);
+    .post(
+        checkObjectIds(["id"]),
+        protect,
+        checkDocumentExistence(Service, "id"),
+        checkDocumentOwnership(Service),
+        addAvailabilityPeriods
+    )
+    .delete(
+        checkObjectIds(["id"]),
+        protect,
+        checkDocumentExistence(Service, "id"),
+        checkDocumentOwnership(Service),
+        removeAvailabilityPeriods
+    );
+
 router
     .route("/:id/payment")
-    .get(checkObjectIds(["id"]), protect, getPaymentCanProceedUsers)
-    .put(protect, addUsersToPayment);
-router.route("/:id/images").put(checkObjectIds(["id"]), protect, uploadServiceImages);
+    .get(
+        checkObjectIds(["id"]),
+        protect,
+        checkDocumentExistence(Service, "id"),
+        checkDocumentOwnership(Service),
+        getPaymentCanProceedUsers
+    )
+    .put(
+        checkObjectIds(["id"]),
+        protect,
+        checkDocumentExistence(Service, "id"),
+        checkDocumentOwnership(Service),
+        addUsersToPayment
+    );
+
+router
+    .route("/:id/images")
+    .put(
+        checkObjectIds(["id"]),
+        protect,
+        checkDocumentExistence(Service, "id"),
+        checkDocumentOwnership(Service),
+        uploadServiceImages
+    );
+
 router.route("/toprated/:category/:number").get(getTopRatedServicesPerCategory);
+
 router.route("/distanceradius/:address/:distance").get(getServicesInDistanceRadius);
+
 router.route("/textsearch/:description").get(getServicesByDescription);
 
 export default router;

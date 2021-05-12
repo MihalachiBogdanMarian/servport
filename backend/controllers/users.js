@@ -1,5 +1,6 @@
 import path from "path";
 import asyncHandler from "../middleware/async.js";
+import Request from "../models/Request.js";
 import Service from "../models/Service.js";
 import User from "../models/User.js";
 import ErrorResponse from "../utils/errorResponse.js";
@@ -15,15 +16,9 @@ const getUsers = asyncHandler(async(req, res, next) => {
 // @route   GET /api/v1/users/:id
 // @access  private/admin
 const getUser = asyncHandler(async(req, res, next) => {
-    const user = await User.findById(req.params.id).select("-password");
-
-    if (!user) {
-        return next(new ErrorResponse(`No user with the id of ${req.params.id}`, 404));
-    }
-
     res.status(200).json({
         success: true,
-        data: user,
+        data: req.document,
     });
 });
 
@@ -31,11 +26,7 @@ const getUser = asyncHandler(async(req, res, next) => {
 // @route   DEL /api/v1/users/:id
 // @access  private/admin
 const deleteUser = asyncHandler(async(req, res, next) => {
-    const user = await User.findById(req.params.id);
-
-    if (!user) {
-        return next(new ErrorResponse(`No user with the id of ${req.params.id}`, 404));
-    }
+    const user = req.document;
 
     await user.remove();
 
@@ -49,11 +40,7 @@ const deleteUser = asyncHandler(async(req, res, next) => {
 // @route   PUT /api/v1/users/:id
 // @access  private/admin
 const updateUser = asyncHandler(async(req, res, next) => {
-    let user = await User.findById(req.params.id);
-
-    if (!user) {
-        return next(new ErrorResponse(`No user with the id of ${req.params.id}`, 404));
-    }
+    let user = req.document;
 
     user.isAdmin = req.body.isAdmin || false;
     user.isWarned = req.body.isWarned || false;
@@ -71,13 +58,7 @@ const updateUser = asyncHandler(async(req, res, next) => {
 // @route   GET /api/v1/users/:id/profile
 // @access  private
 const getUserProfile = asyncHandler(async(req, res, next) => {
-    const user = await User.findById(req.params.id).select(
-        "-__v -createdAt -updatedAt -email -password -isAdmin -isWarned -isBlocked -schedules"
-    );
-
-    if (!user) {
-        return next(new ErrorResponse(`No user with the id of ${req.params.id}`, 404));
-    }
+    const user = req.document;
 
     const services = await Service.find({ user: user._id }).select(
         "-_id, -__v -createdAt -updatedAt -cluster -labels -user -paymentCanProceedUsers -previousRating"
@@ -105,11 +86,7 @@ const getUserProfile = asyncHandler(async(req, res, next) => {
 const updateUserProfile = asyncHandler(async(req, res, next) => {
     const { name, phone, address } = req.body;
 
-    let user = await User.findById(req.params.id);
-
-    if (!user) {
-        return next(new ErrorResponse(`No user with the id of ${req.params.id}`, 404));
-    }
+    let user = req.document;
 
     if (user._id.toString() !== req.user._id.toString()) {
         return next(new ErrorResponse("You cannot update someone elses profile", 400));
@@ -133,23 +110,27 @@ const updateUserProfile = asyncHandler(async(req, res, next) => {
 const addSchedules = asyncHandler(async(req, res, next) => {
     const { schedules } = req.body;
 
-    let user = await User.findById(req.params.id);
-
-    if (!user) {
-        return next(new ErrorResponse(`No user with the id of ${req.params.id}`, 404));
-    }
+    let user = req.document;
 
     if (user._id.toString() !== req.user._id.toString()) {
         return next(new ErrorResponse("You cannot add schedules for someone else", 400));
     }
 
-    user = await User.findOneAndUpdate({ _id: req.params.id }, { $push: { schedules: { $each: schedules } } });
+    const userServices = (await Service.find({ user: req.params.id }).select("_id")).map((idObject) =>
+        idObject._id.toString()
+    );
+
+    schedules.forEach((schedule) => {
+        if (!userServices.includes(schedule.service.toString())) {
+            return next(new ErrorResponse("Cannot add schedule for user which contains not only users services", 500));
+        }
+    });
+
+    user = await User.findOneAndUpdate({ _id: req.params.id }, { $push: { schedules: { $each: schedules } } }, { new: true });
 
     if (!user) {
         return next(new ErrorResponse("Something went wrong with the adding", 500));
     }
-
-    user = await User.findById(req.params.id);
 
     res.status(200).json({
         success: true,
@@ -161,11 +142,7 @@ const addSchedules = asyncHandler(async(req, res, next) => {
 // @route   GET /api/v1/users/:userId/schedule/:scheduleId
 // @access  private
 const setScheduleCompleted = asyncHandler(async(req, res, next) => {
-    const user = await User.findById(req.params.userId);
-
-    if (!user) {
-        return next(new ErrorResponse(`No user with the id of ${req.params.userId}`, 404));
-    }
+    const user = req.document;
 
     const schedule = user.schedules.find((schedule) => schedule._id.toString() === req.params.scheduleId.toString());
 
@@ -173,11 +150,33 @@ const setScheduleCompleted = asyncHandler(async(req, res, next) => {
         return next(new ErrorResponse(`No schedule with the id of ${req.params.scheduleId}`, 404));
     }
 
+    // set schedule completed
     await User.updateOne({ _id: req.params.userId, "schedules._id": req.params.scheduleId }, {
         $set: {
             "schedules.$.completed": true,
         },
     });
+
+    // update the service in the request to finished provided
+    const request = await Request.findOne({
+        requestServices: {
+            $elemMatch: {
+                service: schedule.service,
+                availabilityPeriod: schedule.availabilityPeriod,
+            },
+        },
+    });
+
+    const requestServiceIndex = request.requestServices.findIndex(
+        (requestService) =>
+        requestService.service.toString() === schedule.service.toString() &&
+        requestService.availabilityPeriod.startTime.getTime() === schedule.availabilityPeriod.startTime.getTime() &&
+        requestService.availabilityPeriod.endTime.getTime() === schedule.availabilityPeriod.endTime.getTime()
+    );
+    request.requestServices[requestServiceIndex].isFinishedProvided = true;
+    request.requestServices[requestServiceIndex].finishedProvidedAt = Date.now();
+
+    await request.save();
 
     res.status(200).json({
         success: true,
@@ -189,11 +188,7 @@ const setScheduleCompleted = asyncHandler(async(req, res, next) => {
 // @route   PUT /api/v1/users/:id/avatar
 // @access  private
 const uploadProfileAvatar = asyncHandler(async(req, res, next) => {
-    const user = await User.findById(req.params.id);
-
-    if (!user) {
-        return next(new ErrorResponse(`User not found with id of ${req.params.id}`, 404));
-    }
+    const user = req.document;
 
     if (!req.files) {
         return next(new ErrorResponse("Please upload a file", 400));
