@@ -6,19 +6,19 @@ import setAuthToken from "./utils/setAuthToken";
 
 const requestServicesFromStorage = localStorage.getItem("requestServices") ?
     JSON.parse(localStorage.getItem("requestServices")) :
-    [];
+    undefined;
 
 const userDetailsFromStorage = localStorage.getItem("userDetails") ?
     JSON.parse(localStorage.getItem("userDetails")) :
-    null;
+    undefined;
 
 const executionAddressesFromStorage = localStorage.getItem("executionAddresses") ?
     JSON.parse(localStorage.getItem("executionAddresses")) :
-    {};
+    undefined;
 
 const initialState = {
     request: { requestServices: requestServicesFromStorage, executionAddresses: executionAddressesFromStorage },
-    userLoggedIn: { userInfo: userDetailsFromStorage },
+    loggedInUser: { userDetails: userDetailsFromStorage },
 };
 
 const middleware = [thunk];
@@ -37,8 +37,8 @@ store.subscribe(() => {
     let previousState = currentState;
     currentState = store.getState();
     // if the token changes set the value in localStorage and axios headers
-    if (previousState.auth.token !== currentState.auth.token) {
-        const token = currentState.auth.token;
+    if (previousState.loggedInUser.token !== currentState.loggedInUser.token) {
+        const token = currentState.loggedInUser.token;
         setAuthToken(token);
     }
 });

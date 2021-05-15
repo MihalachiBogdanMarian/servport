@@ -1,6 +1,5 @@
 import { combineReducers } from "redux";
+import { getMe, login, register } from "./auth";
 import { request } from "./request";
-import { service } from "./service";
-import { user } from "./user";
 
-export default combineReducers({ user, service, request });
+export default combineReducers({ loggedInUser: getMe, loginData: login, registerData: register, request });

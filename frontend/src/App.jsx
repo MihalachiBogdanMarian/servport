@@ -1,11 +1,10 @@
 import React, { useEffect } from "react";
 import { Provider } from "react-redux"; /* Redux */
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import { loadUser } from "./actions/auth"; /* Redux */
-import Footer from "./components/Footer";
+import { getMe } from "./actions/auth"; /* Redux */
 import Header from "./components/Header";
 import Routes from "./components/Routes";
-import { USER_LOGOUT } from "./constants/user";
+import { AUTH_LOGOUT } from "./constants/auth";
 import Home from "./screens/Home";
 import store from "./store"; /* Redux */
 import setAuthToken from "./utils/setAuthToken"; /* Redux */
@@ -15,12 +14,12 @@ const App = () => {
     // check for token in Local Storage
     if (localStorage.token) {
       setAuthToken(localStorage.token);
+      store.dispatch(getMe());
     }
-    store.dispatch(loadUser());
 
     // log user out from all tabs if they log out in one tab
     window.addEventListener("storage", () => {
-      if (!localStorage.token) store.dispatch({ type: USER_LOGOUT });
+      if (!localStorage.token) store.dispatch({ type: AUTH_LOGOUT });
     });
   }, []);
 
@@ -34,7 +33,6 @@ const App = () => {
             <Route component={Routes} />
           </Switch>
         </main>
-        <Footer />
       </Router>
     </Provider>
   );

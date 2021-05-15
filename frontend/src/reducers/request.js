@@ -1,1 +1,3 @@
-export const request = null;
+export const request = (state = {}, action) => {
+    return state;
+};

@@ -1,2 +1,3 @@
-// export const user = (state = { orders: [] }, action) => {};
-export const user = null;
+export const user = (state = {}, action) => {
+    return state;
+};

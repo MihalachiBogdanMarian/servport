@@ -109,6 +109,9 @@ app.use("/api/v1/services", services);
 app.use("/api/v1/services/:serviceId/reviews", reviews);
 app.use("/api/v1/requests", requests);
 
+// express error handling middleware
+app.use(errorHandler);
+
 if (process.env.NODE_ENV === "production") {
     // PRODUCTION
     app.use(express.static(path.join(__dirname, "/frontend/build")));
