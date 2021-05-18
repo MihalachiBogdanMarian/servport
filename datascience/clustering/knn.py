@@ -5,7 +5,7 @@ import numpy as np
 from dotenv import dotenv_values
 
 from clustering_utils import *
-from my_kmeans import *
+from vectorized_kmeans import *
 
 config = dotenv_values(".env")
 

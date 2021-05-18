@@ -130,6 +130,7 @@ const ServiceSchema = new mongoose.Schema({
             },
             price: {
                 type: Number,
+                required: true,
             },
             hasPaid: {
                 type: Boolean,
@@ -267,7 +268,7 @@ ServiceSchema.post("save", async function(doc, next) {
     }
 });
 
-ServiceSchema.index({ title: "text", description: "text" }, { name: "ServiceTextIndex", weights: { animal: 10, description: 7 } });
+ServiceSchema.index({ title: "text", description: "text" }, { name: "ServiceTextIndex", weights: { title: 10, description: 7 } });
 
 const Service = mongoose.model("Service", ServiceSchema);
 

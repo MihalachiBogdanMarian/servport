@@ -4,7 +4,7 @@ from clustering_utils import *
 
 
 @timer_decorator
-def my_kmeans(data, k, similarity_measure="minkowski", minkowski_r=2):
+def vectorized_kmeans(data, k, similarity_measure="minkowski", minkowski_r=2):
     def get_closest_centroids(X, centroids, similarity_measure="minkowski", minkowski_r=2):
         # get distances between the data point and all centroids
         dist = compute_distance(X, centroids, similarity_measure, minkowski_r=minkowski_r)
@@ -78,7 +78,7 @@ def my_kmeans(data, k, similarity_measure="minkowski", minkowski_r=2):
     return data, assigned_centroids, sse_list[len(sse_list) - 1]
 
 
-# clustered_data, _, _ = my_kmeans(get_service_vectors(), k=3)
+# clustered_data, _, _ = vectorized_kmeans(get_service_vectors(), k=3)
 # print(len([x for x in clustered_data.values() if x[6] == 0.0]))
 # print(len([x for x in clustered_data.values() if x[6] == 1.0]))
 # print(len([x for x in clustered_data.values() if x[6] == 2.0]))

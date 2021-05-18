@@ -93,7 +93,7 @@
           <x:Boolean x:Key="IsExpanded">True</x:Boolean>
         </scg:Dictionary>
       </sap:WorkflowViewStateService.ViewState>
-      <ui:OpenBrowser CommunicationMethod="{x:Null}" NewSession="{x:Null}" Private="{x:Null}" UiBrowser="{x:Null}" BrowserType="Chrome" DisplayName="Open Browser Olx.com" Hidden="True" sap:VirtualizedContainerService.HintSize="953,5568" sap2010:WorkflowViewState.IdRef="OpenBrowser_1" Url="[in_OlxCategoryURL]">
+      <ui:OpenBrowser CommunicationMethod="{x:Null}" NewSession="{x:Null}" Private="{x:Null}" UiBrowser="{x:Null}" BrowserType="Chrome" DisplayName="Open Browser Olx.ro" Hidden="True" sap:VirtualizedContainerService.HintSize="953,5568" sap2010:WorkflowViewState.IdRef="OpenBrowser_1" Url="[in_OlxCategoryURL]">
         <ui:OpenBrowser.Body>
           <ActivityAction x:TypeArguments="x:Object">
             <ActivityAction.Argument>
@@ -105,7 +105,7 @@
                   <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                 </scg:Dictionary>
               </sap:WorkflowViewStateService.ViewState>
-              <ui:BrowserScope Browser="{x:Null}" SearchScope="{x:Null}" TimeoutMS="{x:Null}" UiBrowser="{x:Null}" BrowserType="Chrome" ContinueOnError="False" DisplayName="Attach Browser tab Olx.com" sap:VirtualizedContainerService.HintSize="877,5251" sap2010:WorkflowViewState.IdRef="BrowserScope_4" InformativeScreenshot="2277f11a44db316551260f7fb054d0ba" Selector="&lt;html app='chrome.exe' title='*' /&gt;">
+              <ui:BrowserScope Browser="{x:Null}" SearchScope="{x:Null}" TimeoutMS="{x:Null}" UiBrowser="{x:Null}" BrowserType="Chrome" ContinueOnError="False" DisplayName="Attach Browser tab Olx.ro" sap:VirtualizedContainerService.HintSize="877,5251" sap2010:WorkflowViewState.IdRef="BrowserScope_4" InformativeScreenshot="2277f11a44db316551260f7fb054d0ba" Selector="&lt;html app='chrome.exe' title='*' /&gt;">
                 <ui:BrowserScope.Body>
                   <ActivityAction x:TypeArguments="x:Object">
                     <ActivityAction.Argument>

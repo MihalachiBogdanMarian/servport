@@ -3,9 +3,9 @@ from evaluate_algs import *
 # ELBOW METHOD
 
 
-# data, clusters, _ = my_kmeans(
+# data, clusters, _ = vectorized_kmeans(
 #     get_service_vectors(),
-#     find_best_k_elbow_method(get_service_vectors(), "my_kmeans", 2, 11),
+#     find_best_k_elbow_method(get_service_vectors(), "vectorized_kmeans", 2, 11),
 #     "minkowski",
 # )
 # print("num. of clusters: " + str(len(set(clusters))))
@@ -37,9 +37,9 @@ plot_separate_clustered_attributes(get_service_vectors(with_clusters=True))
 # SILHOUETTE COEFFICIENT
 
 
-# data, clusters, _ = my_kmeans(
+# data, clusters, _ = vectorized_kmeans(
 #     get_service_vectors(),
-#     find_best_k_silhouette_coefficient(get_service_vectors(), "my_kmeans", 2, 11),
+#     find_best_k_silhouette_coefficient(get_service_vectors(), "vectorized_kmeans", 2, 11),
 # )
 # print("num. of clusters: " + str(len(set(clusters))))
 # assign_labels_to_clusters_and_store_info_in_database(data, clusters)

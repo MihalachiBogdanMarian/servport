@@ -3,7 +3,7 @@ import numpy as np
 from birch_library import *
 from clustering_utils import *
 from kmeans_library import *
-from my_kmeans import *
+from vectorized_kmeans import *
 
 
 def find_best_k_elbow_method(
@@ -20,7 +20,7 @@ def find_best_k_elbow_method(
         if algorithm == "kmeans_lib":
             _, _, sse_value = kmeans_lib(service_vectors, k)
         else:
-            _, _, sse_value = my_kmeans(
+            _, _, sse_value = vectorized_kmeans(
                 service_vectors,
                 k,
                 similarity_measure=similarity_measure,
@@ -57,7 +57,7 @@ def find_best_k_silhouette_coefficient(
         elif algorithm == "birch_lib":
             _, assigned_centroids = birch_lib(service_vectors, k)
         else:
-            _, assigned_centroids, _ = my_kmeans(
+            _, assigned_centroids, _ = vectorized_kmeans(
                 service_vectors,
                 k,
                 similarity_measure=similarity_measure,
@@ -106,8 +106,8 @@ def assign_labels_to_clusters_and_store_info_in_database(clustered_data, cluster
 # print(find_best_k_elbow_method("kmeans_lib", 2, 11))
 # print(find_best_k_silhouette_coefficient("birch_lib", 2, 11))
 
-# data, clusters, _ = my_kmeans(
+# data, clusters, _ = vectorized_kmeans(
 #     get_service_vectors(),
-#     find_best_k_elbow_method(get_service_vectors(), "my_kmeans", 2, 11),
+#     find_best_k_elbow_method(get_service_vectors(), "vectorized_kmeans", 2, 11),
 # )
 # assign_labels_to_clusters_and_store_info_in_database(data, clusters)
