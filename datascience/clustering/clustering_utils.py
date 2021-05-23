@@ -51,7 +51,7 @@ def get_service_vectors(with_clusters=False):
 
     service_vectors = {}
 
-    for service in services.find():
+    for service in services.find().limit(5):
         if not with_clusters:
             service_vector = np.zeros([6], dtype="float")
         else:
@@ -159,7 +159,7 @@ def get_services_dataframe(with_clusters=False):
             ]
         )
 
-    for service in services.find():
+    for service in services.find().limit(5):
         if not with_clusters:
             services_df = services_df.append(
                 {
@@ -241,6 +241,8 @@ def turn_clustered_data_into_dataframe(clustered_data):
 def compute_distance(X, centroids, distance_metric, minkowski_r=2):
     # similarity measures
     if distance_metric == "minkowski":
+        print(X.shape)
+        print(centroids.shape)
         return ((X - centroids) ** minkowski_r).sum(axis=X.ndim - 1) ** (
             1 / minkowski_r
         )

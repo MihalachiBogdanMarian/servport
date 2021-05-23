@@ -9,10 +9,10 @@ def vectorized_kmeans(data, k, similarity_measure="minkowski", minkowski_r=2):
         # get distances between the data point and all centroids
         dist = compute_distance(X, centroids, similarity_measure, minkowski_r=minkowski_r)
 
-        # get the index of the centroid with the smallest distance to the data point
-        closest_centroid_index = np.argmin(dist, axis=1)
+        # get the indexes of the centroids with the smallest distance to each data point
+        closest_centroid_indexes = np.argmin(dist, axis=1)
 
-        return closest_centroid_index
+        return closest_centroid_indexes
 
     def compute_sse(
         data, centroids, assigned_centroids, similarity_measure="minkowski", minkowski_r=2
