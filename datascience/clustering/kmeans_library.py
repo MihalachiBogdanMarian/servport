@@ -18,6 +18,6 @@ def kmeans_lib(data, k, batch_size=10, max_iter=10):
 
 
 # clustered_data, _, _ = kmeans_lib(get_service_vectors(), k=3)
-# print(len([x for x in clustered_data.values() if x[6] == 0.0]))
-# print(len([x for x in clustered_data.values() if x[6] == 1.0]))
-# print(len([x for x in clustered_data.values() if x[6] == 2.0]))
+# print(len([x for x in clustered_data.values() if x[5] == 0.0]))
+# print(len([x for x in clustered_data.values() if x[5] == 1.0]))
+# print(len([x for x in clustered_data.values() if x[5] == 2.0]))

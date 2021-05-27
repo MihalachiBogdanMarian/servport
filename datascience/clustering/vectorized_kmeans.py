@@ -79,6 +79,6 @@ def vectorized_kmeans(data, k, similarity_measure="minkowski", minkowski_r=2):
 
 
 # clustered_data, _, _ = vectorized_kmeans(get_service_vectors(), k=3)
-# print(len([x for x in clustered_data.values() if x[6] == 0.0]))
-# print(len([x for x in clustered_data.values() if x[6] == 1.0]))
-# print(len([x for x in clustered_data.values() if x[6] == 2.0]))
+# print(len([x for x in clustered_data.values() if x[5] == 0.0]))
+# print(len([x for x in clustered_data.values() if x[5] == 1.0]))
+# print(len([x for x in clustered_data.values() if x[5] == 2.0]))

@@ -74,7 +74,7 @@ def find_best_k_silhouette_coefficient(
     plt.ylabel("Silhouette Coefficient")
     plt.show()
 
-    return silhouette_coefficients.index(min(silhouette_coefficients)) + min_k
+    return silhouette_coefficients.index(max(silhouette_coefficients)) + min_k
 
 
 def assign_labels_to_clusters_and_store_info_in_database(clustered_data, clusters):
@@ -91,9 +91,9 @@ def assign_labels_to_clusters_and_store_info_in_database(clustered_data, cluster
             {"_id": ObjectId(service_id)},
             {
                 "$set": {
-                    "cluster": clustered_feature_vector[6],
+                    "cluster": clustered_feature_vector[5],
                     "labels": clusters_to_labels(len(set(clusters)))[
-                        int(clustered_feature_vector[6])
+                        int(clustered_feature_vector[5])
                     ],
                 }
             },

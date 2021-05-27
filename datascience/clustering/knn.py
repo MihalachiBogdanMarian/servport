@@ -13,7 +13,7 @@ config = dotenv_values(".env")
 def knn(clustered_data, new_service_id, k):
     service_vectors_clustered = np.stack(clustered_data.values(), axis=0)
     service_vectors = np.delete(service_vectors_clustered, -1, axis=1)
-    clusters = [service_vector[6] for service_vector in service_vectors_clustered]
+    clusters = [service_vector[5] for service_vector in service_vectors_clustered]
 
     distances = compute_distance(
         get_service_vector(new_service_id), service_vectors, "minkowski", minkowski_r=2

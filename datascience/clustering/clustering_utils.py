@@ -51,9 +51,9 @@ def get_service_vectors(with_clusters=False):
 
     service_vectors = {}
 
-    for service in services.find().limit(5):
+    for service in services.find():
         if not with_clusters:
-            service_vector = np.zeros([6], dtype="float")
+            service_vector = np.zeros([5], dtype="float")
         else:
             service_vector = np.zeros([7], dtype="float")
 
@@ -74,12 +74,9 @@ def get_service_vectors(with_clusters=False):
         # NUM_INTERESTED
         service_vector[4] = float(service["numInterested"])
 
-        # NUM_AVAILABILITY_PERIODS
-        service_vector[5] = float(len(service["availabilityPeriods"]))
-
         if with_clusters:
             if "cluster" in service:
-                service_vector[6] = service["cluster"]
+                service_vector[5] = service["cluster"]
 
         # ID
         service_vectors[str(service["_id"])] = service_vector
@@ -97,7 +94,7 @@ def get_service_vector(service_id):
 
     service = db.services.find_one({"_id": ObjectId(service_id)})
 
-    service_vector = np.zeros([6], dtype="float")
+    service_vector = np.zeros([5], dtype="float")
 
     # AVG_PRICE
     service_vector[0] = float(
@@ -115,9 +112,6 @@ def get_service_vector(service_id):
 
     # NUM_INTERESTED
     service_vector[4] = float(service["numInterested"])
-
-    # NUM_AVAILABILITY_PERIODS
-    service_vector[5] = float(len(service["availabilityPeriods"]))
 
     client.close()
 
@@ -142,7 +136,6 @@ def get_services_dataframe(with_clusters=False):
                 "NumReviews",
                 "NumViews",
                 "NumInterested",
-                "NumAvailabilityPeriods",
             ]
         )
     else:
@@ -154,12 +147,11 @@ def get_services_dataframe(with_clusters=False):
                 "NumReviews",
                 "NumViews",
                 "NumInterested",
-                "NumAvailabilityPeriods",
                 "Cluster",
             ]
         )
 
-    for service in services.find().limit(5):
+    for service in services.find():
         if not with_clusters:
             services_df = services_df.append(
                 {
@@ -172,9 +164,6 @@ def get_services_dataframe(with_clusters=False):
                     "NumReviews": float(len(service["reviews"])),
                     "NumViews": float(service["numViews"]),
                     "NumInterested": float(service["numInterested"]),
-                    "NumAvailabilityPeriods": float(
-                        len(service["availabilityPeriods"])
-                    ),
                 },
                 ignore_index=True,
             )
@@ -194,9 +183,6 @@ def get_services_dataframe(with_clusters=False):
                         "NumReviews": float(len(service["reviews"])),
                         "NumViews": float(service["numViews"]),
                         "NumInterested": float(service["numInterested"]),
-                        "NumAvailabilityPeriods": float(
-                            len(service["availabilityPeriods"])
-                        ),
                         "Cluster": float(service["cluster"]),
                     },
                     ignore_index=True,
@@ -216,7 +202,6 @@ def turn_clustered_data_into_dataframe(clustered_data):
             "NumReviews",
             "NumViews",
             "NumInterested",
-            "NumAvailabilityPeriods",
         ]
     )
 
@@ -229,8 +214,7 @@ def turn_clustered_data_into_dataframe(clustered_data):
                 "NumReviews": clustered_feature_vector[2],
                 "NumViews": clustered_feature_vector[3],
                 "NumInterested": clustered_feature_vector[4],
-                "NumAvailabilityPeriods": clustered_feature_vector[5],
-                "Cluster": clustered_feature_vector[6],
+                "Cluster": clustered_feature_vector[5],
             },
             ignore_index=True,
         )
@@ -241,8 +225,6 @@ def turn_clustered_data_into_dataframe(clustered_data):
 def compute_distance(X, centroids, distance_metric, minkowski_r=2):
     # similarity measures
     if distance_metric == "minkowski":
-        print(X.shape)
-        print(centroids.shape)
         return ((X - centroids) ** minkowski_r).sum(axis=X.ndim - 1) ** (
             1 / minkowski_r
         )
@@ -270,9 +252,8 @@ def plot_separate_clustered_attributes(clustered_data):
         2: "num. of reviews",
         3: "num. of views",
         4: "num. of interested",
-        5: "num. of availability periods",
     }
-    clusters = [int(service_vector[6]) for service_vector in service_vectors_clustered]
+    clusters = [int(service_vector[5]) for service_vector in service_vectors_clustered]
 
     val = 0.0
 
@@ -296,7 +277,7 @@ def plot_separate_clustered_attributes(clustered_data):
 
     # plt.show()
 
-    for i in range(0, 6):
+    for i in range(0, 5):
         _, ax = plt.subplots()
         scatter = ax.scatter(
             service_vectors_clustered[:, i],
@@ -382,6 +363,46 @@ def clusters_to_labels(k):
         7: {"price": "medium", "rating": "large", "numReviews": "medium"},
         8: {"price": "large", "rating": "large", "numReviews": "large"},
         9: {"price": "large", "rating": "large", "numReviews": "large"},
+        10: {},
+        11: {},
+        12: {},
+        13: {},
+        14: {},
+        15: {},
+        16: {},
+        17: {},
+        18: {},
+        19: {},
+        20: {},
+        21: {},
+        22: {},
+        23: {},
+        24: {},
+        25: {},
+        26: {},
+        27: {},
+        28: {},
+        29: {},
+        30: {},
+        31: {},
+        32: {},
+        33: {},
+        34: {},
+        35: {},
+        36: {},
+        37: {},
+        38: {},
+        39: {},
+        40: {},
+        41: {},
+        42: {},
+        43: {},
+        44: {},
+        45: {},
+        46: {},
+        47: {},
+        48: {},
+        49: {},
     }
 
     # clusters_to_labels = {}

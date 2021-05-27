@@ -18,8 +18,8 @@ def birch_lib(data, k, branching_factor=50, threshold=1.7):
 
 
 # clustered_data, _ = birch_lib(get_service_vectors(), k=3)
-# print(len([x for x in clustered_data.values() if x[6] == 0.0]))
-# print(len([x for x in clustered_data.values() if x[6] == 1.0]))
-# print(len([x for x in clustered_data.values() if x[6] == 2.0]))
-# clusters_set = set([x[6] for x in clustered_data.values()])
+# print(len([x for x in clustered_data.values() if x[5] == 0.0]))
+# print(len([x for x in clustered_data.values() if x[5] == 1.0]))
+# print(len([x for x in clustered_data.values() if x[5] == 2.0]))
+# clusters_set = set([x[5] for x in clustered_data.values()])
 # print("Num. of clusters:", len(clusters_set))
