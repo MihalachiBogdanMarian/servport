@@ -16,7 +16,7 @@ const Login = ({ location, history }) => {
   const loginData = useSelector((state) => state.loginData);
   const { loading, error, token } = loginData;
 
-  const redirect = location.search ? location.search.split("=")[1] : "/";
+  const redirect = location.search ? location.search.split("=")[1] : "/profile";
 
   useEffect(() => {
     if (token) {

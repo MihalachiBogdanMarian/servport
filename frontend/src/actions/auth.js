@@ -23,6 +23,8 @@ export const login = (email, password) => async(dispatch) => {
             type: AUTH_LOGIN_SUCCESS,
             payload: data.token,
         });
+
+        dispatch(getMe());
     } catch (error) {
         const message =
             error.response && error.response.data.errorMessage ? error.response.data.errorMessage : error.message;
@@ -41,12 +43,12 @@ export const getMe = () => async(dispatch) => {
 
         dispatch({
             type: AUTH_GET_ME_SUCCESS,
-            payload: data,
+            payload: data.data,
         });
     } catch (error) {
         const message =
             error.response && error.response.data.errorMessage ? error.response.data.errorMessage : error.message;
-        if (message === "Not authorized, token failed") {
+        if (message === "Not authorized to access this route") {
             dispatch(logout());
         }
         dispatch({
@@ -57,6 +59,7 @@ export const getMe = () => async(dispatch) => {
 };
 
 export const logout = () => async(dispatch) => {
+    localStorage.removeItem("token");
     localStorage.removeItem("userDetails");
     localStorage.removeItem("requestServices");
     localStorage.removeItem("executionAddresses");
@@ -72,13 +75,15 @@ export const register = (name, email, phone, password, address) => async(dispatc
 
         dispatch({
             type: AUTH_REGISTER_SUCCESS,
-            payload: data,
+            payload: data.token,
         });
 
         dispatch({
             type: AUTH_LOGIN_SUCCESS,
-            payload: data,
+            payload: data.token,
         });
+
+        dispatch(getMe());
     } catch (error) {
         const message =
             error.response && error.response.data.errorMessage ? error.response.data.errorMessage : error.message;

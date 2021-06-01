@@ -11,7 +11,7 @@ const Register = ({ location, history }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [confirmedPassword, setConfirmedPassword] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
   const [message, setMessage] = useState(null);
@@ -21,7 +21,7 @@ const Register = ({ location, history }) => {
   const registerData = useSelector((state) => state.registerData);
   const { loading, error, token } = registerData;
 
-  const redirect = location.search ? location.search.split("=")[1] : "/";
+  const redirect = location.search ? location.search.split("=")[1] : "/profile";
 
   useEffect(() => {
     if (token) {
@@ -31,10 +31,10 @@ const Register = ({ location, history }) => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    if (password !== confirmPassword) {
+    if (password !== confirmedPassword) {
       setMessage("Passwords do not match");
     } else {
-      dispatch(register(name, email, password, phone, address));
+      dispatch(register(name, email, phone, password, address));
     }
   };
 
@@ -95,13 +95,13 @@ const Register = ({ location, history }) => {
           ></Form.Control>
         </Form.Group>
 
-        <Form.Group controlId="confirmPassword">
+        <Form.Group controlId="confirmedPassword">
           <Form.Label>Confirm Password</Form.Label>
           <Form.Control
             type="password"
             placeholder="Confirm password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
+            value={confirmedPassword}
+            onChange={(e) => setConfirmedPassword(e.target.value)}
           ></Form.Control>
         </Form.Group>
 

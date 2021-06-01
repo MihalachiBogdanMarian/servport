@@ -2,6 +2,8 @@ import React from "react";
 import { Route, Switch } from "react-router-dom";
 import Login from "../screens/Login";
 import Register from "../screens/Register";
+import Service from "../screens/Service";
+import Services from "../screens/Services";
 import Footer from "./Footer";
 import NotFound from "./NotFound";
 // import PrivateRoute from "./PrivateRoute";
@@ -13,6 +15,8 @@ const Routes = () => {
         {/* <PrivateRoute exact path="" component={} /> */}
         <Route path="/login" component={Login} />
         <Route path="/register" component={Register} />
+        <Route path="/services/:id" component={Service} />
+        <Route path="/services" component={Services} />
         <Route component={NotFound} />
       </Switch>
       <Footer />

@@ -28,8 +28,21 @@ const Header = () => {
             <Nav className="ml-auto">
               <ServicesDropdown />
 
+              {userDetails && userDetails.isAdmin && (
+                <NavDropdown title="Admin" id="adminmenu">
+                  <LinkContainer to="/admin/userslist">
+                    <NavDropdown.Item>Users</NavDropdown.Item>
+                  </LinkContainer>
+                  <LinkContainer to="/admin/serviceslist">
+                    <NavDropdown.Item>Services</NavDropdown.Item>
+                  </LinkContainer>
+                  <LinkContainer to="/admin/requestslist">
+                    <NavDropdown.Item>Requests</NavDropdown.Item>
+                  </LinkContainer>
+                </NavDropdown>
+              )}
               {userDetails ? (
-                <NavDropdown title={userDetails.name} id="username">
+                <NavDropdown title={userDetails.name.split(" ")[0].split("-")[0]} id="username">
                   <LinkContainer to="/profile">
                     <NavDropdown.Item>Profile</NavDropdown.Item>
                   </LinkContainer>
@@ -49,19 +62,6 @@ const Header = () => {
                     </Nav.Link>
                   </LinkContainer>
                 </>
-              )}
-              {userDetails && userDetails.isAdmin && (
-                <NavDropdown title="Admin" id="adminmenu">
-                  <LinkContainer to="/admin/userslist">
-                    <NavDropdown.Item>Users</NavDropdown.Item>
-                  </LinkContainer>
-                  <LinkContainer to="/admin/serviceslist">
-                    <NavDropdown.Item>Services</NavDropdown.Item>
-                  </LinkContainer>
-                  <LinkContainer to="/admin/requestslist">
-                    <NavDropdown.Item>Requests</NavDropdown.Item>
-                  </LinkContainer>
-                </NavDropdown>
               )}
             </Nav>
           </Navbar.Collapse>

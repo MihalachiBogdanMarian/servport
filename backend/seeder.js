@@ -32,8 +32,8 @@ const importData = async() => {
 
         // await User.create(users);
         // console.log("Users Imported!".green.inverse);
-        await Service.create(services);
-        console.log("Services Imported!".green.inverse);
+        // await Service.create(services);
+        // console.log("Services Imported!".green.inverse);
         // await Request.create(requests);
         // console.log("Requests Imported!".green.inverse);
 

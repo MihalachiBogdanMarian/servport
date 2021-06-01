@@ -16,7 +16,7 @@ const Home = () => {
       <div className="dark-overlay">
         <div className="home-inner">
           <h1 className="">Services Portal</h1>
-          <p className="">Create a developer profile/portfolio, share posts and get help from other developers</p>
+          <p className="">Post service offers, search for service offers, expand your business</p>
           <div className="buttons">
             <Link to="/services/auto" className="btn btn-primary">
               Services
