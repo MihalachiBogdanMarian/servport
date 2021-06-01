@@ -10,6 +10,7 @@ import { areDateIntervalsOverlapping } from "../utils/utilities.js";
 // @desc    get all services
 // @route   GET /api/v1/services
 // @access  public
+// {{URL}}/api/v1/services?page=1&limit=1&price[minPrice]=585&title=Authorized repair service engineer&price[maxPrice][eq]=841
 const getServices = asyncHandler(async(req, res, next) => {
     res.status(200).json(res.advancedResults);
 });

@@ -15,8 +15,8 @@ const Routes = () => {
         {/* <PrivateRoute exact path="" component={} /> */}
         <Route path="/login" component={Login} />
         <Route path="/register" component={Register} />
+        <Route path="/services/page/:pageNumber/category/:category" component={Services} />
         <Route path="/services/:id" component={Service} />
-        <Route path="/services" component={Services} />
         <Route component={NotFound} />
       </Switch>
       <Footer />

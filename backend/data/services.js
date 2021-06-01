@@ -329,7 +329,7 @@ const populateServices = (numServices, serviceCategory) => {
                 images = [...images, "events-photo.jpg"];
                 break;
             case "Services>Events>Floral Arrangements & Decorations":
-                images = [...images, "events-arrangements.jpg"];
+                images = [...images, "events-decorations.jpg"];
                 break;
             case "Services>Private Lessons":
                 images = [...images, "lessons.jpg"];

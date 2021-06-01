@@ -10,7 +10,12 @@ export const getServices = (state = { services: [] }, action) => {
         case SERVICE_GET_SERVICES_REQUEST:
             return {...state, loading: true };
         case SERVICE_GET_SERVICES_SUCCESS:
-            return { loading: false, services: action.payload.data, pages: action.payload.pages, page: action.payload.page };
+            return {
+                loading: false,
+                services: action.payload.data,
+                pages: action.payload.pagination.pages,
+                page: action.payload.pagination.page,
+            };
         case SERVICE_GET_SERVICES_FAIL:
             return { loading: false, error: action.payload };
         case SERVICE_GET_SERVICES_RESET:

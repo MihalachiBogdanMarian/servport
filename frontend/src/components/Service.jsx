@@ -14,7 +14,7 @@ const Service = ({ service }) => {
     <div className="card mb-3 service-card">
       <div className="row g-0">
         <div className="col-md-4">
-          <Link to={`services/${service._id}`}>
+          <Link to={`/services/${service._id}`}>
             <img
               src={process.env.REACT_APP_FILE_UPLOAD_PATH + service.images[0]}
               alt={service.title}
@@ -24,7 +24,7 @@ const Service = ({ service }) => {
         </div>
         <div className="col-md-8">
           <div className="card-body">
-            <Link to={`services/${service._id}`}>
+            <Link to={`/services/${service._id}`}>
               <h5 className="card-title">{service.title}</h5>
             </Link>
             <p className="card-text">Provisioning locations: {addressesString}</p>

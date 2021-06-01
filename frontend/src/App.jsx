@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { getMe } from "./actions/auth"; /* Redux */
 import Header from "./components/Header";
 import Routes from "./components/Routes";
-import { AUTH_LOGOUT } from "./constants/auth";
+import { AUTH_LOGIN_SUCCESS, AUTH_LOGOUT } from "./constants/auth";
 import Home from "./screens/Home";
 import store from "./store"; /* Redux */
 import setAuthToken from "./utils/setAuthToken"; /* Redux */
@@ -14,6 +14,10 @@ const App = () => {
     // check for token in Local Storage
     if (localStorage.token) {
       setAuthToken(localStorage.token);
+      store.dispatch({
+        type: AUTH_LOGIN_SUCCESS,
+        payload: localStorage.token,
+      });
       store.dispatch(getMe());
     }
 
