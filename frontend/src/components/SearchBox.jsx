@@ -6,7 +6,7 @@ const SearchBox = () => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    if (text.trim()) {
+    if (text.trim() !== "") {
     } else {
     }
   };
@@ -20,7 +20,7 @@ const SearchBox = () => {
         placeholder="Search services..."
         className="mt-3 mb-3"
       ></Form.Control>
-      <Button type="submit" variant="outline-success" className="mb-3">
+      <Button type="submit" variant="outline-success" className="mb-3 p-2">
         Search
       </Button>
     </Form>

@@ -11,12 +11,12 @@ import Paginate from "../components/Paginate";
 import SearchBox from "../components/SearchBox";
 import Service from "../components/Service";
 
-const Services = ({ match }) => {
-  console.log(match);
+const Services = ({ history, match }) => {
   const pageNumber = match.params.pageNumber || 1;
   const category = match.params.category || "Services>Auto %26 Transportation>Car Services";
 
   const [filters, setFilters] = useState([]);
+  const [isResetFiltersPressed, setIsResetFiltersPressed] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -33,7 +33,13 @@ const Services = ({ match }) => {
         <Row className="justify-content-md-center">
           <Col xs={12} md={4} className="border">
             <Row className="justify-content-md-center">
-              <Filters></Filters>
+              <Filters
+                category={category}
+                filters={filters}
+                setFilters={setFilters}
+                isResetFiltersPressed={isResetFiltersPressed}
+                setIsResetFiltersPressed={setIsResetFiltersPressed}
+              ></Filters>
             </Row>
           </Col>
           <Col xs={12} md={4} className="border">
@@ -49,7 +55,16 @@ const Services = ({ match }) => {
         </Row>
         <Row className="justify-content-md-center">
           <Col xs={12} className="border">
-            <Button type="button" variant="primary" className="m-3">
+            <Button
+              type="button"
+              variant="primary"
+              className="m-3"
+              onClick={() => {
+                setFilters([]);
+                setIsResetFiltersPressed(true);
+                history.push(`/services/page/1/category/${category}`);
+              }}
+            >
               Reset Filters
             </Button>
           </Col>

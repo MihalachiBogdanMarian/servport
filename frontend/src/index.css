@@ -72,5 +72,16 @@ h3 {
 .search-box-form,
 .geo-search-form {
   text-align: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.km-control {
+  margin: 0 auto;
+  max-width: 150px;
 }
 /*# sourceMappingURL=index.css.map */

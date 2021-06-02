@@ -1,4 +1,7 @@
 import axios from "axios";
+// import { AUTH_LOGOUT } from "../constants/auth";
+// import { ERROR } from "../constants/error";
+// import store from "../store";
 
 const api = axios.create({
     baseURL: "http://localhost:5000/api/v1",
@@ -17,11 +20,15 @@ const api = axios.create({
 // api.interceptors.response.use(
 //     (res) => res,
 //     (error) => {
-//         console.log(error.response);
-//         if (error.response.status === 401) {
+//         const message =
+//             error.response && error.response.data.errorMessage ? error.response.data.errorMessage : error.message;
+//         if (message === "Not authorized to access this route") {
 //             store.dispatch({ type: AUTH_LOGOUT });
 //         }
-//         return Promise.reject(error);
+//         store.dispatch({
+//             type: ERROR,
+//             payload: message,
+//         });
 //     }
 // );
 

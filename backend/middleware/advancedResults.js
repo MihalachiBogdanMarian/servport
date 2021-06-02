@@ -107,19 +107,19 @@ const processNestedFields = (queryString) => {
 
   if (unprocessedNestedFields && unprocessedNestedFields.length > 0) {
     unprocessedNestedFields.forEach((str) => {
-      processNestedField("{" + str.replace(/,([^,]*)$/, "$1") + "}");
+      const removeLastComma = str.charAt(str.length - 1) === ",";
+      processNestedField("{" + (removeLastComma ? str.replace(/,([^,]*)$/, "$1") : str) + "}");
     });
   }
 
   let processedNestedFieldsString = "";
-  processedNestedFields.forEach((str) => (processedNestedFieldsString += "," + str));
+  if (processedNestedFields && processedNestedFields.length) {
+    processedNestedFieldsString = processedNestedFields[0];
+  }
+  processedNestedFields.slice(1).forEach((str) => (processedNestedFieldsString += "," + str));
 
   queryString = queryString.replace(regex, "");
   queryString = queryString.replace(/\s+/, "");
-
-  if (queryString === "{}") {
-    processedNestedFieldsString = processedNestedFieldsString.replace(",", "");
-  }
 
   queryString =
     queryString.substring(0, queryString.length - 1) +

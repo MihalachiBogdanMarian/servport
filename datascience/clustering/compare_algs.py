@@ -14,14 +14,14 @@ from evaluate_algs import *
 # plot_separate_clustered_attributes(get_service_vectors(with_clusters=True))
 
 
-# data, clusters, _ = kmeans_lib(
-#     get_service_vectors(),
-#     find_best_k_elbow_method(get_service_vectors(), "kmeans_lib", 2, 11),
-# )
-# print("num. of clusters: " + str(len(set(clusters))))
-# assign_labels_to_clusters_and_store_info_in_database(data, clusters)
-# plot_data_t_sne(get_services_dataframe(with_clusters=True))
-# plot_separate_clustered_attributes(get_service_vectors(with_clusters=True))
+data, clusters, _ = kmeans_lib(
+    get_service_vectors(),
+    find_best_k_elbow_method(get_service_vectors(), "kmeans_lib", 2, 11),
+)
+print("num. of clusters: " + str(len(set(clusters))))
+assign_labels_to_clusters_and_store_info_in_database(data, clusters)
+plot_data_t_sne(get_services_dataframe(with_clusters=True))
+plot_separate_clustered_attributes(get_service_vectors(with_clusters=True))
 
 
 # data, clusters = birch_lib(

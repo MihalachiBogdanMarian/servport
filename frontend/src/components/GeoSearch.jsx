@@ -13,7 +13,7 @@ const GeoSearch = () => {
   };
 
   return (
-    <Form onSubmit={submitHandler} className="search-box-form">
+    <Form onSubmit={submitHandler} className="geo-search-form">
       <Form.Control
         type="text"
         name="address"
@@ -22,7 +22,23 @@ const GeoSearch = () => {
         className="mt-3 mb-3"
       ></Form.Control>
 
-      <Button type="submit" variant="outline-success" className="mb-3">
+      <Form.Control as="select" defaultValue="+ 0 km" className="km-control mt-3 mb-3">
+        <option>+ 0 km</option>
+        <option>+ 1 km</option>
+        <option>+ 2 km</option>
+        <option>+ 3 km</option>
+        <option>+ 5 km</option>
+        <option>+ 7 km</option>
+        <option>+ 10 km</option>
+        <option>+ 15 km</option>
+        <option>+ 20 km</option>
+        <option>+ 25 km</option>
+        <option>+ 50 km</option>
+        <option>+ 75 km</option>
+        <option>+ 100 km</option>
+      </Form.Control>
+
+      <Button type="submit" variant="outline-success" className="mb-3 p-2">
         GSearch
       </Button>
     </Form>

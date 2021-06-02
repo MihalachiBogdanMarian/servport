@@ -69,5 +69,12 @@ h3 {
 
 .search-box-form,
 .geo-search-form {
-    text-align: center
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+}
+
+.km-control {
+    margin: 0 auto;
+    max-width: 150px;
 }
