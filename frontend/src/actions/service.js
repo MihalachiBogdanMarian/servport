@@ -39,7 +39,7 @@ export const getServicesByDescription = (description) => async(dispatch) => {
     try {
         dispatch({ type: SERVICE_GET_SERVICES_BY_DESCRIPTION_REQUEST });
 
-        const { data } = await api.get(`/api/v1/services/textsearch/${description}`);
+        const { data } = await api.get(`/services/textsearch/${description}`);
 
         dispatch({
             type: SERVICE_GET_SERVICES_BY_DESCRIPTION_SUCCESS,
@@ -57,7 +57,7 @@ export const getServicesInDistanceRadius = (address, distance) => async(dispatch
     try {
         dispatch({ type: SERVICE_GET_SERVICES_IN_DISTANCE_RADIUS_REQUEST });
 
-        const { data } = await api.get(`/api/v1/services/distanceradius/${address}/${distance}`);
+        const { data } = await api.get(`/services/distanceradius/${address}/${distance}`);
 
         dispatch({
             type: SERVICE_GET_SERVICES_IN_DISTANCE_RADIUS_SUCCESS,

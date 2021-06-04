@@ -9,7 +9,6 @@ const Header = () => {
   const dispatch = useDispatch();
 
   const loggedInUser = useSelector((state) => state.loggedInUser);
-
   const { userDetails } = loggedInUser;
 
   const logoutHandler = () => {

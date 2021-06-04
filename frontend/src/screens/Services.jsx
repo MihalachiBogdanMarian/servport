@@ -22,8 +22,11 @@ const Services = ({ history, match }) => {
 
   const servicesList = useSelector((state) => state.servicesList);
   const { loading, error, services, pages, page } = servicesList;
+  const loggedInUser = useSelector((state) => state.loggedInUser);
+  const { userDetails } = loggedInUser;
 
   useEffect(() => {
+    console.log(filters);
     dispatch(getServices(category, pageNumber, filters));
   }, [dispatch, category, pageNumber, filters]);
 
@@ -42,19 +45,34 @@ const Services = ({ history, match }) => {
               ></Filters>
             </Row>
           </Col>
+
           <Col xs={12} md={4} className="border">
             <Row className="justify-content-center align-items-center">
-              <GeoSearch></GeoSearch>
+              <GeoSearch
+                category={category}
+                filters={filters}
+                setFilters={setFilters}
+                isResetFiltersPressed={isResetFiltersPressed}
+                setIsResetFiltersPressed={setIsResetFiltersPressed}
+              ></GeoSearch>
             </Row>
           </Col>
+
           <Col xs={12} md={4} className="border">
             <Row className="justify-content-center align-items-center">
-              <SearchBox></SearchBox>
+              <SearchBox
+                category={category}
+                filters={filters}
+                setFilters={setFilters}
+                isResetFiltersPressed={isResetFiltersPressed}
+                setIsResetFiltersPressed={setIsResetFiltersPressed}
+              ></SearchBox>
             </Row>
           </Col>
         </Row>
+
         <Row className="justify-content-md-center">
-          <Col xs={12} className="border">
+          <Col xs={12} className="border d-flex justify-content-between">
             <Button
               type="button"
               variant="primary"
@@ -66,6 +84,20 @@ const Services = ({ history, match }) => {
               }}
             >
               Reset Filters
+            </Button>
+
+            <Button
+              type="button"
+              variant="primary"
+              className="m-3"
+              onClick={() => {
+                if (!userDetails) {
+                  history.push("/login");
+                } else {
+                }
+              }}
+            >
+              Post Service Offer
             </Button>
           </Col>
         </Row>

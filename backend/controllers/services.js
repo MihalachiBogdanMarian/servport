@@ -5,6 +5,7 @@ import Service from "../models/Service.js";
 import User from "../models/User.js";
 import ErrorResponse from "../utils/errorResponse.js";
 import geocoder from "../utils/geocoder.js";
+import getPagination from "../utils/getPagination.js";
 import { areDateIntervalsOverlapping } from "../utils/utilities.js";
 
 // @desc    get all services
@@ -333,7 +334,7 @@ const getServicesInDistanceRadius = asyncHandler(async(req, res, next) => {
     // Earth radius = 3.963 mi / 6.378 km
     const radius = parseInt(distance) / 6378;
 
-    const services = await Service.find({
+    let query = Service.find({
         locations: {
             $elemMatch: {
                 $geoWithin: {
@@ -345,20 +346,24 @@ const getServicesInDistanceRadius = asyncHandler(async(req, res, next) => {
         },
     });
 
-    res.status(200).json({ success: true, count: services.length, data: services });
+    const { pagination, results } = await getPagination(req, query);
+
+    res.status(200).json({ success: true, count: results.length, pagination, data: results });
 });
 
 // @desc    get services which match best a given description
 // @route   GET /api/v1/services/textsearch/:description
 // @access  public
 const getServicesByDescription = asyncHandler(async(req, res, next) => {
-    const { description } = req.params.description;
+    const description = req.params.description;
 
-    const services = await Service.find({ $text: { $search: description } }, { score: { $meta: "textScore" } }).sort({
+    let query = Service.find({ $text: { $search: description } }, { score: { $meta: "textScore" } }).sort({
         score: { $meta: "textScore" },
     });
 
-    res.status(200).json({ success: true, count: services.length, data: services });
+    const { pagination, results } = await getPagination(req, query);
+
+    res.status(200).json({ success: true, count: results.length, pagination, data: results });
 });
 
 export {

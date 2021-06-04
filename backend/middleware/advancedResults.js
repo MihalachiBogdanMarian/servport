@@ -1,11 +1,51 @@
+import Service from "../models/Service.js";
+import geocoder from "../utils/geocoder.js";
+import getPagination from "../utils/getPagination.js";
+
 const advancedResults = (model, populate) => async(req, res, next) => {
     let query;
 
     // copy req.query
     const reqQuery = {...req.query };
 
+    // check for geo search
+    let geoSearchObject = undefined;
+    if (parseInt(reqQuery.geoSearch)) {
+        const loc = await geocoder.geocode(reqQuery.geoSearchAddress);
+        const lat = loc[0].latitude;
+        const lng = loc[0].longitude;
+
+        const radius = parseInt(reqQuery.geoSearchKm) / 6378;
+        geoSearchObject = {
+            $elemMatch: {
+                $geoWithin: {
+                    $centerSphere: [
+                        [lng, lat], radius
+                    ],
+                },
+            },
+        };
+    }
+
+    // check for full-text search
+    let textSearch = parseInt(reqQuery.textSearch);
+    let textSearchDescription = undefined;
+    if (textSearch) {
+        textSearchDescription = reqQuery.textSearchDescription;
+    }
+
     // fields to exclude
-    const removeFields = ["select", "sort", "page", "limit"];
+    const removeFields = [
+        "select",
+        "sort",
+        "page",
+        "limit",
+        "geoSearch",
+        "geoSearchAddress",
+        "geoSearchKm",
+        "textSearch",
+        "textSearchDescription",
+    ];
 
     // loop over removeFields and delete them from reqQuery
     removeFields.forEach((param) => delete reqQuery[param]);
@@ -19,7 +59,26 @@ const advancedResults = (model, populate) => async(req, res, next) => {
     queryString = processNestedFields(queryString);
 
     // finding resource
-    query = model.find(JSON.parse(queryString));
+    if (model.collection.collectionName === "services") {
+        if (textSearch) {
+            const serviceIds = await Service.aggregate([
+                { $match: { $text: { $search: textSearchDescription } } },
+                { $project: { _id: 1 } },
+                { $sort: { score: { $meta: "textScore" } } },
+            ]);
+            const queryObject = {...JSON.parse(queryString), locations: geoSearchObject, _id: { $in: serviceIds } };
+            Object.keys(queryObject).forEach((key) => (queryObject[key] === undefined ? delete queryObject[key] : {}));
+
+            query = model.find(queryObject);
+        } else {
+            const queryObject = {...JSON.parse(queryString), locations: geoSearchObject };
+            Object.keys(queryObject).forEach((key) => (queryObject[key] === undefined ? delete queryObject[key] : {}));
+
+            query = model.find(queryObject);
+        }
+    } else {
+        query = model.find(JSON.parse(queryString));
+    }
 
     // select fields
     if (req.query.select) {
@@ -36,37 +95,7 @@ const advancedResults = (model, populate) => async(req, res, next) => {
     }
 
     // pagination
-    const page = parseInt(req.query.page, 10) || 1;
-    const limit = parseInt(req.query.limit, 10) || parseInt(process.env.DEFAULT_PAGE_LIMIT, 10);
-    const startIndex = (page - 1) * limit;
-    const endIndex = page * limit;
-    const total = (await query).length;
-
-    query = query.skip(startIndex).limit(limit);
-
-    if (populate) {
-        query = query.populate(populate);
-    }
-
-    // executing query
-    const results = await query;
-
-    // pagination result
-    const pagination = {};
-    if (endIndex < total) {
-        pagination.next = {
-            page: page + 1,
-            limit,
-        };
-    }
-    if (startIndex > 0) {
-        pagination.prev = {
-            page: page - 1,
-            limit,
-        };
-    }
-    pagination.page = page;
-    pagination.pages = Math.ceil(total / limit);
+    const { pagination, results } = await getPagination(req, query, populate);
 
     res.advancedResults = {
         success: true,
