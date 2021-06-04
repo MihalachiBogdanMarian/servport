@@ -31,7 +31,7 @@ const App = () => {
     <Provider store={store}>
       <Router>
         <Header />
-        <main className="py-3">
+        <main>
           <Switch>
             <Route exact path="/" component={Home} />
             <Route component={Routes} />

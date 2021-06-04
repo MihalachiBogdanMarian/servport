@@ -33,7 +33,9 @@ const Login = ({ location, history }) => {
   };
 
   const handleLeavingPage = () => {
-    dispatch({ type: AUTH_LOGOUT });
+    if (error) {
+      dispatch({ type: AUTH_LOGOUT });
+    }
   };
 
   return (

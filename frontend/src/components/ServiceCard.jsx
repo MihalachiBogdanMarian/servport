@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import formatDate from "../utils/formatDate";
 
-const Service = ({ service }) => {
+const ServiceCard = ({ service }) => {
   const addresses = service.addresses.map((address) => address.replace(", ", " (") + ")");
 
   const addressesString =
@@ -41,4 +41,4 @@ const Service = ({ service }) => {
   );
 };
 
-export default Service;
+export default ServiceCard;

@@ -9,7 +9,7 @@ import Message from "../components/Message";
 import Meta from "../components/Meta";
 import Paginate from "../components/Paginate";
 import SearchBox from "../components/SearchBox";
-import Service from "../components/Service";
+import ServiceCard from "../components/ServiceCard";
 
 const Services = ({ history, match }) => {
   const pageNumber = match.params.pageNumber || 1;
@@ -26,7 +26,6 @@ const Services = ({ history, match }) => {
   const { userDetails } = loggedInUser;
 
   useEffect(() => {
-    console.log(filters);
     dispatch(getServices(category, pageNumber, filters));
   }, [dispatch, category, pageNumber, filters]);
 
@@ -34,7 +33,7 @@ const Services = ({ history, match }) => {
     <>
       <Container>
         <Row className="justify-content-md-center">
-          <Col xs={12} md={4} className="border">
+          <Col xs={12} md={4} className="border border-dark shadow-sm">
             <Row className="justify-content-md-center">
               <Filters
                 category={category}
@@ -46,7 +45,7 @@ const Services = ({ history, match }) => {
             </Row>
           </Col>
 
-          <Col xs={12} md={4} className="border">
+          <Col xs={12} md={4} className="border border-dark shadow-sm">
             <Row className="justify-content-center align-items-center">
               <GeoSearch
                 category={category}
@@ -58,7 +57,7 @@ const Services = ({ history, match }) => {
             </Row>
           </Col>
 
-          <Col xs={12} md={4} className="border">
+          <Col xs={12} md={4} className="border border-dark shadow-sm">
             <Row className="justify-content-center align-items-center">
               <SearchBox
                 category={category}
@@ -72,7 +71,7 @@ const Services = ({ history, match }) => {
         </Row>
 
         <Row className="justify-content-md-center">
-          <Col xs={12} className="border d-flex justify-content-between">
+          <Col xs={12} className="border border-dark shadow-sm d-flex justify-content-between">
             <Button
               type="button"
               variant="primary"
@@ -83,7 +82,7 @@ const Services = ({ history, match }) => {
                 history.push(`/services/page/1/category/${category}`);
               }}
             >
-              Reset Filters
+              Reset
             </Button>
 
             <Button
@@ -115,7 +114,7 @@ const Services = ({ history, match }) => {
               <>
                 <Row>
                   {services.map((service) => (
-                    <Service key={service._id} service={service} />
+                    <ServiceCard key={service._id} service={service} />
                   ))}
                 </Row>
                 <Paginate pages={pages} page={page} serviceCategory={category} />

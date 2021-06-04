@@ -41,7 +41,9 @@ const Register = ({ location, history }) => {
   };
 
   const handleLeavingPage = () => {
-    dispatch({ type: AUTH_REGISTER_RESET });
+    if (error) {
+      dispatch({ type: AUTH_REGISTER_RESET });
+    }
   };
 
   return (

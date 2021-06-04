@@ -1,8 +1,8 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { Link, Redirect } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 
-const Home = () => {
+const Home = ({ history }) => {
   const loggedInUser = useSelector((state) => state.loggedInUser);
 
   const { userDetails } = loggedInUser;
@@ -15,18 +15,21 @@ const Home = () => {
     <section className="home">
       <div className="dark-overlay">
         <div className="home-inner">
-          <h1 className="">Services Portal</h1>
-          <p className="">Post service offers, search for service offers, expand your business</p>
+          <h1 className="home-h1">Services Portal</h1>
+          <p className="home-p">Post service offers, search for service offers, expand your business</p>
           <div className="buttons">
-            <Link to="/services/auto" className="btn btn-primary">
+            <button
+              className="home-button"
+              onClick={() => history.push("/services/page/1/category/Services>Auto %26 Transportation>Car Services")}
+            >
               Services
-            </Link>
-            <Link to="/register" className="btn btn-primary">
+            </button>
+            <button className="home-button" onClick={() => history.push("/register")}>
               Sign Up
-            </Link>
-            <Link to="/login" className="btn btn-light">
+            </button>
+            <button className="home-button" onClick={() => history.push("/login")}>
               Login
-            </Link>
+            </button>
           </div>
         </div>
       </div>
