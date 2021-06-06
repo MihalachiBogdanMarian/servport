@@ -112,16 +112,16 @@ export const getServiceDetails = (state = { currentService: { reviews: [] } }, a
     }
 };
 
-export const getPricePercentage = (state = { pricePercentage: null }, action) => {
+export const getPricePercentage = (state = { percentage: null }, action) => {
     switch (action.type) {
         case SERVICE_GET_PRICE_PERCENTAGE_REQUEST:
             return {...state, loading: true };
         case SERVICE_GET_PRICE_PERCENTAGE_SUCCESS:
-            return { loading: false, pricePercentage: action.payload };
+            return { loading: false, percentage: action.payload };
         case SERVICE_GET_PRICE_PERCENTAGE_FAIL:
             return { loading: false, error: action.payload };
         case SERVICE_GET_PRICE_PERCENTAGE_RESET:
-            return { pricePercentage: null };
+            return { percentage: null };
         default:
             return state;
     }

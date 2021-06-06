@@ -83,10 +83,10 @@ const Service = ({ history, match }) => {
                     <>
                       <Badge
                         pill
-                        variant={pricePercentage.pricePercentage <= 50.0 ? "success" : "danger"}
+                        variant={pricePercentage.percentage <= 50.0 ? "success" : "danger"}
                         className="ml-3 mr-3 p-2"
                       >
-                        &lt;&nbsp;{pricePercentage.pricePercentage}%
+                        &lt;&nbsp;{pricePercentage.percentage}%
                       </Badge>
                     </>
                   ) : userDetails ? (
