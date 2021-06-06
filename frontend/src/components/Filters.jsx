@@ -1,21 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { Dropdown, DropdownButton } from "react-bootstrap";
+import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
+import { addFilter } from "../actions/service";
 
-const Filters = ({ category, filters, setFilters, isResetFiltersPressed, setIsResetFiltersPressed }) => {
+const Filters = ({ category, isResetFiltersPressed, setIsResetFiltersPressed }) => {
   let history = useHistory();
 
   const [priceButtonLabel, setPriceButtonLabel] = useState("Price");
   const [ratingButtonLabel, setRatingButtonLabel] = useState("Rating");
   const [numReviewsButtonLabel, setNumReviewsButtonLabel] = useState("No. of Reviews");
 
+  const dispatch = useDispatch();
+
   const filter = (field, value) => {
-    const filterApplied = filters.find((filter) => filter.startsWith(field + "="));
-    if (filterApplied) {
-      setFilters([...filters.filter((filter) => !filter.startsWith(field + "=")), field + "=" + value]);
-    } else {
-      setFilters([...filters, field + "=" + value]);
-    }
+    dispatch(addFilter(field + "=" + value));
 
     switch (field) {
       case "labels[price]":

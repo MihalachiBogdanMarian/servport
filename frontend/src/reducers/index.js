@@ -1,7 +1,7 @@
 import { combineReducers } from "redux";
 import { getMe, login, register } from "./auth";
 import { request } from "./request";
-import { getServices } from "./service";
+import { getPageAndFilters, getPricePercentage, getServiceDetails, getServices } from "./service";
 
 export default combineReducers({
     loggedInUser: getMe,
@@ -9,4 +9,7 @@ export default combineReducers({
     registerData: register,
     request,
     servicesList: getServices,
+    pageAndFilters: getPageAndFilters,
+    serviceDetails: getServiceDetails,
+    pricePercentage: getPricePercentage,
 });

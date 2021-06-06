@@ -34,6 +34,10 @@ h3 {
   background-color: black;
 }
 
+.navbar-brand {
+  font-family: 'Press Start 2P', cursive;
+}
+
 .home-h1 {
   font-size: 3rem;
   font-weight: 900;
@@ -50,7 +54,7 @@ h3 {
   margin-top: 20px;
 }
 
-.buttons .home-button {
+.shadow-button {
   margin: 15px;
   padding: 10px 15px;
   background-color: #0000002b;
@@ -65,7 +69,7 @@ h3 {
   font-weight: 900;
 }
 
-.buttons .home-button:hover {
+.shadow-button:hover {
   -webkit-animation-name: button-shadow-animation;
           animation-name: button-shadow-animation;
   -webkit-animation-duration: 0.5s;
@@ -158,5 +162,43 @@ h3 {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
+}
+
+/* specific service page */
+.service-container {
+  border-color: black;
+  border-style: solid;
+  border-width: 0 1px 1px 1px;
+  -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+          box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.current-service-stats {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin: 15px;
+  padding: 10px 15px;
+}
+
+.interested-star {
+  margin-top: -10px;
+  visibility: hidden;
+  cursor: pointer;
+  font-size: 30px;
+  color: yellow;
+}
+
+.interested-star:before {
+  content: "\2605";
+  color: yellow;
+  position: absolute;
+  visibility: visible;
+}
+
+.interested-star:checked:before {
+  content: "\2606";
+  color: yellow;
+  position: absolute;
 }
 /*# sourceMappingURL=index.css.map */

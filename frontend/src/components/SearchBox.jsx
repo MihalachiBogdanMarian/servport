@@ -1,26 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { Button, Form } from "react-bootstrap";
+import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
+import { addFilter } from "../actions/service";
 import Message from "../components/Message";
 
-const SearchBox = ({ category, filters, setFilters, isResetFiltersPressed, setIsResetFiltersPressed }) => {
+const SearchBox = ({ category, isResetFiltersPressed, setIsResetFiltersPressed }) => {
   let history = useHistory();
 
   const [text, setText] = useState("");
   const [error, setError] = useState("");
 
+  const dispatch = useDispatch();
+
   const submitHandler = (e) => {
     e.preventDefault();
     if (text.trim() !== "") {
-      const filterApplied = filters.find((filter) => filter.startsWith("textSearch="));
-      if (filterApplied) {
-        setFilters([
-          ...filters.filter((filter) => !filter.startsWith("textSearchDescription=")),
-          "textSearchDescription=" + text,
-        ]);
-      } else {
-        setFilters([...filters, "textSearch=1", "textSearchDescription=" + text]);
-      }
+      dispatch(addFilter("textSearch=1", "", {}, text));
 
       history.push(`/services/page/1/category/${category}`);
     } else {

@@ -19,15 +19,15 @@ const Home = ({ history }) => {
           <p className="home-p">Post service offers, search for service offers, expand your business</p>
           <div className="buttons">
             <button
-              className="home-button"
+              className="shadow-button"
               onClick={() => history.push("/services/page/1/category/Services>Auto %26 Transportation>Car Services")}
             >
               Services
             </button>
-            <button className="home-button" onClick={() => history.push("/register")}>
+            <button className="shadow-button" onClick={() => history.push("/register")}>
               Sign Up
             </button>
-            <button className="home-button" onClick={() => history.push("/login")}>
+            <button className="shadow-button" onClick={() => history.push("/login")}>
               Login
             </button>
           </div>

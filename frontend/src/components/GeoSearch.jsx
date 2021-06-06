@@ -1,7 +1,9 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import { Select } from "react-functional-select";
+import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
+import { addFilter } from "../actions/service";
 import Message from "../components/Message";
 
 const kmOptions = [
@@ -26,7 +28,7 @@ const themeConfig = {
   },
 };
 
-const GeoSearch = ({ category, filters, setFilters, isResetFiltersPressed, setIsResetFiltersPressed }) => {
+const GeoSearch = ({ category, isResetFiltersPressed, setIsResetFiltersPressed }) => {
   const selectRef = useRef(null);
 
   let history = useHistory();
@@ -34,6 +36,8 @@ const GeoSearch = ({ category, filters, setFilters, isResetFiltersPressed, setIs
   const [address, setAddress] = useState("");
   const [kmOption, setKmOption] = useState({ value: "0", label: "+ 0 km" });
   const [error, setError] = useState("");
+
+  const dispatch = useDispatch();
 
   const getOptionValue = useCallback((option) => option.value, []);
   const getOptionLabel = useCallback((option) => option.label, []);
@@ -43,16 +47,7 @@ const GeoSearch = ({ category, filters, setFilters, isResetFiltersPressed, setIs
   const submitHandler = (e) => {
     e.preventDefault();
     if (address.trim() !== "") {
-      const filterApplied = filters.find((filter) => filter.startsWith("geoSearch="));
-      if (filterApplied) {
-        setFilters([
-          ...filters.filter((filter) => !filter.startsWith("geoSearchKm=")),
-          "geoSearchAddress=" + address,
-          "geoSearchKm=" + kmOption.value,
-        ]);
-      } else {
-        setFilters([...filters, "geoSearch=1", "geoSearchAddress=" + address, "geoSearchKm=" + kmOption.value]);
-      }
+      dispatch(addFilter("geoSearch=1", address, kmOption));
 
       history.push(`/services/page/1/category/${category}`);
     } else {

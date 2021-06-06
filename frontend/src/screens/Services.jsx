@@ -10,20 +10,25 @@ import Meta from "../components/Meta";
 import Paginate from "../components/Paginate";
 import SearchBox from "../components/SearchBox";
 import ServiceCard from "../components/ServiceCard";
+import { CHANGE_PAGE_NUMBER, RESET_PAGE_AND_FILTERS } from "../constants/service";
 
 const Services = ({ history, match }) => {
-  const pageNumber = match.params.pageNumber || 1;
   const category = match.params.category || "Services>Auto %26 Transportation>Car Services";
 
-  const [filters, setFilters] = useState([]);
   const [isResetFiltersPressed, setIsResetFiltersPressed] = useState(false);
 
   const dispatch = useDispatch();
 
   const servicesList = useSelector((state) => state.servicesList);
   const { loading, error, services, pages, page } = servicesList;
+  const pageAndFilters = useSelector((state) => state.pageAndFilters);
+  const { pageNumber, filters } = pageAndFilters;
   const loggedInUser = useSelector((state) => state.loggedInUser);
   const { userDetails } = loggedInUser;
+
+  useEffect(() => {
+    dispatch({ type: CHANGE_PAGE_NUMBER, payload: match.params.pageNumber || 1 });
+  }, [dispatch, match.params.pageNumber]);
 
   useEffect(() => {
     dispatch(getServices(category, pageNumber, filters));
@@ -37,8 +42,6 @@ const Services = ({ history, match }) => {
             <Row className="justify-content-md-center">
               <Filters
                 category={category}
-                filters={filters}
-                setFilters={setFilters}
                 isResetFiltersPressed={isResetFiltersPressed}
                 setIsResetFiltersPressed={setIsResetFiltersPressed}
               ></Filters>
@@ -49,8 +52,6 @@ const Services = ({ history, match }) => {
             <Row className="justify-content-center align-items-center">
               <GeoSearch
                 category={category}
-                filters={filters}
-                setFilters={setFilters}
                 isResetFiltersPressed={isResetFiltersPressed}
                 setIsResetFiltersPressed={setIsResetFiltersPressed}
               ></GeoSearch>
@@ -61,8 +62,6 @@ const Services = ({ history, match }) => {
             <Row className="justify-content-center align-items-center">
               <SearchBox
                 category={category}
-                filters={filters}
-                setFilters={setFilters}
                 isResetFiltersPressed={isResetFiltersPressed}
                 setIsResetFiltersPressed={setIsResetFiltersPressed}
               ></SearchBox>
@@ -77,7 +76,7 @@ const Services = ({ history, match }) => {
               variant="primary"
               className="m-3"
               onClick={() => {
-                setFilters([]);
+                dispatch({ type: RESET_PAGE_AND_FILTERS });
                 setIsResetFiltersPressed(true);
                 history.push(`/services/page/1/category/${category}`);
               }}

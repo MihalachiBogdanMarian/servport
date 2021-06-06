@@ -108,6 +108,7 @@ const getPricePercentage = asyncHandler(async(req, res, next) => {
                 $match: {
                     $and: [
                         { _id: { $ne: mongoose.Types.ObjectId(req.params.id) } },
+                        { category: service.category },
                         {
                             averagePrice: {
                                 $gte: serviceAveragePrice,
@@ -123,7 +124,7 @@ const getPricePercentage = asyncHandler(async(req, res, next) => {
     };
 
     const totalNumServicesPromise = async() => {
-        return await Service.find({}).countDocuments();
+        return await Service.find({ category: service.category }).countDocuments();
     };
 
     await Promise.all([numServicesGreaterPricePromise(), totalNumServicesPromise()])
@@ -131,7 +132,10 @@ const getPricePercentage = asyncHandler(async(req, res, next) => {
             const [numServicesGreaterPrice, totalNumServices] = values;
             res.status(200).json({
                 success: true,
-                data: ((numServicesGreaterPrice[0].count / totalNumServices) * 100).toFixed(2),
+                data: (
+                    ((numServicesGreaterPrice.length === 0 ? 0 : numServicesGreaterPrice[0].count) / totalNumServices) *
+                    100
+                ).toFixed(2),
             });
         })
         .catch((error) => {
