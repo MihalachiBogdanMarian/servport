@@ -1,13 +1,23 @@
-import React, { useEffect, useState } from "react";
-import { Badge, Button, Col, Container, Row } from "react-bootstrap";
+import React, { useCallback, useEffect, useState } from "react";
+import { Badge, Button, Card, Col, Container, ListGroup, Row } from "react-bootstrap";
+import { Select } from "react-functional-select";
 import { useDispatch, useSelector } from "react-redux";
 import ReactTooltip from "react-tooltip";
-import { getServiceDetails } from "../actions/service";
+import { getPricePercentage, getServiceDetails } from "../actions/service";
 import ImageCarousel from "../components/ImageCarousel";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
-import { getPricePercentage } from "../reducers/service";
+import OwnerCard from "../components/OwnerCard";
+import Reviews from "../components/Reviews";
+import formatAvailabilityPeriod from "../utils/formatAvailabilityPeriod";
 import formatDate from "../utils/formatDate";
+import hasExpired from "../utils/hasExpired";
+
+const themeConfig = {
+  select: {
+    css: "width: 450px;",
+  },
+};
 
 const Service = ({ history, match }) => {
   const serviceId = match.params.id;
@@ -15,6 +25,10 @@ const Service = ({ history, match }) => {
   const dispatch = useDispatch();
 
   const [isPriceButtonPressed, setPriceButtonPressed] = useState(false);
+  const [executionAddressOptions, setExecutionAddressOptions] = useState([]);
+  const [availabilityPeriodOptions, setAvailabilityPeriodOptions] = useState([]);
+  const [paymentPermissionReceived, setPaymentPermissionReceived] = useState(undefined);
+  const [agreedPrice, setAgreedPrice] = useState("--.--$");
 
   const serviceDetails = useSelector((state) => state.serviceDetails);
   const { loading, error, currentService } = serviceDetails;
@@ -24,10 +38,44 @@ const Service = ({ history, match }) => {
   const loggedInUser = useSelector((state) => state.loggedInUser);
   const { userDetails } = loggedInUser;
 
+  const getOptionValue = useCallback((option) => option.value, []);
+  const getOptionLabel = useCallback((option) => option.label, []);
+
   useEffect(() => {
     dispatch(getServiceDetails(serviceId));
-    dispatch(getPricePercentage(serviceId));
   }, [dispatch, serviceId]);
+
+  useEffect(() => {
+    if (currentService && "title" in currentService) {
+      setExecutionAddressOptions([
+        ...currentService.addresses.map((address) => {
+          return { value: address, label: address, isDisabled: true };
+        }),
+      ]);
+      setAvailabilityPeriodOptions([
+        ...currentService.availabilityPeriods.map((availabilityPeriod) => {
+          return {
+            value: formatAvailabilityPeriod(availabilityPeriod.startTime, availabilityPeriod.endTime),
+            label: formatAvailabilityPeriod(availabilityPeriod.startTime, availabilityPeriod.endTime),
+            isDisabled: true,
+          };
+        }),
+      ]);
+
+      if (userDetails) {
+        setPaymentPermissionReceived(
+          currentService.paymentCanProceedUsers.find(
+            (paymentUser) => paymentUser.user === userDetails._id && !hasExpired(paymentUser.expiresAt)
+          )
+        );
+        setAgreedPrice(paymentPermissionReceived ? paymentPermissionReceived.price + "$" : "--.--$");
+      }
+    }
+  }, [dispatch, currentService, userDetails, paymentPermissionReceived]);
+
+  useEffect(() => {
+    dispatch(getPricePercentage(serviceId));
+  }, [dispatch, serviceId, userDetails]);
 
   return (
     <>
@@ -38,7 +86,7 @@ const Service = ({ history, match }) => {
       ) : (
         currentService &&
         "title" in currentService && (
-          <Container className="service-container">
+          <Container className="shadow-container">
             <Row className="justify-content-between">
               <span className="current-service-stats">
                 <p>
@@ -67,28 +115,77 @@ const Service = ({ history, match }) => {
               </button>
             </Row>
             <Row>
-              <Col xs={12} md={6}></Col>
+              <Col xs={12} md={6}>
+                {userDetails ? (
+                  <OwnerCard ownerDetails={currentService.user} blocked={false}></OwnerCard>
+                ) : (
+                  <OwnerCard ownerDetails={currentService.user} blocked={true}></OwnerCard>
+                )}
+                <Card className="shadow-container">
+                  <ListGroup variant="flush">
+                    <ListGroup.Item>
+                      <Row>
+                        <Col>Price:</Col>
+                        <Col>
+                          <strong>{agreedPrice}</strong>
+                        </Col>
+                      </Row>
+                    </ListGroup.Item>
+                    <ListGroup.Item>
+                      <a data-tip data-for="paymentTooltip" href>
+                        <Button
+                          onClick={() => history.push("/request")}
+                          className="btn-block"
+                          type="button"
+                          disabled={paymentPermissionReceived === undefined}
+                        >
+                          Proceed to Payment
+                        </Button>
+                      </a>
+                      {paymentPermissionReceived === undefined ? (
+                        <ReactTooltip id="paymentTooltip" effect="solid" place="bottom">
+                          <span>
+                            you first have to contact the owner <br></br>&nbsp;&nbsp;&nbsp;&nbsp;and agree on price and
+                            period
+                          </span>
+                        </ReactTooltip>
+                      ) : (
+                        <></>
+                      )}
+                    </ListGroup.Item>
+                  </ListGroup>
+                </Card>
+              </Col>
               <Col xs={12} md={6}>
                 <ImageCarousel images={currentService.images}></ImageCarousel>
+              </Col>
+            </Row>
+            <Row>
+              <Col xs={12} md={6} className="order-md-1 order-2">
+                <Reviews
+                  userDetails={userDetails}
+                  serviceId={currentService._id.toString()}
+                  matchServiceId={match.params.id}
+                ></Reviews>
+              </Col>
+              <Col xs={12} md={6} className="order-md-2 order-1">
                 <p>
                   <small className="text-muted">Posted at: {formatDate(currentService.createdAt)}</small>
                 </p>
                 <h5>{currentService.title}</h5>
                 <hr></hr>
                 <Row className="justify-content-between align-items-center">
-                  <p className="ml-3 mr-3">
+                  <p className="pt-3 ml-3 mr-3 align-self-center">
                     Prices between: {currentService.price.minPrice}$ - {currentService.price.maxPrice}$
                   </p>
                   {isPriceButtonPressed ? (
-                    <>
-                      <Badge
-                        pill
-                        variant={pricePercentage.percentage <= 50.0 ? "success" : "danger"}
-                        className="ml-3 mr-3 p-2"
-                      >
-                        &lt;&nbsp;{pricePercentage.percentage}%
-                      </Badge>
-                    </>
+                    <Badge
+                      pill
+                      variant={pricePercentage.percentage <= 50.0 ? "danger" : "success"}
+                      className="badge-font-large ml-3 mr-3 p-2"
+                    >
+                      &lt;&nbsp;{pricePercentage.percentage}%
+                    </Badge>
                   ) : userDetails ? (
                     <Button
                       type="submit"
@@ -100,16 +197,17 @@ const Service = ({ history, match }) => {
                     </Button>
                   ) : (
                     <>
-                      <Button
-                        type="submit"
-                        variant="outline-success"
-                        className="ml-3 mr-3"
-                        disabled
-                        data-tip="you have to <br> be logged in"
-                      >
-                        Show price percentage
-                      </Button>
-                      <ReactTooltip />
+                      <a data-tip data-for="loggedInTooltip" href>
+                        <Button type="submit" variant="outline-success" className="ml-3 mr-3" disabled>
+                          Show price percentage
+                        </Button>
+                      </a>
+                      <ReactTooltip id="loggedInTooltip" effect="solid" place="top">
+                        <span className="tooltip-span">
+                          you have to be logged in <br></br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;in order to see
+                          <br></br> &nbsp;&nbsp;&nbsp;the price percentage
+                        </span>
+                      </ReactTooltip>
                     </>
                   )}
                 </Row>
@@ -117,11 +215,27 @@ const Service = ({ history, match }) => {
                 <h6>Description</h6>
                 <p>{currentService.description}</p>
                 <hr></hr>
+                <Row className="justify-content-start m-3">
+                  <Select
+                    menuPosition="top"
+                    options={executionAddressOptions}
+                    getOptionValue={getOptionValue}
+                    getOptionLabel={getOptionLabel}
+                    initialValue={{ value: "Check available locations", label: "Check available locations" }}
+                    themeConfig={themeConfig}
+                  />
+                </Row>
+                <Row className="justify-content-end m-3">
+                  <Select
+                    menuPosition="top"
+                    options={availabilityPeriodOptions}
+                    getOptionValue={getOptionValue}
+                    getOptionLabel={getOptionLabel}
+                    initialValue={{ value: "Check availability periods", label: "Check availability periods" }}
+                    themeConfig={themeConfig}
+                  />
+                </Row>
               </Col>
-            </Row>
-            <Row>
-              <Col xs={12} md={6}></Col>
-              <Col xs={12} md={6}></Col>
             </Row>
           </Container>
         )

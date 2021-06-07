@@ -23,7 +23,8 @@ const Login = ({ location, history }) => {
   useEffect(() => {
     if (token) {
       // user is logged in
-      history.push(redirect);
+      history.goBack();
+      // history.push(redirect);
     }
   }, [history, token, redirect]);
 

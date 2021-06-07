@@ -11,11 +11,20 @@ const checkObjectIds = (idsToCheck) => (req, res, next) => {
 };
 
 // middleware to check for document existence in db
-const checkDocumentExistence = (model, id, populateModel = "", populateFields = [], selectFields = "") =>
+const checkDocumentExistence = (model, id, populateModel = "", populateFields = "", selectFields = "") =>
     asyncHandler(async(req, res, next) => {
-        const document = await model.findById(req.params[id]).populate(populateModel, populateFields).select(selectFields);
-
         const modelName = model.collection.collectionName.slice(0, -1);
+
+        let document = undefined;
+        if (modelName === "service") {
+            document = await model
+                .findById(req.params[id])
+                .populate(populateModel, populateFields)
+                .populate({ path: "reviews", populate: { path: "user", select: "name" } })
+                .select(selectFields);
+        } else {
+            document = await model.findById(req.params[id]).populate(populateModel, populateFields).select(selectFields);
+        }
 
         if (!document) {
             return next(new ErrorResponse(`No ${modelName} with the id of ${req.params[id]}`, 404));

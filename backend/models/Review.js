@@ -15,7 +15,7 @@ const ReviewSchema = new mongoose.Schema({
     },
     comment: {
         type: String,
-        required: [true, "Please add some text"],
+        required: [true, "Please add a comment"],
     },
     createdAt: {
         type: Date,

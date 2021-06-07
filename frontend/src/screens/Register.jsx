@@ -22,14 +22,16 @@ const Register = ({ location, history }) => {
 
   const registerData = useSelector((state) => state.registerData);
   const { loading, error, token } = registerData;
+  const loggedInUser = useSelector((state) => state.loggedInUser);
+  const { userDetails } = loggedInUser;
 
   const redirect = location.search ? location.search.split("=")[1] : "/profile";
 
   useEffect(() => {
-    if (token) {
+    if (token || userDetails) {
       history.push(redirect);
     }
-  }, [history, token, redirect]);
+  }, [history, token, redirect, userDetails]);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -58,7 +60,7 @@ const Register = ({ location, history }) => {
           <Form.Group controlId="name">
             <Form.Label>Name</Form.Label>
             <Form.Control
-              type="name"
+              type="text"
               placeholder="Enter name"
               value={name}
               onChange={(e) => setName(e.target.value)}

@@ -83,5 +83,6 @@ export const logout = () => async(dispatch) => {
     localStorage.removeItem("requestServices");
     localStorage.removeItem("executionAddresses");
     localStorage.removeItem("paymentMethod");
-    document.location.href = "/login";
+    const newLocation = document.location.href;
+    document.location.href = newLocation;
 };

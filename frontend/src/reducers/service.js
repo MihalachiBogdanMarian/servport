@@ -21,7 +21,7 @@ import {
     SERVICE_GET_SERVICE_DETAILS_FAIL,
     SERVICE_GET_SERVICE_DETAILS_REQUEST,
     SERVICE_GET_SERVICE_DETAILS_RESET,
-    SERVICE_GET_SERVICE_DETAILS_SUCCESS,
+    SERVICE_GET_SERVICE_DETAILS_SUCCESS
 } from "../constants/service";
 
 export const getServices = (state = { services: [] }, action) => {

@@ -1,6 +1,7 @@
 import { combineReducers } from "redux";
 import { getMe, login, register } from "./auth";
 import { request } from "./request";
+import { addReview, getServiceReviews, removeReview } from "./review";
 import { getPageAndFilters, getPricePercentage, getServiceDetails, getServices } from "./service";
 
 export default combineReducers({
@@ -11,5 +12,8 @@ export default combineReducers({
     servicesList: getServices,
     pageAndFilters: getPageAndFilters,
     serviceDetails: getServiceDetails,
+    serviceReviews: getServiceReviews,
     pricePercentage: getPricePercentage,
+    addReviewStatus: addReview,
+    removeReviewStatus: removeReview,
 });

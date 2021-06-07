@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Button, Form } from "react-bootstrap";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { addFilter } from "../actions/service";
 import Message from "../components/Message";
@@ -8,7 +8,12 @@ import Message from "../components/Message";
 const SearchBox = ({ category, isResetFiltersPressed, setIsResetFiltersPressed }) => {
   let history = useHistory();
 
-  const [text, setText] = useState("");
+  const pageAndFilters = useSelector((state) => state.pageAndFilters);
+  const { filters } = pageAndFilters;
+  const textFilterApplied = filters.find((filter) => filter.startsWith("textSearchDescription="));
+  const textSearchDescription = textFilterApplied ? textFilterApplied.split("=")[1] : "";
+
+  const [text, setText] = useState(textSearchDescription);
   const [error, setError] = useState("");
 
   const dispatch = useDispatch();

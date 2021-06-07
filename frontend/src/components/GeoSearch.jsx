@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import { Select } from "react-functional-select";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { addFilter } from "../actions/service";
 import Message from "../components/Message";
@@ -33,11 +33,20 @@ const GeoSearch = ({ category, isResetFiltersPressed, setIsResetFiltersPressed }
 
   let history = useHistory();
 
-  const [address, setAddress] = useState("");
-  const [kmOption, setKmOption] = useState({ value: "0", label: "+ 0 km" });
-  const [error, setError] = useState("");
-
   const dispatch = useDispatch();
+
+  const pageAndFilters = useSelector((state) => state.pageAndFilters);
+  const { filters } = pageAndFilters;
+  const geoAddressApplied = filters.find((filter) => filter.startsWith("geoSearchAddress="));
+  const geoKmApplied = filters.find((filter) => filter.startsWith("geoSearchKm="));
+  const geoSearchAddress = geoAddressApplied ? geoAddressApplied.split("=")[1] : "";
+  const geoSearchKm = geoKmApplied
+    ? kmOptions.find((kmOption) => (kmOption.value = geoKmApplied))
+    : { value: "0", label: "+ 0 km" };
+
+  const [address, setAddress] = useState(geoSearchAddress);
+  const [kmOption, setKmOption] = useState(geoSearchKm);
+  const [error, setError] = useState("");
 
   const getOptionValue = useCallback((option) => option.value, []);
   const getOptionLabel = useCallback((option) => option.label, []);

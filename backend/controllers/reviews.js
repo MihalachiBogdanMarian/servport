@@ -2,6 +2,16 @@ import asyncHandler from "../middleware/async.js";
 import ErrorResponse from "../utils/errorResponse.js";
 import sentimentAnalysis from "../utils/sentimentAnalysis.js";
 
+// @desc    get reviews for a service
+// @route   GET /api/v1/services/:serviceId/reviews
+// @access  private
+const getReviews = asyncHandler(async(req, res, next) => {
+    res.status(200).json({
+        success: true,
+        data: req.document.reviews,
+    });
+});
+
 // @desc    add review to service
 // @route   POST /api/v1/services/:serviceId/reviews
 // @access  private
@@ -16,7 +26,7 @@ const addReview = asyncHandler(async(req, res, next) => {
         return next(new ErrorResponse("Cannot post review to your own service offer", 400));
     }
 
-    const alreadyReviewed = service.reviews.find((review) => review.user.toString() === req.user._id.toString());
+    const alreadyReviewed = service.reviews.find((review) => review.user._id.toString() === req.user._id.toString());
 
     if (alreadyReviewed) {
         return next(new ErrorResponse("Service already reviewed", 400));
@@ -70,7 +80,7 @@ const removeReview = asyncHandler(async(req, res, next) => {
         return next(new ErrorResponse(`No review with the id of ${req.params.reviewId}`, 404));
     }
 
-    const myReview = review.user.toString() === req.user._id.toString();
+    const myReview = review.user._id.toString() === req.user._id.toString();
 
     if (!myReview) {
         return next(new ErrorResponse("Cannot delete someone elses review", 400));
@@ -134,4 +144,4 @@ const starReview = asyncHandler(async(req, res, next) => {
     res.status(201).json({ success: true, sentiment, stars, review });
 });
 
-export { addReview, removeReview, starReview };
+export { getReviews, addReview, removeReview, starReview };

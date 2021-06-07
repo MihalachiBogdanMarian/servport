@@ -24,8 +24,52 @@ h3 {
     padding: 1rem 0;
 }
 
-.rating span {
-    margin: 0.1rem;
+strong {
+    font-weight: 900;
+}
+
+.dark-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    // background-color: rgba(0, 0, 0, 0.8);
+    position: absolute;
+}
+
+.shadow-button {
+    margin: 15px;
+    padding: 10px 15px;
+    background-color: #0000002b;
+    color: black;
+    border: 2px solid black;
+    border-radius: 10px;
+    text-decoration: none;
+    cursor: pointer;
+    transition-duration: 0.5s;
+    font-size: 1rem;
+    font-weight: 900;
+    &:hover {
+        animation-name: button-shadow-animation;
+        animation-duration: 0.5s;
+        box-shadow: 3px 3px 15px black, -3px -3px 15px black;
+    }
+    @keyframes button-shadow-animation {
+        from {
+            box-shadow: 0 0 0 black;
+        }
+        to {
+            box-shadow: 3px 3px 15px black, -3px -3px 15px black;
+        }
+    }
+}
+
+.shadow-container {
+    border-color: black;
+    border-style: solid;
+    border-width: 1px 1px 1px 1px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
 }
 
 
@@ -56,33 +100,6 @@ h3 {
     margin-top: 20px;
 }
 
-.shadow-button {
-    margin: 15px;
-    padding: 10px 15px;
-    background-color: #0000002b;
-    color: black;
-    border: 3px solid black;
-    border-radius: 10px;
-    text-decoration: none;
-    cursor: pointer;
-    transition-duration: 0.5s;
-    font-size: 1rem;
-    font-weight: 900;
-    &:hover {
-        animation-name: button-shadow-animation;
-        animation-duration: 0.5s;
-        box-shadow: 3px 3px 15px black, -3px -3px 15px black;
-    }
-    @keyframes button-shadow-animation {
-        from {
-            box-shadow: 0 0 0 black;
-        }
-        to {
-            box-shadow: 3px 3px 15px black, -3px -3px 15px black;
-        }
-    }
-}
-
 
 /* home page */
 
@@ -102,16 +119,6 @@ h3 {
     justify-content: center;
     text-align: center;
     color: #fff;
-}
-
-.dark-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    // background-color: rgba(0, 0, 0, 0.8);
-    position: absolute;
 }
 
 
@@ -140,13 +147,6 @@ h3 {
 
 /* specific service page */
 
-.service-container {
-    border-color: black;
-    border-style: solid;
-    border-width: 0 1px 1px 1px;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-}
-
 .current-service-stats {
     display: flex;
     margin: 15px;
@@ -158,16 +158,41 @@ h3 {
     visibility: hidden;
     cursor: pointer;
     font-size: 30px;
-    color: yellow;
+    color: orange;
     &:before {
         content: "\2605";
-        color: yellow;
+        color: orange;
         position: absolute;
         visibility: visible;
     }
     &:checked:before {
         content: "\2606";
-        color: yellow;
+        color: orange;
         position: absolute;
     }
+}
+
+.badge-font-large {
+    font-size: 1rem;
+}
+
+.owner-card {
+    border: 1px solid black;
+    box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
+    img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+    }
+}
+
+.owner-card-blocked {
+    height: 150px;
+    border: 2px solid black;
+    box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    vertical-align: middle;
+    line-height: 150px;
+    background-color: #d4d4d4;
+    color: black;
 }

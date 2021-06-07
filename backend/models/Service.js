@@ -154,10 +154,10 @@ const ServiceSchema = new mongoose.Schema({
     timestamps: true,
 });
 
-ServiceSchema.path("reviews").validate(function(value) {
-    const userIds = value.map((review) => review.user.toString());
-    return new Set(userIds).size === userIds.length;
-}, "A user cannot leave more than one review");
+// ServiceSchema.path("reviews").validate(function(value) {
+//     const userIds = value.map((review) => review.user._id.toString());
+//     return new Set(userIds).size === userIds.length;
+// }, "A user cannot leave more than one review");
 
 // set service owner as the default user who can proceed to payment
 ServiceSchema.pre("save", function(next) {

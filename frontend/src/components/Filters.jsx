@@ -1,15 +1,28 @@
 import React, { useEffect, useState } from "react";
 import { Dropdown, DropdownButton } from "react-bootstrap";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { addFilter } from "../actions/service";
 
 const Filters = ({ category, isResetFiltersPressed, setIsResetFiltersPressed }) => {
   let history = useHistory();
 
-  const [priceButtonLabel, setPriceButtonLabel] = useState("Price");
-  const [ratingButtonLabel, setRatingButtonLabel] = useState("Rating");
-  const [numReviewsButtonLabel, setNumReviewsButtonLabel] = useState("No. of Reviews");
+  const pageAndFilters = useSelector((state) => state.pageAndFilters);
+  const { filters } = pageAndFilters;
+  const priceFilterApplied = filters.find((filter) => filter.startsWith("labels[price]="));
+  const priceButtonValue = priceFilterApplied ? " - " + priceFilterApplied.split("=")[1].charAt(0).toUpperCase() : "";
+  const ratingFilterApplied = filters.find((filter) => filter.startsWith("labels[rating]="));
+  const ratingButtonValue = ratingFilterApplied
+    ? " - " + ratingFilterApplied.split("=")[1].charAt(0).toUpperCase()
+    : "";
+  const numReviewsFilterApplied = filters.find((filter) => filter.startsWith("labels[numReviews]="));
+  const numReviewsButtonValue = numReviewsFilterApplied
+    ? " - " + numReviewsFilterApplied.split("=")[1].charAt(0).toUpperCase()
+    : "";
+
+  const [priceButtonLabel, setPriceButtonLabel] = useState("Price" + priceButtonValue);
+  const [ratingButtonLabel, setRatingButtonLabel] = useState("Rating" + ratingButtonValue);
+  const [numReviewsButtonLabel, setNumReviewsButtonLabel] = useState("No. of Reviews" + numReviewsButtonValue);
 
   const dispatch = useDispatch();
 

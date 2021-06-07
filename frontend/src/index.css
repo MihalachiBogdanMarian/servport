@@ -24,34 +24,17 @@ h3 {
   padding: 1rem 0;
 }
 
-.rating span {
-  margin: 0.1rem;
-}
-
-/* header */
-.navbar-custom {
-  font-size: 0.8rem;
-  background-color: black;
-}
-
-.navbar-brand {
-  font-family: 'Press Start 2P', cursive;
-}
-
-.home-h1 {
-  font-size: 3rem;
+strong {
   font-weight: 900;
-  color: black;
 }
 
-.home-p {
-  font-size: 1rem;
-  font-weight: 900;
-  color: black;
-}
-
-.buttons {
-  margin-top: 20px;
+.dark-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  position: absolute;
 }
 
 .shadow-button {
@@ -59,7 +42,7 @@ h3 {
   padding: 10px 15px;
   background-color: #0000002b;
   color: black;
-  border: 3px solid black;
+  border: 2px solid black;
   border-radius: 10px;
   text-decoration: none;
   cursor: pointer;
@@ -100,6 +83,40 @@ h3 {
   }
 }
 
+.shadow-container {
+  border-color: black;
+  border-style: solid;
+  border-width: 1px 1px 1px 1px;
+  -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+          box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+/* header */
+.navbar-custom {
+  font-size: 0.8rem;
+  background-color: black;
+}
+
+.navbar-brand {
+  font-family: 'Press Start 2P', cursive;
+}
+
+.home-h1 {
+  font-size: 3rem;
+  font-weight: 900;
+  color: black;
+}
+
+.home-p {
+  font-size: 1rem;
+  font-weight: 900;
+  color: black;
+}
+
+.buttons {
+  margin-top: 20px;
+}
+
 /* home page */
 .home {
   position: relative;
@@ -126,15 +143,6 @@ h3 {
           justify-content: center;
   text-align: center;
   color: #fff;
-}
-
-.dark-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  position: absolute;
 }
 
 /* services page */
@@ -165,14 +173,6 @@ h3 {
 }
 
 /* specific service page */
-.service-container {
-  border-color: black;
-  border-style: solid;
-  border-width: 0 1px 1px 1px;
-  -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-          box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-}
-
 .current-service-stats {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -186,19 +186,47 @@ h3 {
   visibility: hidden;
   cursor: pointer;
   font-size: 30px;
-  color: yellow;
+  color: orange;
 }
 
 .interested-star:before {
   content: "\2605";
-  color: yellow;
+  color: orange;
   position: absolute;
   visibility: visible;
 }
 
 .interested-star:checked:before {
   content: "\2606";
-  color: yellow;
+  color: orange;
   position: absolute;
+}
+
+.badge-font-large {
+  font-size: 1rem;
+}
+
+.owner-card {
+  border: 1px solid black;
+  -webkit-box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
+          box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
+}
+
+.owner-card img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.owner-card-blocked {
+  height: 150px;
+  border: 2px solid black;
+  -webkit-box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
+          box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  vertical-align: middle;
+  line-height: 150px;
+  background-color: #d4d4d4;
+  color: black;
 }
 /*# sourceMappingURL=index.css.map */
