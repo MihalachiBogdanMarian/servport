@@ -1,9 +1,10 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useCallback, useEffect, useState } from "react";
 import { Badge, Button, Card, Col, Container, ListGroup, Row } from "react-bootstrap";
 import { Select } from "react-functional-select";
 import { useDispatch, useSelector } from "react-redux";
 import ReactTooltip from "react-tooltip";
-import { getPricePercentage, getServiceDetails } from "../actions/service";
+import { getServiceDetails } from "../actions/service";
 import ImageCarousel from "../components/ImageCarousel";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
@@ -27,14 +28,15 @@ const Service = ({ history, match }) => {
   const [isPriceButtonPressed, setPriceButtonPressed] = useState(false);
   const [executionAddressOptions, setExecutionAddressOptions] = useState([]);
   const [availabilityPeriodOptions, setAvailabilityPeriodOptions] = useState([]);
+  const [hasPaymentPermissionExpired, setPaymentPermissionExpired] = useState(false);
   const [paymentPermissionReceived, setPaymentPermissionReceived] = useState(undefined);
   const [agreedPrice, setAgreedPrice] = useState("--.--$");
 
   const serviceDetails = useSelector((state) => state.serviceDetails);
-  const { loading, error, currentService } = serviceDetails;
+  const { loading, error, currentService, percentage } = serviceDetails;
   const pageAndFilters = useSelector((state) => state.pageAndFilters);
   const { pageNumber } = pageAndFilters;
-  const pricePercentage = useSelector((state) => state.pricePercentage);
+  // const pricePercentage = useSelector((state) => state.pricePercentage);
   const loggedInUser = useSelector((state) => state.loggedInUser);
   const { userDetails } = loggedInUser;
 
@@ -63,6 +65,11 @@ const Service = ({ history, match }) => {
       ]);
 
       if (userDetails) {
+        setPaymentPermissionExpired(
+          currentService.paymentCanProceedUsers.find(
+            (paymentUser) => paymentUser.user === userDetails._id && hasExpired(paymentUser.expiresAt)
+          )
+        );
         setPaymentPermissionReceived(
           currentService.paymentCanProceedUsers.find(
             (paymentUser) => paymentUser.user === userDetails._id && !hasExpired(paymentUser.expiresAt)
@@ -73,9 +80,9 @@ const Service = ({ history, match }) => {
     }
   }, [dispatch, currentService, userDetails, paymentPermissionReceived]);
 
-  useEffect(() => {
-    dispatch(getPricePercentage(serviceId));
-  }, [dispatch, serviceId, userDetails]);
+  // useEffect(() => {
+  //   dispatch(getPricePercentage(serviceId));
+  // }, [dispatch, serviceId, userDetails]);
 
   return (
     <>
@@ -125,6 +132,11 @@ const Service = ({ history, match }) => {
                   <ListGroup variant="flush">
                     <ListGroup.Item>
                       <Row>
+                        {hasPaymentPermissionExpired && (
+                          <Message variant="success">
+                            Payment permission expired! Please contact the owner again
+                          </Message>
+                        )}
                         <Col>Price:</Col>
                         <Col>
                           <strong>{agreedPrice}</strong>
@@ -132,8 +144,10 @@ const Service = ({ history, match }) => {
                       </Row>
                     </ListGroup.Item>
                     <ListGroup.Item>
-                      <a data-tip data-for="paymentTooltip" href>
+                      <a data-tip data-for="paymentTooltip">
                         <Button
+                          data-tip
+                          data-for="paymentTooltip"
                           onClick={() => history.push("/request")}
                           className="btn-block"
                           type="button"
@@ -162,11 +176,7 @@ const Service = ({ history, match }) => {
             </Row>
             <Row>
               <Col xs={12} md={6} className="order-md-1 order-2">
-                <Reviews
-                  userDetails={userDetails}
-                  serviceId={currentService._id.toString()}
-                  matchServiceId={match.params.id}
-                ></Reviews>
+                <Reviews serviceId={currentService._id.toString()} matchServiceId={match.params.id}></Reviews>
               </Col>
               <Col xs={12} md={6} className="order-md-2 order-1">
                 <p>
@@ -181,10 +191,10 @@ const Service = ({ history, match }) => {
                   {isPriceButtonPressed ? (
                     <Badge
                       pill
-                      variant={pricePercentage.percentage <= 50.0 ? "danger" : "success"}
+                      variant={percentage <= 50.0 ? "danger" : "success"}
                       className="badge-font-large ml-3 mr-3 p-2"
                     >
-                      &lt;&nbsp;{pricePercentage.percentage}%
+                      &lt;&nbsp;{percentage}%
                     </Badge>
                   ) : userDetails ? (
                     <Button
@@ -197,7 +207,7 @@ const Service = ({ history, match }) => {
                     </Button>
                   ) : (
                     <>
-                      <a data-tip data-for="loggedInTooltip" href>
+                      <a data-tip data-for="loggedInTooltip">
                         <Button type="submit" variant="outline-success" className="ml-3 mr-3" disabled>
                           Show price percentage
                         </Button>

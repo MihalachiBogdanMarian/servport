@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React from "react";
 import ReactTooltip from "react-tooltip";
 
@@ -6,7 +7,7 @@ const OwnerCard = ({ ownerDetails, blocked }) => {
     <>
       {blocked ? (
         <>
-          <a data-tip data-for="ownerCardTooltip" href>
+          <a data-tip data-for="ownerCardTooltip">
             <div className="card mb-3 owner-card-blocked">
               <div className="row g-0">
                 <div className="col-md-12">

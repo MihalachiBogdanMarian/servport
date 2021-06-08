@@ -21,7 +21,7 @@ import {
     SERVICE_GET_SERVICE_DETAILS_FAIL,
     SERVICE_GET_SERVICE_DETAILS_REQUEST,
     SERVICE_GET_SERVICE_DETAILS_RESET,
-    SERVICE_GET_SERVICE_DETAILS_SUCCESS
+    SERVICE_GET_SERVICE_DETAILS_SUCCESS,
 } from "../constants/service";
 
 export const getServices = (state = { services: [] }, action) => {
@@ -97,16 +97,16 @@ export const getPageAndFilters = (state = { pageNumber: 1, filters: [] }, action
     }
 };
 
-export const getServiceDetails = (state = { currentService: { reviews: [] } }, action) => {
+export const getServiceDetails = (state = { currentService: { reviews: [] }, percentage: null }, action) => {
     switch (action.type) {
         case SERVICE_GET_SERVICE_DETAILS_REQUEST:
             return {...state, loading: true };
         case SERVICE_GET_SERVICE_DETAILS_SUCCESS:
-            return { loading: false, currentService: action.payload };
+            return { loading: false, currentService: action.payload.service, percentage: action.payload.pricePercentage };
         case SERVICE_GET_SERVICE_DETAILS_FAIL:
             return { loading: false, error: action.payload };
         case SERVICE_GET_SERVICE_DETAILS_RESET:
-            return { currentService: {} };
+            return { currentService: { reviews: [] }, percentage: null };
         default:
             return state;
     }

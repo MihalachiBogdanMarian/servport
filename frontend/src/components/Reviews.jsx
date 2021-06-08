@@ -1,19 +1,25 @@
-import React, { useEffect, useState } from "react";
-import { Button, Form, ListGroup } from "react-bootstrap";
+import React, { useEffect, useRef, useState } from "react";
+import { Button, Col, Form, ListGroup, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { addReview, getServiceReviews } from "../actions/review";
+import { addReview, getServiceReviews, removeReview } from "../actions/review";
 import Message from "../components/Message";
 import Rating from "../components/Rating";
-import { SERVICE_ADD_REVIEW_RESET } from "../constants/review";
+import { SERVICE_ADD_REVIEW_RESET, SERVICE_REMOVE_REVIEW_RESET } from "../constants/review";
 import Loader from "./Loader";
 
-const Reviews = ({ userDetails, serviceId, matchServiceId }) => {
+const Reviews = ({ serviceId, matchServiceId }) => {
   const [title, setTitle] = useState("");
   const [comment, setComment] = useState("");
+  const [myReview, setMyReview] = useState(undefined);
 
   const dispatch = useDispatch();
 
+  const latestSuccessAddReviewStatus = useRef();
+  const latestSuccessRemoveReviewStatus = useRef();
+
+  const loggedInUser = useSelector((state) => state.loggedInUser);
+  const { userDetails } = loggedInUser;
   const serviceReviews = useSelector((state) => state.serviceReviews);
   const { currentServiceReviews } = serviceReviews;
   const addReviewStatus = useSelector((state) => state.addReviewStatus);
@@ -24,32 +30,61 @@ const Reviews = ({ userDetails, serviceId, matchServiceId }) => {
     error: errorAddReviewStatus,
   } = addReviewStatus;
   const removeReviewStatus = useSelector((state) => state.removeReviewStatus);
-  const {
-    loading: loadingRemoveReviewStatus,
-    success: successRemoveReviewStatus,
-    message: successRemoveReviewMessage,
-    error: errorRemoveReviewStatus,
-  } = removeReviewStatus;
+  const { success: successRemoveReviewStatus, message: successRemoveReviewMessage } = removeReviewStatus;
+
+  useEffect(() => {
+    // making sure current always point to fresh values of successes
+    latestSuccessAddReviewStatus.current = successAddReviewStatus;
+    latestSuccessRemoveReviewStatus.current = successRemoveReviewStatus;
+  });
 
   useEffect(() => {
     dispatch(getServiceReviews(serviceId));
   }, [dispatch, serviceId]);
 
   useEffect(() => {
+    if (currentServiceReviews) {
+      setMyReview(currentServiceReviews.find((review) => review.user._id.toString() === userDetails._id.toString()));
+    }
+  }, [dispatch, currentServiceReviews, userDetails, serviceId]);
+
+  useEffect(() => {
     if (successAddReviewStatus) {
       setTitle("");
       setComment("");
       dispatch(getServiceReviews(serviceId));
+      if (latestSuccessRemoveReviewStatus) {
+        dispatch({ type: SERVICE_REMOVE_REVIEW_RESET });
+      }
     }
     if (!serviceId || serviceId !== matchServiceId) {
-      dispatch(getServiceReviews(serviceId));
+      dispatch(getServiceReviews(matchServiceId));
       dispatch({ type: SERVICE_ADD_REVIEW_RESET });
+      dispatch({ type: SERVICE_REMOVE_REVIEW_RESET });
     }
   }, [dispatch, successAddReviewStatus, serviceId, matchServiceId]);
+
+  useEffect(() => {
+    if (successRemoveReviewStatus) {
+      dispatch(getServiceReviews(serviceId));
+      if (latestSuccessAddReviewStatus) {
+        dispatch({ type: SERVICE_ADD_REVIEW_RESET });
+      }
+    }
+    if (!serviceId || serviceId !== matchServiceId) {
+      dispatch(getServiceReviews(matchServiceId));
+      dispatch({ type: SERVICE_ADD_REVIEW_RESET });
+      dispatch({ type: SERVICE_REMOVE_REVIEW_RESET });
+    }
+  }, [dispatch, successRemoveReviewStatus, serviceId, matchServiceId]);
 
   const submitHandler = (e) => {
     e.preventDefault();
     dispatch(addReview(serviceId, title, comment));
+  };
+
+  const removeReviewHandler = (serviceId, reviewId) => {
+    dispatch(removeReview(serviceId, reviewId));
   };
 
   return (
@@ -88,34 +123,72 @@ const Reviews = ({ userDetails, serviceId, matchServiceId }) => {
             </Form>
           ) : (
             <Message variant="success">
-              Please <Link to="/login">Sign in</Link> to write a review
+              Please <Link to="/login">SIGN IN</Link> to write a review
             </Message>
           )}
         </ListGroup.Item>
-        {userDetails ? (
+        {successRemoveReviewStatus && <Message variant="success">{successRemoveReviewMessage}</Message>}
+        {userDetails && currentServiceReviews ? (
           currentServiceReviews.length === 0 ? (
             <Message variant="success">No Reviews</Message>
+          ) : (
+            myReview && (
+              <ListGroup.Item key={myReview._id}>
+                <Row>
+                  <Col xs={10}>
+                    <strong>
+                      {myReview.createdAt.substring(0, 10)} {myReview.user.name}
+                    </strong>
+                    <br></br>
+                    <br></br>
+                    <strong>{myReview.title}</strong>
+                  </Col>
+                  <Col xs={2}>
+                    <button
+                      onClick={() => removeReviewHandler(serviceId, myReview._id)}
+                      type="button"
+                      className="btn btn-danger"
+                    >
+                      <i className="fas fa-times" />
+                    </button>
+                  </Col>
+                </Row>
+                <br></br>
+                <Rating value={myReview.rating} />
+                <br></br>
+                <p>{myReview.comment}</p>
+              </ListGroup.Item>
+            )
+          )
+        ) : (
+          <Message variant="success">
+            Please <Link to="/login">SIGN IN</Link> to check out users reviews
+          </Message>
+        )}
+        {userDetails && currentServiceReviews ? (
+          currentServiceReviews.length === 0 ? (
+            <></>
           ) : (
             currentServiceReviews
               .filter((review) => review.user._id !== userDetails._id)
               .map((review) => (
                 <ListGroup.Item key={review._id}>
-                  <strong>{review.user.name}</strong>
+                  <strong>
+                    {review.createdAt.substring(0, 10)} {review.user.name}
+                  </strong>
+                  <br></br>
                   <br></br>
                   <strong>{review.title}</strong>
                   <br></br>
                   <br></br>
                   <Rating value={review.rating} />
                   <br></br>
-                  <p>{review.createdAt.substring(0, 10)}</p>
                   <p>{review.comment}</p>
                 </ListGroup.Item>
               ))
           )
         ) : (
-          <Message variant="success">
-            Please <Link to="/login">Sign in</Link> to check out users reviews
-          </Message>
+          <></>
         )}
       </ListGroup>
     </>

@@ -44,10 +44,59 @@ const getMyServices = asyncHandler(async(req, res, next) => {
 // @route   GET /api/v1/services/:id
 // @access  public
 const getService = asyncHandler(async(req, res, next) => {
-    res.status(200).json({
-        success: true,
-        data: req.document,
-    });
+    const service = req.document;
+
+    const serviceAveragePrice = (service.price.minPrice + service.price.maxPrice) / 2;
+
+    const numServicesGreaterPricePromise = async() => {
+        return await Service.aggregate([{
+                $unwind: "$price",
+            },
+            {
+                $addFields: {
+                    averagePrice: { $divide: [{ $add: ["$price.minPrice", "$price.maxPrice"] }, 2] },
+                },
+            },
+            {
+                $match: {
+                    $and: [
+                        { _id: { $ne: mongoose.Types.ObjectId(req.params.id) } },
+                        { category: service.category },
+                        {
+                            averagePrice: {
+                                $gte: serviceAveragePrice,
+                            },
+                        },
+                    ],
+                },
+            },
+            {
+                $count: "count",
+            },
+        ]);
+    };
+
+    const totalNumServicesPromise = async() => {
+        return await Service.find({ category: service.category }).countDocuments();
+    };
+
+    await Promise.all([numServicesGreaterPricePromise(), totalNumServicesPromise()])
+        .then((values) => {
+            const [numServicesGreaterPrice, totalNumServices] = values;
+            res.status(200).json({
+                success: true,
+                data: {
+                    service: req.document,
+                    pricePercentage: (
+                        ((numServicesGreaterPrice.length === 0 ? 0 : numServicesGreaterPrice[0].count) / totalNumServices) *
+                        100
+                    ).toFixed(2),
+                },
+            });
+        })
+        .catch((error) => {
+            return next(new ErrorResponse("Problem with counting documents", 500));
+        });
 });
 
 // @desc    update service info

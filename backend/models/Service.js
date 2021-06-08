@@ -165,7 +165,7 @@ ServiceSchema.pre("save", function(next) {
         next();
     } else {
         if (!this.paymentCanProceedUsers.some((userWhoCanProceed) => userWhoCanProceed.user === this.user)) {
-            this.paymentCanProceedUsers = [...this.paymentCanProceedUsers, { user: this.user, hasPaid: true }];
+            this.paymentCanProceedUsers = [...this.paymentCanProceedUsers, { user: this.user, hasPaid: true, price: 0 }];
             next();
         } else {
             next();

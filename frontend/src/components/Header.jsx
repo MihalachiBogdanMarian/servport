@@ -41,15 +41,17 @@ const Header = () => {
                 </NavDropdown>
               )}
               {userDetails ? (
-                <NavDropdown title={userDetails.name.split(" ")[0].split("-")[0]} id="username">
-                  <LinkContainer to="/profile">
-                    <NavDropdown.Item>Profile</NavDropdown.Item>
-                  </LinkContainer>
+                <>
                   <LinkContainer to="/request">
-                    <NavDropdown.Item>Request</NavDropdown.Item>
+                    <Nav.Link>Request</Nav.Link>
                   </LinkContainer>
-                  <NavDropdown.Item onClick={logoutHandler}>Logout</NavDropdown.Item>
-                </NavDropdown>
+                  <NavDropdown title={userDetails.name.split(" ")[0].split("-")[0]} id="username">
+                    <LinkContainer to="/profile">
+                      <NavDropdown.Item>Profile</NavDropdown.Item>
+                    </LinkContainer>
+                    <NavDropdown.Item onClick={logoutHandler}>Logout</NavDropdown.Item>
+                  </NavDropdown>
+                </>
               ) : (
                 <>
                   <LinkContainer to="/register">
