@@ -9,6 +9,7 @@ import ImageCarousel from "../components/ImageCarousel";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 import OwnerCard from "../components/OwnerCard";
+import Rating from "../components/Rating";
 import Reviews from "../components/Reviews";
 import formatAvailabilityPeriod from "../utils/formatAvailabilityPeriod";
 import formatDate from "../utils/formatDate";
@@ -32,13 +33,13 @@ const Service = ({ history, match }) => {
   const [paymentPermissionReceived, setPaymentPermissionReceived] = useState(undefined);
   const [agreedPrice, setAgreedPrice] = useState("--.--$");
 
+  const loggedInUser = useSelector((state) => state.loggedInUser);
+  const { userDetails } = loggedInUser;
   const serviceDetails = useSelector((state) => state.serviceDetails);
   const { loading, error, currentService, percentage } = serviceDetails;
   const pageAndFilters = useSelector((state) => state.pageAndFilters);
   const { pageNumber } = pageAndFilters;
   // const pricePercentage = useSelector((state) => state.pricePercentage);
-  const loggedInUser = useSelector((state) => state.loggedInUser);
-  const { userDetails } = loggedInUser;
 
   const getOptionValue = useCallback((option) => option.value, []);
   const getOptionLabel = useCallback((option) => option.label, []);
@@ -176,13 +177,14 @@ const Service = ({ history, match }) => {
             </Row>
             <Row>
               <Col xs={12} md={6} className="order-md-1 order-2">
-                <Reviews serviceId={currentService._id.toString()} matchServiceId={match.params.id}></Reviews>
+                <Reviews serviceId={currentService._id} matchServiceId={serviceId}></Reviews>
               </Col>
               <Col xs={12} md={6} className="order-md-2 order-1">
                 <p>
                   <small className="text-muted">Posted at: {formatDate(currentService.createdAt)}</small>
                 </p>
                 <h5>{currentService.title}</h5>
+                <Rating value={currentService.rating}></Rating>
                 <hr></hr>
                 <Row className="justify-content-between align-items-center">
                   <p className="pt-3 ml-3 mr-3 align-self-center">

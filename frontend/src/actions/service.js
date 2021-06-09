@@ -16,6 +16,9 @@ import {
     SERVICE_GET_SERVICE_DETAILS_FAIL,
     SERVICE_GET_SERVICE_DETAILS_REQUEST,
     SERVICE_GET_SERVICE_DETAILS_SUCCESS,
+    SERVICE_GET_TOP_RATED_FAIL,
+    SERVICE_GET_TOP_RATED_REQUEST,
+    SERVICE_GET_TOP_RATED_SUCCESS,
 } from "../constants/service";
 import store from "../store";
 import api from "../utils/api";
@@ -153,6 +156,24 @@ export const getPricePercentage = (id) => async(dispatch) => {
     } catch (error) {
         dispatch({
             type: SERVICE_GET_PRICE_PERCENTAGE_FAIL,
+            payload: getErrorMessage(error),
+        });
+    }
+};
+
+export const getTopRatedServicesPerCategory = (category, number) => async(dispatch) => {
+    try {
+        dispatch({ type: SERVICE_GET_TOP_RATED_REQUEST });
+
+        const { data } = await api.get(`/services/toprated/${category}/${number}`);
+
+        dispatch({
+            type: SERVICE_GET_TOP_RATED_SUCCESS,
+            payload: data.data,
+        });
+    } catch (error) {
+        dispatch({
+            type: SERVICE_GET_TOP_RATED_FAIL,
             payload: getErrorMessage(error),
         });
     }

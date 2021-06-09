@@ -22,6 +22,10 @@ import {
     SERVICE_GET_SERVICE_DETAILS_REQUEST,
     SERVICE_GET_SERVICE_DETAILS_RESET,
     SERVICE_GET_SERVICE_DETAILS_SUCCESS,
+    SERVICE_GET_TOP_RATED_FAIL,
+    SERVICE_GET_TOP_RATED_REQUEST,
+    SERVICE_GET_TOP_RATED_RESET,
+    SERVICE_GET_TOP_RATED_SUCCESS,
 } from "../constants/service";
 
 export const getServices = (state = { services: [] }, action) => {
@@ -122,6 +126,21 @@ export const getPricePercentage = (state = { percentage: null }, action) => {
             return { loading: false, error: action.payload };
         case SERVICE_GET_PRICE_PERCENTAGE_RESET:
             return { percentage: null };
+        default:
+            return state;
+    }
+};
+
+export const getTopRatedServicesPerCategory = (state = { topRatedServices: [] }, action) => {
+    switch (action.type) {
+        case SERVICE_GET_TOP_RATED_REQUEST:
+            return {...state, loading: true };
+        case SERVICE_GET_TOP_RATED_SUCCESS:
+            return { loading: false, topRatedServices: action.payload };
+        case SERVICE_GET_TOP_RATED_FAIL:
+            return { loading: false, error: action.payload };
+        case SERVICE_GET_TOP_RATED_RESET:
+            return { topRatedServices: [] };
         default:
             return state;
     }

@@ -10,6 +10,7 @@ import Meta from "../components/Meta";
 import Paginate from "../components/Paginate";
 import SearchBox from "../components/SearchBox";
 import ServiceCard from "../components/ServiceCard";
+import TopServicesCarousel from "../components/TopServicesCarousel";
 import { CHANGE_PAGE_NUMBER, RESET_PAGE_AND_FILTERS } from "../constants/service";
 
 const Services = ({ history, match }) => {
@@ -36,6 +37,13 @@ const Services = ({ history, match }) => {
 
   return (
     <>
+      {parseInt(pageNumber) === 1 && filters.length === 0 && (
+        <Container className="top-rated-carousel-container">
+          <Row className="justify-content-md-center">
+            <TopServicesCarousel category={category}></TopServicesCarousel>
+          </Row>
+        </Container>
+      )}
       <Container>
         <Row className="justify-content-md-center">
           <Col xs={12} md={4} className="border border-dark shadow-sm">

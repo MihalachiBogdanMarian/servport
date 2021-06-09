@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Button, Col, Form, ListGroup, Row } from "react-bootstrap";
+import { confirmAlert } from "react-confirm-alert";
+import "react-confirm-alert/src/react-confirm-alert.css";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { addReview, getServiceReviews, removeReview } from "../actions/review";
@@ -33,26 +35,26 @@ const Reviews = ({ serviceId, matchServiceId }) => {
   const { success: successRemoveReviewStatus, message: successRemoveReviewMessage } = removeReviewStatus;
 
   useEffect(() => {
+    dispatch(getServiceReviews(matchServiceId));
+  }, [dispatch, matchServiceId]);
+
+  useEffect(() => {
     // making sure current always point to fresh values of successes
     latestSuccessAddReviewStatus.current = successAddReviewStatus;
     latestSuccessRemoveReviewStatus.current = successRemoveReviewStatus;
   });
 
   useEffect(() => {
-    dispatch(getServiceReviews(serviceId));
-  }, [dispatch, serviceId]);
-
-  useEffect(() => {
     if (currentServiceReviews) {
       setMyReview(currentServiceReviews.find((review) => review.user._id.toString() === userDetails._id.toString()));
     }
-  }, [dispatch, currentServiceReviews, userDetails, serviceId]);
+  }, [dispatch, currentServiceReviews, userDetails, matchServiceId]);
 
   useEffect(() => {
     if (successAddReviewStatus) {
       setTitle("");
       setComment("");
-      dispatch(getServiceReviews(serviceId));
+      dispatch(getServiceReviews(matchServiceId));
       if (latestSuccessRemoveReviewStatus) {
         dispatch({ type: SERVICE_REMOVE_REVIEW_RESET });
       }
@@ -66,7 +68,7 @@ const Reviews = ({ serviceId, matchServiceId }) => {
 
   useEffect(() => {
     if (successRemoveReviewStatus) {
-      dispatch(getServiceReviews(serviceId));
+      dispatch(getServiceReviews(matchServiceId));
       if (latestSuccessAddReviewStatus) {
         dispatch({ type: SERVICE_ADD_REVIEW_RESET });
       }
@@ -80,11 +82,28 @@ const Reviews = ({ serviceId, matchServiceId }) => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    dispatch(addReview(serviceId, title, comment));
+    dispatch(addReview(matchServiceId, title, comment));
   };
 
   const removeReviewHandler = (serviceId, reviewId) => {
     dispatch(removeReview(serviceId, reviewId));
+  };
+
+  const removeReviewButtonPressed = () => {
+    confirmAlert({
+      title: "Confirm to delete",
+      message: "Are you sure you want to delete this review?",
+      buttons: [
+        {
+          label: "Cancel",
+          onClick: () => {},
+        },
+        {
+          label: "Confirm",
+          onClick: () => removeReviewHandler(matchServiceId, myReview._id),
+        },
+      ],
+    });
   };
 
   return (
@@ -144,11 +163,7 @@ const Reviews = ({ serviceId, matchServiceId }) => {
                     <strong>{myReview.title}</strong>
                   </Col>
                   <Col xs={2}>
-                    <button
-                      onClick={() => removeReviewHandler(serviceId, myReview._id)}
-                      type="button"
-                      className="btn btn-danger"
-                    >
+                    <button onClick={() => removeReviewButtonPressed()} type="button" className="btn btn-danger">
                       <i className="fas fa-times" />
                     </button>
                   </Col>

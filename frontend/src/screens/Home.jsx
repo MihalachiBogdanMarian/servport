@@ -4,7 +4,6 @@ import { Redirect } from "react-router-dom";
 
 const Home = ({ history }) => {
   const loggedInUser = useSelector((state) => state.loggedInUser);
-
   const { userDetails } = loggedInUser;
 
   if (userDetails) {
