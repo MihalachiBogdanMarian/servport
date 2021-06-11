@@ -32,27 +32,27 @@ const addReview = asyncHandler(async(req, res, next) => {
         return next(new ErrorResponse("Service already reviewed", 400));
     }
 
-    // const sentiment = await sentimentAnalysis(comment, next);
-    // let stars;
-    // switch (sentiment) {
-    //     case "Poor":
-    //         stars = 1;
-    //         break;
-    //     case "Fair":
-    //         stars = 2;
-    //         break;
-    //     case "Good":
-    //         stars = 3;
-    //         break;
-    //     case "Very Good":
-    //         stars = 4;
-    //         break;
-    //     case "Excellent":
-    //         stars = 5;
-    //         break;
-    //     default:
-    //         break;
-    // }
+    const sentiment = await sentimentAnalysis(comment, next);
+    let stars;
+    switch (sentiment) {
+        case "Poor":
+            stars = 1;
+            break;
+        case "Fair":
+            stars = 2;
+            break;
+        case "Good":
+            stars = 3;
+            break;
+        case "Very Good":
+            stars = 4;
+            break;
+        case "Excellent":
+            stars = 5;
+            break;
+        default:
+            break;
+    }
 
     const review = {
         title,

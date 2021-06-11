@@ -21,17 +21,19 @@ colors;
 
 const importData = async() => {
     try {
-        // await User.deleteMany();
-        // console.log("Users Destroyed!".red.inverse);
+        // first run the User population, then the Service + Request population
+
+        await User.deleteMany();
+        console.log("Users Destroyed!".red.inverse);
         // await Service.deleteMany();
         // console.log("Services Destroyed!".red.inverse);
         // await Request.deleteMany();
         // console.log("Requests Destroyed!".red.inverse);
 
-        // console.log("Data Destroyed!".red.inverse);
+        console.log("Data Destroyed!".red.inverse);
 
-        // await User.create(users);
-        // console.log("Users Imported!".green.inverse);
+        await User.create(users);
+        console.log("Users Imported!".green.inverse);
         // await Service.create(services);
         // console.log("Services Imported!".green.inverse);
         // await Request.create(requests);
