@@ -1,4 +1,7 @@
 import {
+    AUTH_CHANGE_PASSWORD_FAIL,
+    AUTH_CHANGE_PASSWORD_REQUEST,
+    AUTH_CHANGE_PASSWORD_SUCCESS,
     AUTH_GET_ME_FAIL,
     AUTH_GET_ME_REQUEST,
     AUTH_GET_ME_SUCCESS,
@@ -29,7 +32,7 @@ export const login = (email, password) => async(dispatch) => {
     } catch (error) {
         dispatch({
             type: AUTH_LOGIN_FAIL,
-            payload: getErrorMessage(error, true),
+            payload: getErrorMessage(error),
         });
     }
 };
@@ -54,7 +57,7 @@ export const register = (name, email, phone, password, address) => async(dispatc
     } catch (error) {
         dispatch({
             type: AUTH_REGISTER_FAIL,
-            payload: getErrorMessage(error, true),
+            payload: getErrorMessage(error),
         });
     }
 };
@@ -72,7 +75,7 @@ export const getMe = () => async(dispatch) => {
     } catch (error) {
         dispatch({
             type: AUTH_GET_ME_FAIL,
-            payload: getErrorMessage(error),
+            payload: getErrorMessage(error, true),
         });
     }
 };
@@ -85,4 +88,22 @@ export const logout = () => async(dispatch) => {
     localStorage.removeItem("paymentMethod");
     const newLocation = document.location.href;
     document.location.href = newLocation;
+};
+
+export const changePassword = (currentPassword, newPassword) => async(dispatch) => {
+    try {
+        dispatch({ type: AUTH_CHANGE_PASSWORD_REQUEST });
+
+        const { data } = await api.put("/auth/updatepassword", { currentPassword, newPassword });
+
+        dispatch({
+            type: AUTH_CHANGE_PASSWORD_SUCCESS,
+            payload: data.token,
+        });
+    } catch (error) {
+        dispatch({
+            type: AUTH_CHANGE_PASSWORD_FAIL,
+            payload: getErrorMessage(error, true),
+        });
+    }
 };

@@ -4393,6 +4393,7 @@ input[type="submit"].btn-block {
 
 .nav-tabs {
     border-bottom: 1px solid #eceeef;
+    cursor: pointer;
 }
 
 .nav-tabs .nav-link {

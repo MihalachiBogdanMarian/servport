@@ -77,6 +77,12 @@ const Login = ({ location, history }) => {
             New Customer? <Link to={redirect ? `/register?redirect=${redirect}` : "/register"}>Register</Link>
           </Col>
         </Row>
+        <Row className="py-3">
+          <Col>
+            Forgot Password?{" "}
+            <Link to={redirect ? `/register?redirect=${redirect}` : "/forgotpassword"}>Reset Password</Link>
+          </Col>
+        </Row>
       </FormContainer>
     </>
   );

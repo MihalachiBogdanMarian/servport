@@ -183,6 +183,10 @@ strong {
 
 /* specific service page */
 
+.trust-score-div {
+    display: flex;
+}
+
 .current-service-stats {
     display: flex;
     margin: 15px;
@@ -231,4 +235,16 @@ strong {
     line-height: 150px;
     background-color: #d4d4d4;
     color: black;
+}
+
+
+/* profile page */
+
+.profile-img-container {
+    text-align: center;
+    .profile-img {
+        width: 300px;
+        height: 300px;
+        border-radius: 50%;
+    }
 }

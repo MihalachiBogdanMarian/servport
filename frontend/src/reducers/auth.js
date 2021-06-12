@@ -1,4 +1,8 @@
 import {
+    AUTH_CHANGE_PASSWORD_FAIL,
+    AUTH_CHANGE_PASSWORD_REQUEST,
+    AUTH_CHANGE_PASSWORD_RESET,
+    AUTH_CHANGE_PASSWORD_SUCCESS,
     AUTH_GET_ME_FAIL,
     AUTH_GET_ME_REQUEST,
     AUTH_GET_ME_RESET,
@@ -53,6 +57,21 @@ export const getMe = (state = { userDetails: {} }, action) => {
             return { loading: false, error: action.payload };
         case AUTH_GET_ME_RESET:
             return { userDetails: {} };
+        default:
+            return state;
+    }
+};
+
+export const changePassword = (state = { token: null, isAuthenticated: false }, action) => {
+    switch (action.type) {
+        case AUTH_CHANGE_PASSWORD_REQUEST:
+            return {...state, loading: true };
+        case AUTH_CHANGE_PASSWORD_SUCCESS:
+            return { loading: false, token: action.payload, isAuthenticated: true };
+        case AUTH_CHANGE_PASSWORD_FAIL:
+            return { loading: false, error: action.payload, isAuthenticated: false };
+        case AUTH_CHANGE_PASSWORD_RESET:
+            return { token: null, isAuthenticated: false };
         default:
             return state;
     }

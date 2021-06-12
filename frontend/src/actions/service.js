@@ -156,7 +156,7 @@ export const getPricePercentage = (id) => async(dispatch) => {
     } catch (error) {
         dispatch({
             type: SERVICE_GET_PRICE_PERCENTAGE_FAIL,
-            payload: getErrorMessage(error),
+            payload: getErrorMessage(error, true),
         });
     }
 };

@@ -43,7 +43,7 @@ export const addReview = (id, title, comment) => async(dispatch) => {
     } catch (error) {
         dispatch({
             type: SERVICE_ADD_REVIEW_FAIL,
-            payload: getErrorMessage(error),
+            payload: getErrorMessage(error, true),
         });
     }
 };
@@ -61,7 +61,7 @@ export const removeReview = (serviceId, reviewId) => async(dispatch) => {
     } catch (error) {
         dispatch({
             type: SERVICE_REMOVE_REVIEW_FAIL,
-            payload: getErrorMessage(error),
+            payload: getErrorMessage(error, true),
         });
     }
 };

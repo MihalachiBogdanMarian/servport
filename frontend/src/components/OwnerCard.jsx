@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from "react";
 import ReactTooltip from "react-tooltip";
+import Rating from "./Rating";
 
 const OwnerCard = ({ ownerDetails, blocked }) => {
   return (
@@ -32,13 +33,20 @@ const OwnerCard = ({ ownerDetails, blocked }) => {
               <div className="col-md-4">
                 <img
                   src={process.env.REACT_APP_FILE_UPLOAD_PATH + ownerDetails.avatar}
-                  alt="Owner profile avatar"
+                  alt="owner profile avatar"
                   className="img-fluid p-2"
                 />
               </div>
               <div className="col-md-8">
                 <div className="card-body">
                   <h6 className="card-title">{ownerDetails.name}</h6>
+                  <div className="trust-score-div">
+                    <p className="card-text">
+                      <strong>Trust score:</strong>
+                    </p>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <Rating value={ownerDetails.trustScore} />
+                  </div>
                   <p className="card-text">
                     <strong>Phone:</strong> {ownerDetails.phone}
                   </p>

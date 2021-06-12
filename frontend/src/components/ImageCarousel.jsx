@@ -8,7 +8,7 @@ const ImageCarousel = ({ images }) => {
       {images &&
         images.map((image) => (
           <div key={image}>
-            <img alt="Service offer" src={process.env.REACT_APP_FILE_UPLOAD_PATH + image} />
+            <img alt="service offer" src={process.env.REACT_APP_FILE_UPLOAD_PATH + image} />
           </div>
         ))}
     </Carousel>

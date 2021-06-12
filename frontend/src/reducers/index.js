@@ -1,13 +1,17 @@
 import { combineReducers } from "redux";
-import { getMe, login, register } from "./auth";
+import { changePassword, getMe, login, register } from "./auth";
 import { request } from "./request";
 import { addReview, getServiceReviews, removeReview } from "./review";
 import { getPageAndFilters, getServiceDetails, getServices, getTopRatedServicesPerCategory } from "./service";
+import { updateProfileInfo, uploadProfilePicture } from "./user";
 
 export default combineReducers({
     loggedInUser: getMe,
     loginData: login,
     registerData: register,
+    changePasswordData: changePassword,
+    updateProfileInfoStatus: updateProfileInfo,
+    uploadProfilePictureStatus: uploadProfilePicture,
     request,
     servicesList: getServices,
     pageAndFilters: getPageAndFilters,

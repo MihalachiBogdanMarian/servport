@@ -25,10 +25,11 @@ const api = axios.create({
 //         if (message === "Not authorized to access this route") {
 //             store.dispatch({ type: AUTH_LOGOUT });
 //         }
-//         store.dispatch({
-//             type: ERROR,
-//             payload: message,
-//         });
+//         // store.dispatch({
+//         //     type: ERROR,
+//         //     payload: message,
+//         // });
+//         return Promise.reject(error);
 //     }
 // );
 
