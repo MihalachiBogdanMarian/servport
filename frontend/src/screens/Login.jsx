@@ -80,7 +80,7 @@ const Login = ({ location, history }) => {
         <Row className="py-3">
           <Col>
             Forgot Password?{" "}
-            <Link to={redirect ? `/register?redirect=${redirect}` : "/forgotpassword"}>Reset Password</Link>
+            <Link to={redirect ? `/forgotpassword?redirect=${redirect}` : "/forgotpassword"}>Reset Password</Link>
           </Col>
         </Row>
       </FormContainer>

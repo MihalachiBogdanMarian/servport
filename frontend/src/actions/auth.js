@@ -2,6 +2,9 @@ import {
     AUTH_CHANGE_PASSWORD_FAIL,
     AUTH_CHANGE_PASSWORD_REQUEST,
     AUTH_CHANGE_PASSWORD_SUCCESS,
+    AUTH_FORGOT_PASSWORD_FAIL,
+    AUTH_FORGOT_PASSWORD_REQUEST,
+    AUTH_FORGOT_PASSWORD_SUCCESS,
     AUTH_GET_ME_FAIL,
     AUTH_GET_ME_REQUEST,
     AUTH_GET_ME_SUCCESS,
@@ -11,6 +14,9 @@ import {
     AUTH_REGISTER_FAIL,
     AUTH_REGISTER_REQUEST,
     AUTH_REGISTER_SUCCESS,
+    AUTH_RESET_PASSWORD_FAIL,
+    AUTH_RESET_PASSWORD_REQUEST,
+    AUTH_RESET_PASSWORD_SUCCESS,
 } from "../constants/auth";
 import api from "../utils/api";
 import getErrorMessage from "../utils/getErrorMessage";
@@ -103,6 +109,42 @@ export const changePassword = (currentPassword, newPassword) => async(dispatch) 
     } catch (error) {
         dispatch({
             type: AUTH_CHANGE_PASSWORD_FAIL,
+            payload: getErrorMessage(error, true),
+        });
+    }
+};
+
+export const forgotPassword = (email) => async(dispatch) => {
+    try {
+        dispatch({ type: AUTH_FORGOT_PASSWORD_REQUEST });
+
+        const { data } = await api.post("/auth/forgotpassword", { email });
+
+        dispatch({
+            type: AUTH_FORGOT_PASSWORD_SUCCESS,
+            payload: data,
+        });
+    } catch (error) {
+        dispatch({
+            type: AUTH_FORGOT_PASSWORD_FAIL,
+            payload: getErrorMessage(error, true),
+        });
+    }
+};
+
+export const resetPassword = (newPassword, resetToken) => async(dispatch) => {
+    try {
+        dispatch({ type: AUTH_RESET_PASSWORD_REQUEST });
+
+        const { data } = await api.put(`/auth/resetpassword/${resetToken}`, { newPassword });
+
+        dispatch({
+            type: AUTH_RESET_PASSWORD_SUCCESS,
+            payload: data.token,
+        });
+    } catch (error) {
+        dispatch({
+            type: AUTH_RESET_PASSWORD_FAIL,
             payload: getErrorMessage(error, true),
         });
     }

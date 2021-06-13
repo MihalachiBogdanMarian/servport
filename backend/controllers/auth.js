@@ -102,10 +102,11 @@ const forgotPassword = asyncHandler(async(req, res, next) => {
     await user.save({ validateBeforeSave: false });
 
     // create reset url
-    const resetUrl = `${req.protocol}://${req.get("host")}/api/v1/auth/resetpassword/${resetToken}`;
+    // const resetUrl = `${req.protocol}://${req.get("host")}/api/v1/auth/resetpassword/${resetToken}`;
+    const resetUrl = `http://localhost:3000/resetpassword/${resetToken}`;
 
     // in the front-end part, there would be a link where users could click
-    const message = `You are receiving this email because you need to confirm your email address. Please make a GET request to: \n\n ${resetUrl}`;
+    const message = `You are receiving this email because you need to confirm your email address. Please access the following link within 10 minutes and type a new password: \n\n ${resetUrl}`;
 
     try {
         await sendEmail({

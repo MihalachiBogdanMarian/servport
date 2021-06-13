@@ -1,5 +1,5 @@
 import { combineReducers } from "redux";
-import { changePassword, getMe, login, register } from "./auth";
+import { changePassword, forgotPassword, getMe, login, register, resetPassword } from "./auth";
 import { request } from "./request";
 import { addReview, getServiceReviews, removeReview } from "./review";
 import { getPageAndFilters, getServiceDetails, getServices, getTopRatedServicesPerCategory } from "./service";
@@ -10,6 +10,8 @@ export default combineReducers({
     loginData: login,
     registerData: register,
     changePasswordData: changePassword,
+    forgotPasswordStatus: forgotPassword,
+    resetPasswordStatus: resetPassword,
     updateProfileInfoStatus: updateProfileInfo,
     uploadProfilePictureStatus: uploadProfilePicture,
     request,
