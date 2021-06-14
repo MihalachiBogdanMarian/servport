@@ -115,7 +115,7 @@ const forgotPassword = asyncHandler(async(req, res, next) => {
             message,
         });
 
-        return res.status(200).json({ success: true, data: "Email sent" });
+        return res.status(200).json({ success: true, message: "Email sent" });
     } catch (err) {
         console.log(err);
         user.resetPasswordToken = undefined;
@@ -141,12 +141,12 @@ const resetPassword = asyncHandler(async(req, res, next) => {
     }
 
     // set the new password - will hit the middleware pre-save which will encrypt the new password
-    user.password = req.body.password;
+    user.password = req.body.newPassword;
     user.resetPasswordToken = undefined;
     user.resetPasswordExpire = undefined;
     await user.save();
 
-    sendTokenResponse(user, 200, res);
+    return res.status(200).json({ success: true, message: "Password reset successfully" });
 });
 
 // @desc    update password

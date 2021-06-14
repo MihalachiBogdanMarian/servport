@@ -6,25 +6,34 @@ import FormContainer from "../components/FormContainer";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 
-const ResetPassword = ({ match, history }) => {
+const ResetPassword = ({ match, history, location }) => {
   const [password, setPassword] = useState("");
 
   const dispatch = useDispatch();
 
+  const loginData = useSelector((state) => state.loginData);
+  const { token } = loginData;
   const resetPasswordStatus = useSelector((state) => state.resetPasswordStatus);
-  const { loading, error, token } = resetPasswordStatus;
+  const { loading, error, success } = resetPasswordStatus;
+
+  const redirect = location.search ? location.search.split("=")[1] : "/profile";
 
   const submitHandler = (e) => {
     e.preventDefault();
     dispatch(resetPassword(password, match.params.resettoken));
-    history.push("/login");
   };
 
   useEffect(() => {
-    if (token) {
+    if (success) {
       history.push("/login");
     }
-  }, [history, token]);
+  }, [history, success]);
+
+  useEffect(() => {
+    if (token) {
+      history.push(redirect);
+    }
+  }, [history, token, redirect]);
 
   return (
     <FormContainer>

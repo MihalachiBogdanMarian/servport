@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -7,11 +7,13 @@ import FormContainer from "../components/FormContainer";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 
-const ForgotPassword = ({ location, history }) => {
+const ForgotPassword = ({ history, location }) => {
   const [email, setEmail] = useState("");
 
   const dispatch = useDispatch();
 
+  const loginData = useSelector((state) => state.loginData);
+  const { token } = loginData;
   const forgotPasswordStatus = useSelector((state) => state.forgotPasswordStatus);
   const { loading, error, success, message } = forgotPasswordStatus;
 
@@ -21,6 +23,12 @@ const ForgotPassword = ({ location, history }) => {
     e.preventDefault();
     dispatch(forgotPassword(email));
   };
+
+  useEffect(() => {
+    if (token) {
+      history.push(redirect);
+    }
+  }, [history, token, redirect]);
 
   return (
     <FormContainer>

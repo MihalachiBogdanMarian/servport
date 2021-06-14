@@ -90,7 +90,7 @@ export const forgotPassword = (state = { success: false, message: "" }, action) 
         case AUTH_FORGOT_PASSWORD_REQUEST:
             return {...state, loading: true };
         case AUTH_FORGOT_PASSWORD_SUCCESS:
-            return { loading: false, success: action.payload.success, message: action.payload.data };
+            return { loading: false, success: action.payload.success, message: action.payload.message };
         case AUTH_FORGOT_PASSWORD_FAIL:
             return { loading: false, success: false, error: action.payload };
         case AUTH_FORGOT_PASSWORD_RESET:
@@ -100,16 +100,16 @@ export const forgotPassword = (state = { success: false, message: "" }, action) 
     }
 };
 
-export const resetPassword = (state = { token: null, isAuthenticated: false }, action) => {
+export const resetPassword = (state = { success: false, message: "" }, action) => {
     switch (action.type) {
         case AUTH_RESET_PASSWORD_REQUEST:
             return {...state, loading: true };
         case AUTH_RESET_PASSWORD_SUCCESS:
-            return { loading: false, token: action.payload, isAuthenticated: true };
+            return { loading: false, success: action.payload.success, message: action.payload.message };
         case AUTH_RESET_PASSWORD_FAIL:
-            return { loading: false, error: action.payload, isAuthenticated: false };
+            return { loading: false, success: false, error: action.payload };
         case AUTH_RESET_PASSWORD_RESET:
-            return { token: null, isAuthenticated: false };
+            return { success: false, message: "" };
         default:
             return state;
     }

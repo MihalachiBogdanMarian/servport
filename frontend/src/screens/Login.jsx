@@ -17,6 +17,8 @@ const Login = ({ location, history }) => {
 
   const loginData = useSelector((state) => state.loginData);
   const { loading, error, token } = loginData;
+  const resetPasswordStatus = useSelector((state) => state.resetPasswordStatus);
+  const { success } = resetPasswordStatus;
 
   const redirect = location.search ? location.search.split("=")[1] : "/profile";
 
@@ -44,6 +46,7 @@ const Login = ({ location, history }) => {
       <Prompt message={handleLeavingPage} />
       <FormContainer>
         <h1>Sign In</h1>
+        {success && <Message variant="success">{"Password reset successfully"}</Message>}
         {error && <Message variant="danger">{error}</Message>}
         {loading && <Loader />}
         <Form onSubmit={submitHandler}>
