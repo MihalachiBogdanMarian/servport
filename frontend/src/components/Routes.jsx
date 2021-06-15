@@ -16,15 +16,16 @@ const Routes = () => {
   return (
     <>
       <Switch>
-        {/* <PrivateRoute exact path="" component={} /> */}
         <Route exact path="/login" component={Login} />
         <Route exact path="/register" component={Register} />
         <Route exact path="/forgotpassword" component={ForgotPassword} />
         <Route exact path="/resetpassword/:resettoken" component={ResetPassword} />
         <Route exact path="/services/page/:pageNumber/category/:category" component={Services} />
         <Route exact path="/services/:id" component={Service} />
-        <PrivateRoute exact path="/profile" component={Profile} />
+        <PrivateRoute path="/profile/:tab/page/:pageNumber" component={Profile} />
+        <PrivateRoute path="/profile/:tab" component={Profile} />
         <Route component={NotFound} />
+        {/* <PrivateRoute exact path="" component={} /> */}
       </Switch>
       <Footer />
     </>

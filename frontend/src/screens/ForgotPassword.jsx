@@ -17,7 +17,7 @@ const ForgotPassword = ({ history, location }) => {
   const forgotPasswordStatus = useSelector((state) => state.forgotPasswordStatus);
   const { loading, error, success, message } = forgotPasswordStatus;
 
-  const redirect = location.search ? location.search.split("=")[1] : "/profile";
+  const redirect = location.search ? location.search.split("=")[1] : "/profile/profile";
 
   const submitHandler = (e) => {
     e.preventDefault();

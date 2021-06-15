@@ -25,7 +25,7 @@ const Register = ({ location, history }) => {
   const loggedInUser = useSelector((state) => state.loggedInUser);
   const { userDetails } = loggedInUser;
 
-  const redirect = location.search ? location.search.split("=")[1] : "/profile";
+  const redirect = location.search ? location.search.split("=")[1] : "/profile/profile";
 
   useEffect(() => {
     if (token || userDetails) {

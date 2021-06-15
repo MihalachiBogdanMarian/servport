@@ -2,6 +2,10 @@ import {
     ADD_FILTER,
     CHANGE_PAGE_NUMBER,
     RESET_PAGE_AND_FILTERS,
+    SERVICE_GET_MY_SERVICES_FAIL,
+    SERVICE_GET_MY_SERVICES_REQUEST,
+    SERVICE_GET_MY_SERVICES_RESET,
+    SERVICE_GET_MY_SERVICES_SUCCESS,
     SERVICE_GET_PRICE_PERCENTAGE_FAIL,
     SERVICE_GET_PRICE_PERCENTAGE_REQUEST,
     SERVICE_GET_PRICE_PERCENTAGE_RESET,
@@ -141,6 +145,26 @@ export const getTopRatedServicesPerCategory = (state = { topRatedServices: [] },
             return { loading: false, error: action.payload };
         case SERVICE_GET_TOP_RATED_RESET:
             return { topRatedServices: [] };
+        default:
+            return state;
+    }
+};
+
+export const getMyServices = (state = { services: [] }, action) => {
+    switch (action.type) {
+        case SERVICE_GET_MY_SERVICES_REQUEST:
+            return {...state, loading: true };
+        case SERVICE_GET_MY_SERVICES_SUCCESS:
+            return {
+                loading: false,
+                services: action.payload.data,
+                pages: action.payload.pagination.pages,
+                page: action.payload.pagination.page,
+            };
+        case SERVICE_GET_MY_SERVICES_FAIL:
+            return { loading: false, error: action.payload };
+        case SERVICE_GET_MY_SERVICES_RESET:
+            return { services: [] };
         default:
             return state;
     }

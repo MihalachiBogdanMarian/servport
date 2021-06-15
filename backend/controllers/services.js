@@ -32,12 +32,11 @@ const addService = asyncHandler(async(req, res, next) => {
 // @route   GET /api/v1/services/myservices
 // @access  private
 const getMyServices = asyncHandler(async(req, res, next) => {
-    const services = await Service.find({ user: req.user._id });
+    let query = Service.find({ user: req.user._id }).sort({ createdAt: -1 });
 
-    res.status(200).json({
-        success: true,
-        data: services,
-    });
+    const { pagination, results } = await getPagination(req, query, "", "2");
+
+    res.status(200).json({ success: true, count: results.length, pagination, data: results });
 });
 
 // @desc    get service by ID

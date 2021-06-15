@@ -14,13 +14,13 @@ const EditProfile = () => {
   const loggedInUser = useSelector((state) => state.loggedInUser);
   const {
     userDetails: {
+      _id,
+      email,
       name: userDetailsName,
       phone: userDetailsPhone,
       address: userDetailsAddress,
-      email,
-      trustScore,
-      _id,
       avatar,
+      trustScore,
     },
   } = loggedInUser;
 
@@ -85,9 +85,7 @@ const EditProfile = () => {
         <strong>Email:</strong> {email}
       </p>
       <br></br>
-      <br></br>
       <hr></hr>
-      <br></br>
       <br></br>
       <Container>
         <Row className="justify-content-md-center">
@@ -107,23 +105,24 @@ const EditProfile = () => {
                 </Col>
               </Row>
             ) : null}
-            <Progress percentage={uploadPercentage} />
+            {errorUploadProfilePicture ? <Progress percentage={0} /> : <Progress percentage={uploadPercentage} />}
             <Form onSubmit={uploadProfilePictureHandler}>
-              <div className="mb-3">
-                <label htmlFor="profilePicture" className="form-label">
-                  {filename}
-                </label>
+              <div className="custom-file mb-4">
                 <input
-                  className="form-control"
                   type="file"
-                  id="profilePicture"
+                  className="custom-file-input"
+                  id="customFile"
                   onChange={(e) => {
                     setFile(e.target.files[0]);
                     setFilename(e.target.files[0].name);
                   }}
                 />
+                <label className="custom-file-label" htmlFor="customFile">
+                  {filename}
+                </label>
               </div>
-              <Button type="submit" variant="primary">
+
+              <Button onClick={uploadProfilePictureHandler} variant="primary">
                 Upload
               </Button>
             </Form>
@@ -131,9 +130,7 @@ const EditProfile = () => {
         </Row>
       </Container>
       <br></br>
-      <br></br>
       <hr></hr>
-      <br></br>
       <br></br>
       <Container>
         <Row className="justify-content-md-center">
@@ -181,9 +178,7 @@ const EditProfile = () => {
         </Row>
       </Container>
       <br></br>
-      <br></br>
       <hr></hr>
-      <br></br>
       <br></br>
       <Container>
         <Row className="justify-content-md-center">

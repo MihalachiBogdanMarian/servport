@@ -46,7 +46,7 @@ const Header = () => {
                     <Nav.Link>Request</Nav.Link>
                   </LinkContainer>
                   <NavDropdown title={userDetails.name.split(" ")[0].split("-")[0]} id="username">
-                    <LinkContainer to="/profile">
+                    <LinkContainer to="/profile/profile">
                       <NavDropdown.Item>Profile</NavDropdown.Item>
                     </LinkContainer>
                     <NavDropdown.Item onClick={logoutHandler}>Logout</NavDropdown.Item>

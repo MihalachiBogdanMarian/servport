@@ -100,6 +100,7 @@ const Services = ({ history, match }) => {
                 if (!userDetails) {
                   history.push("/login");
                 } else {
+                  history.push("/profile/postservice");
                 }
               }}
             >

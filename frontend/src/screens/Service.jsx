@@ -37,8 +37,8 @@ const Service = ({ history, match }) => {
   const { userDetails } = loggedInUser;
   const serviceDetails = useSelector((state) => state.serviceDetails);
   const { loading, error, currentService, percentage } = serviceDetails;
-  const pageAndFilters = useSelector((state) => state.pageAndFilters);
-  const { pageNumber } = pageAndFilters;
+  // const pageAndFilters = useSelector((state) => state.pageAndFilters);
+  // const { pageNumber } = pageAndFilters;
   // const pricePercentage = useSelector((state) => state.pricePercentage);
 
   const getOptionValue = useCallback((option) => option.value, []);
@@ -115,9 +115,10 @@ const Service = ({ history, match }) => {
               </span>
               <button
                 className="shadow-button"
-                onClick={() =>
-                  history.push(`/services/page/${pageNumber}/category/${currentService.category.replace("&", "%26")}`)
-                }
+                onClick={() => {
+                  // history.push(`/services/page/${pageNumber}/category/${currentService.category.replace("&", "%26")}`);
+                  history.goBack();
+                }}
               >
                 GO BACK
               </button>

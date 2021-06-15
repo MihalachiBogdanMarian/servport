@@ -20,7 +20,7 @@ const Login = ({ location, history }) => {
   const resetPasswordStatus = useSelector((state) => state.resetPasswordStatus);
   const { success } = resetPasswordStatus;
 
-  const redirect = location.search ? location.search.split("=")[1] : "/profile";
+  const redirect = location.search ? location.search.split("=")[1] : "/profile/profile";
 
   useEffect(() => {
     if (token) {

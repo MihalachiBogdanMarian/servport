@@ -1,6 +1,9 @@
 import {
     ADD_FILTER,
     CHANGE_PAGE_NUMBER,
+    SERVICE_GET_MY_SERVICES_FAIL,
+    SERVICE_GET_MY_SERVICES_REQUEST,
+    SERVICE_GET_MY_SERVICES_SUCCESS,
     SERVICE_GET_PRICE_PERCENTAGE_FAIL,
     SERVICE_GET_PRICE_PERCENTAGE_REQUEST,
     SERVICE_GET_PRICE_PERCENTAGE_SUCCESS,
@@ -175,6 +178,24 @@ export const getTopRatedServicesPerCategory = (category, number) => async(dispat
         dispatch({
             type: SERVICE_GET_TOP_RATED_FAIL,
             payload: getErrorMessage(error),
+        });
+    }
+};
+
+export const getMyServices = (pageNumber) => async(dispatch) => {
+    try {
+        dispatch({ type: SERVICE_GET_MY_SERVICES_REQUEST });
+
+        const { data } = await api.get(`/services/myservices?page=${pageNumber}`);
+
+        dispatch({
+            type: SERVICE_GET_MY_SERVICES_SUCCESS,
+            payload: data,
+        });
+    } catch (error) {
+        dispatch({
+            type: SERVICE_GET_MY_SERVICES_FAIL,
+            payload: getErrorMessage(error, true),
         });
     }
 };

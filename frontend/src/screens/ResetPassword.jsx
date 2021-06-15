@@ -16,7 +16,7 @@ const ResetPassword = ({ match, history, location }) => {
   const resetPasswordStatus = useSelector((state) => state.resetPasswordStatus);
   const { loading, error, success } = resetPasswordStatus;
 
-  const redirect = location.search ? location.search.split("=")[1] : "/profile";
+  const redirect = location.search ? location.search.split("=")[1] : "/profile/profile";
 
   const submitHandler = (e) => {
     e.preventDefault();

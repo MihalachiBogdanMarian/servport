@@ -49,11 +49,10 @@ export const uploadProfilePicture = (id, file, setUploadPercentage) => async(dis
             payload: data.data,
         });
     } catch (error) {
-        // clear progress bar percentage
-        setTimeout(() => setUploadPercentage(0), 3000);
         dispatch({
             type: USER_UPLOAD_PROFILE_PICTURE_FAIL,
             payload: getErrorMessage(error, true),
         });
+        setUploadPercentage(0);
     }
 };

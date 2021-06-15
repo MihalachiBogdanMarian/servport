@@ -1,7 +1,11 @@
 import React from "react";
 
 const Scheduler = () => {
-  return <div>Scheduler</div>;
+  return (
+    <>
+      <h1>Scheduler</h1>
+    </>
+  );
 };
 
 export default Scheduler;

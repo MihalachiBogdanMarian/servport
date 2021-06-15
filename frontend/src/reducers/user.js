@@ -17,7 +17,7 @@ export const updateProfileInfo = (state = { success: false, message: "" }, actio
             return {
                 loading: false,
                 success: true,
-                message: "Profile updated successfully",
+                message: "Profile info updated successfully",
             };
         case USER_UPDATE_PROFILE_INFO_FAIL:
             return { loading: false, success: false, error: action.payload };
@@ -42,7 +42,7 @@ export const uploadProfilePicture = (state = { success: false, message: "", avat
         case USER_UPLOAD_PROFILE_PICTURE_FAIL:
             return { loading: false, success: false, error: action.payload };
         case USER_UPLOAD_PROFILE_PICTURE_RESET:
-            return { success: false, message: "" };
+            return { success: false, message: "", avatar: "" };
         default:
             return state;
     }

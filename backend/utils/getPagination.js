@@ -1,6 +1,6 @@
-const getPagination = async(req, query, populate) => {
+const getPagination = async(req, query, populate, itemsPerPage = process.env.DEFAULT_PAGE_LIMIT) => {
     const page = parseInt(req.query.page, 10) || 1;
-    const limit = parseInt(req.query.limit, 10) || parseInt(process.env.DEFAULT_PAGE_LIMIT, 10);
+    const limit = parseInt(req.query.limit, 10) || parseInt(itemsPerPage, 10);
     const startIndex = (page - 1) * limit;
     const endIndex = page * limit;
     const total = (await query).length;

@@ -6,12 +6,25 @@ import MyServices from "../components/MyServices";
 import PostService from "../components/PostService";
 import Scheduler from "../components/Scheduler";
 
-const Profile = () => {
-  const [activeTab, setActiveTab] = useState("1");
+const Profile = ({ match, history }) => {
+  let initialTab = null;
+  if (history.location.pathname.startsWith("/profile/profile")) {
+    initialTab = "1";
+  } else if (history.location.pathname.startsWith("/profile/myservices")) {
+    initialTab = "2";
+  } else if (history.location.pathname.startsWith("/profile/postservice")) {
+    initialTab = "3";
+  } else if (history.location.pathname.startsWith("/profile/scheduler")) {
+    initialTab = "4";
+  }
+
+  const [activeTab, setActiveTab] = useState(initialTab);
 
   const toggle = (tab) => {
     if (activeTab !== tab) setActiveTab(tab);
   };
+
+  console.log(history);
 
   return (
     <Container className="mt-3">
@@ -23,6 +36,7 @@ const Profile = () => {
                 className={classnames({ active: activeTab === "1" })}
                 onClick={() => {
                   toggle("1");
+                  history.push("/profile/profile");
                 }}
               >
                 Profile
@@ -33,6 +47,7 @@ const Profile = () => {
                 className={classnames({ active: activeTab === "2" })}
                 onClick={() => {
                   toggle("2");
+                  history.push("/profile/myservices/page/1");
                 }}
               >
                 Services
@@ -43,6 +58,7 @@ const Profile = () => {
                 className={classnames({ active: activeTab === "3" })}
                 onClick={() => {
                   toggle("3");
+                  history.push("/profile/postservice");
                 }}
               >
                 Post Service
@@ -53,6 +69,7 @@ const Profile = () => {
                 className={classnames({ active: activeTab === "4" })}
                 onClick={() => {
                   toggle("4");
+                  history.push("/profile/scheduler");
                 }}
               >
                 Scheduler
@@ -64,7 +81,7 @@ const Profile = () => {
               <EditProfile></EditProfile>
             </TabPane>
             <TabPane tabId="2">
-              <MyServices></MyServices>
+              <MyServices match={match}></MyServices>
             </TabPane>
             <TabPane tabId="3">
               <PostService></PostService>

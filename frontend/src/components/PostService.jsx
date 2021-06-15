@@ -1,7 +1,11 @@
 import React from "react";
 
 const PostService = () => {
-  return <div>PostService</div>;
+  return (
+    <>
+      <h1>Post Service</h1>
+    </>
+  );
 };
 
 export default PostService;

@@ -7,7 +7,7 @@ const Home = ({ history }) => {
   const { userDetails } = loggedInUser;
 
   if (userDetails) {
-    return <Redirect to="profile" />;
+    return <Redirect to="profile/profile" />;
   }
 
   return (
