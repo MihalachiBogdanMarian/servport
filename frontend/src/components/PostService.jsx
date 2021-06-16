@@ -1,8 +1,12 @@
+import moment from "moment";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { Select } from "react-functional-select";
 import { useDispatch, useSelector } from "react-redux";
 import { postServiceOffer } from "../actions/service";
+import { SERVICE_POST_RESET } from "../constants/service";
+import AddressesFormControl from "./AddressesFormControl";
+import AvailabilityPeriodsFormControl from "./AvailabilityPeriodsFormControl";
 import Loader from "./Loader";
 import Message from "./Message";
 
@@ -32,7 +36,7 @@ const PostService = ({ history }) => {
   const dispatch = useDispatch();
 
   const postedService = useSelector((state) => state.postedService);
-  const { loading, error, success, message, service } = postedService;
+  const { loading, error, success, service } = postedService;
 
   const [price, setPrice] = useState({ minPrice: null, maxPrice: null });
   const [title, setTitle] = useState("");
@@ -40,20 +44,34 @@ const PostService = ({ history }) => {
   const [category, setCategory] = useState(categoryOptions[0]);
   const [addresses, setAddresses] = useState([]);
   const [availabilityPeriods, setAvailabilityPeriods] = useState([]);
+  const [startDate, setStartDate] = useState(moment());
+  const [endDate, setEndDate] = useState(moment());
+  const [startTime, setStartTime] = useState(new Date("24:00"));
+  const [endTime, setEndTime] = useState(new Date("23:59"));
 
   const getOptionValue = useCallback((option) => option.value, []);
   const getOptionLabel = useCallback((option) => option.label, []);
 
   const submitHandler = (e) => {
     e.preventDefault();
-    dispatch(postServiceOffer(title, description, category.value, price, availabilityPeriods, addresses));
+    dispatch(
+      postServiceOffer(
+        title,
+        description,
+        category.value,
+        price,
+        availabilityPeriods,
+        addresses.map((address) => address.text)
+      )
+    );
   };
 
   useEffect(() => {
     if (success) {
       history.push(`/services/${service._id}`);
+      dispatch({ type: SERVICE_POST_RESET });
     }
-  }, [history, success, service]);
+  }, [history, dispatch, success, service]);
 
   return (
     <>
@@ -87,7 +105,7 @@ const PostService = ({ history }) => {
                 ></Form.Control>
               </Form.Group>
 
-              <label for="minPrice" className="form-label">
+              <label htmlFor="minPrice" className="form-label">
                 Minimum Price
               </label>
               <div className="input-group mb-3">
@@ -103,7 +121,7 @@ const PostService = ({ history }) => {
                 <span className="input-group-text">0.00</span>
               </div>
 
-              <label for="maxPrice" className="form-label">
+              <label htmlFor="maxPrice" className="form-label">
                 Maximum Price
               </label>
               <div className="input-group mb-3">
@@ -119,7 +137,7 @@ const PostService = ({ history }) => {
                 <span className="input-group-text">0.00</span>
               </div>
 
-              <label for="category" className="form-label">
+              <label htmlFor="category" className="form-label">
                 Category
               </label>
               <Select
@@ -132,6 +150,26 @@ const PostService = ({ history }) => {
                 themeConfig={themeConfig}
               />
 
+              <AddressesFormControl addresses={addresses} setAddresses={setAddresses}></AddressesFormControl>
+
+              <br></br>
+              <br></br>
+              <br></br>
+              <AvailabilityPeriodsFormControl
+                availabilityPeriods={availabilityPeriods}
+                setAvailabilityPeriods={setAvailabilityPeriods}
+                startDate={startDate}
+                setStartDate={setStartDate}
+                endDate={endDate}
+                setEndDate={setEndDate}
+                startTime={startTime}
+                setStartTime={setStartTime}
+                endTime={endTime}
+                setEndTime={setEndTime}
+              ></AvailabilityPeriodsFormControl>
+
+              <br></br>
+              <br></br>
               <Button type="submit" variant="primary">
                 Post
               </Button>

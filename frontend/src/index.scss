@@ -248,3 +248,78 @@ strong {
         border-radius: 50%;
     }
 }
+
+.ReactTags__tags {
+    position: relative;
+}
+
+.ReactTags__tagInput input.ReactTags__tagInputField,
+.ReactTags__tagInput input.ReactTags__tagInputField:focus {
+    display: block;
+    width: 100%;
+    height: calc(1.5em + 1.5rem);
+    margin-top: 7px;
+    padding: 0.75rem 1.5rem;
+    border: 0 solid #ced4da;
+    border-radius: 0;
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #55595c;
+    background-color: #f7f7f9;
+    background-clip: padding-box;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.ReactTags__selected span.ReactTags__tag {
+    display: inline-block;
+    padding: 5px;
+    margin: 5px;
+    border-radius: 2px;
+    border: 1px solid black;
+    border-color: #23c85c;
+    background: transparent;
+    color: #23c85c;
+    font-size: 0.875rem;
+    font-weight: 400;
+}
+
+.ReactTags__selected .ReactTags__remove {
+    margin-left: 5px;
+    padding-left: 7px;
+    border: transparent;
+    background: transparent;
+    font-weight: 900;
+    color: #23c85c;
+    cursor: pointer;
+}
+
+.react-time-picker__wrapper {
+    border: transparent;
+    color: #55595c;
+    background-color: #f7f7f9;
+}
+
+.start-date-input,
+.end-date-input {
+    height: calc(1.6em + 1.6rem);
+}
+
+.availability-periods-list {
+    max-height: 300px;
+    overflow: scroll;
+    -webkit-overflow-scrolling: touch;
+    color: #23c85c;
+    .availability-periods-list-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-color: #23c85d49;
+    }
+    .remove-availability-period-button {
+        padding: 5px 12px;
+        color: red;
+        background-color: transparent;
+        border-color: rgba(255, 0, 0, 0.267);
+    }
+}

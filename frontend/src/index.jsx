@@ -4,6 +4,7 @@ import { HelmetProvider } from "react-helmet-async";
 import App from "./App";
 import "./bootstrap.min.css";
 import "./index.css";
+import "./input-moment.min.css";
 import reportWebVitals from "./reportWebVitals";
 
 ReactDOM.render(
