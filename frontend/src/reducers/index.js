@@ -8,6 +8,7 @@ import {
     getServiceDetails,
     getServices,
     getTopRatedServicesPerCategory,
+    postServiceOffer,
 } from "./service";
 import { updateProfileInfo, uploadProfilePicture } from "./user";
 
@@ -23,6 +24,7 @@ export default combineReducers({
     request,
     servicesList: getServices,
     myServices: getMyServices,
+    postedService: postServiceOffer,
     pageAndFilters: getPageAndFilters,
     serviceDetails: getServiceDetails,
     serviceReviews: getServiceReviews,

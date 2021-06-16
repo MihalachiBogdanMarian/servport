@@ -30,6 +30,10 @@ import {
     SERVICE_GET_TOP_RATED_REQUEST,
     SERVICE_GET_TOP_RATED_RESET,
     SERVICE_GET_TOP_RATED_SUCCESS,
+    SERVICE_POST_FAIL,
+    SERVICE_POST_REQUEST,
+    SERVICE_POST_RESET,
+    SERVICE_POST_SUCCESS,
 } from "../constants/service";
 
 export const getServices = (state = { services: [] }, action) => {
@@ -165,6 +169,26 @@ export const getMyServices = (state = { services: [] }, action) => {
             return { loading: false, error: action.payload };
         case SERVICE_GET_MY_SERVICES_RESET:
             return { services: [] };
+        default:
+            return state;
+    }
+};
+
+export const postServiceOffer = (state = { service: {}, success: false, message: "" }, action) => {
+    switch (action.type) {
+        case SERVICE_POST_REQUEST:
+            return {...state, loading: true };
+        case SERVICE_POST_SUCCESS:
+            return {
+                loading: false,
+                service: action.payload,
+                success: true,
+                message: "Service offer posted successfully",
+            };
+        case SERVICE_POST_FAIL:
+            return { loading: false, success: false, error: action.payload };
+        case SERVICE_POST_RESET:
+            return { service: {}, success: false, message: "" };
         default:
             return state;
     }

@@ -24,8 +24,6 @@ const Profile = ({ match, history }) => {
     if (activeTab !== tab) setActiveTab(tab);
   };
 
-  console.log(history);
-
   return (
     <Container className="mt-3">
       <Row className="justify-content-center">
@@ -84,7 +82,7 @@ const Profile = ({ match, history }) => {
               <MyServices match={match}></MyServices>
             </TabPane>
             <TabPane tabId="3">
-              <PostService></PostService>
+              <PostService history={history}></PostService>
             </TabPane>
             <TabPane tabId="4">
               <Scheduler></Scheduler>

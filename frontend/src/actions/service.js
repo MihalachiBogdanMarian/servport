@@ -22,6 +22,9 @@ import {
     SERVICE_GET_TOP_RATED_FAIL,
     SERVICE_GET_TOP_RATED_REQUEST,
     SERVICE_GET_TOP_RATED_SUCCESS,
+    SERVICE_POST_FAIL,
+    SERVICE_POST_REQUEST,
+    SERVICE_POST_SUCCESS,
 } from "../constants/service";
 import store from "../store";
 import api from "../utils/api";
@@ -199,3 +202,29 @@ export const getMyServices = (pageNumber) => async(dispatch) => {
         });
     }
 };
+
+export const postServiceOffer =
+    (title, description, category, price, availabilityPeriods, addresses) => async(dispatch) => {
+        try {
+            dispatch({ type: SERVICE_POST_REQUEST });
+
+            const { data } = await api.post("/services", {
+                title,
+                description,
+                category,
+                price,
+                availabilityPeriods,
+                addresses,
+            });
+
+            dispatch({
+                type: SERVICE_POST_SUCCESS,
+                payload: data.data,
+            });
+        } catch (error) {
+            dispatch({
+                type: SERVICE_POST_FAIL,
+                payload: getErrorMessage(error, true),
+            });
+        }
+    };

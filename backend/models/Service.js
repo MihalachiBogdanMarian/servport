@@ -174,39 +174,39 @@ ServiceSchema.pre("save", function(next) {
 });
 
 // geocode & create locations field (provided more request to the API can be made)
-ServiceSchema.pre("save", async function(next) {
-    if (!this.isModified("addresses")) {
-        next();
-    } else {
-        try {
-            const getLocations = () => {
-                const promises = this.addresses.map(async(address) => {
-                    const location = await geocoder.geocode(address);
-                    return {
-                        type: "Point",
-                        coordinates: [location[0].longitude, location[0].latitude],
-                        formattedAddress: location[0].formattedAddress,
-                        street: location[0].streetName,
-                        city: location[0].city,
-                        state: location[0].stateCode,
-                        zipcode: location[0].zipcode,
-                        country: location[0].countryCode,
-                    };
-                });
-                return Promise.all(promises);
-            };
+// ServiceSchema.pre("save", async function(next) {
+//     if (!this.isModified("addresses")) {
+//         next();
+//     } else {
+//         try {
+//             const getLocations = () => {
+//                 const promises = this.addresses.map(async(address) => {
+//                     const location = await geocoder.geocode(address);
+//                     return {
+//                         type: "Point",
+//                         coordinates: [location[0].longitude, location[0].latitude],
+//                         formattedAddress: location[0].formattedAddress,
+//                         street: location[0].streetName,
+//                         city: location[0].city,
+//                         state: location[0].stateCode,
+//                         zipcode: location[0].zipcode,
+//                         country: location[0].countryCode,
+//                     };
+//                 });
+//                 return Promise.all(promises);
+//             };
 
-            const locations = await getLocations();
-            this.locations = locations;
-        } catch (error) {
-            console.log(error.message);
-        }
+//             const locations = await getLocations();
+//             this.locations = locations;
+//         } catch (error) {
+//             console.log(error.message);
+//         }
 
-        // this.addresses = undefined;
+//         // this.addresses = undefined;
 
-        next();
-    }
-});
+//         next();
+//     }
+// });
 
 // recompute the number of reviews and the main rating when the array of reviews is changing
 ServiceSchema.pre("save", function(next) {

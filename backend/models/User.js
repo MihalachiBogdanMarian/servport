@@ -122,32 +122,32 @@ UserSchema.pre("save", async function(next) {
 });
 
 // geocode & create location field
-UserSchema.pre("save", async function(next) {
-    if (!this.isModified("address")) {
-        next();
-    } else {
-        try {
-            const location = await geocoder.geocode(this.address);
-            this.location = {
-                type: "Point",
-                coordinates: [location[0].longitude, location[0].latitude],
-                formattedAddress: location[0].formattedAddress,
-                street: location[0].streetName,
-                city: location[0].city,
-                state: location[0].stateCode,
-                zipcode: location[0].zipcode,
-                country: location[0].countryCode,
-            };
-        } catch (error) {
-            console.log(error.message);
-        }
+// UserSchema.pre("save", async function(next) {
+//     if (!this.isModified("address")) {
+//         next();
+//     } else {
+//         try {
+//             const location = await geocoder.geocode(this.address);
+//             this.location = {
+//                 type: "Point",
+//                 coordinates: [location[0].longitude, location[0].latitude],
+//                 formattedAddress: location[0].formattedAddress,
+//                 street: location[0].streetName,
+//                 city: location[0].city,
+//                 state: location[0].stateCode,
+//                 zipcode: location[0].zipcode,
+//                 country: location[0].countryCode,
+//             };
+//         } catch (error) {
+//             console.log(error.message);
+//         }
 
-        // do not save address in the db
-        // this.address = undefined; // doesn't get put in the JSON
+//         // do not save address in the db
+//         // this.address = undefined; // doesn't get put in the JSON
 
-        next();
-    }
-});
+//         next();
+//     }
+// });
 
 // cascade delete services when a user is removed
 UserSchema.pre("remove", async function(next) {

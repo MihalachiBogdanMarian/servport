@@ -3,7 +3,7 @@ import React from "react";
 const Scheduler = () => {
   return (
     <>
-      <h1>Scheduler</h1>
+      <h1>Your Scheduler</h1>
     </>
   );
 };
