@@ -10,14 +10,28 @@ const Filters = ({ category, isResetFiltersPressed, setIsResetFiltersPressed }) 
   const pageAndFilters = useSelector((state) => state.pageAndFilters);
   const { filters } = pageAndFilters;
   const priceFilterApplied = filters.find((filter) => filter.startsWith("labels[price]="));
-  const priceButtonValue = priceFilterApplied ? " - " + priceFilterApplied.split("=")[1].charAt(0).toUpperCase() : "";
+  const priceButtonValue = priceFilterApplied
+    ? " - " +
+      priceFilterApplied
+        .split("=")[1]
+        .match(/\b([a-z])/g)
+        .join("")
+    : "";
   const ratingFilterApplied = filters.find((filter) => filter.startsWith("labels[rating]="));
   const ratingButtonValue = ratingFilterApplied
-    ? " - " + ratingFilterApplied.split("=")[1].charAt(0).toUpperCase()
+    ? " - " +
+      ratingFilterApplied
+        .split("=")[1]
+        .match(/\b([a-z])/g)
+        .join("")
     : "";
   const numReviewsFilterApplied = filters.find((filter) => filter.startsWith("labels[numReviews]="));
   const numReviewsButtonValue = numReviewsFilterApplied
-    ? " - " + numReviewsFilterApplied.split("=")[1].charAt(0).toUpperCase()
+    ? " - " +
+      numReviewsFilterApplied
+        .split("=")[1]
+        .match(/\b([a-z])/g)
+        .join("")
     : "";
 
   const [priceButtonLabel, setPriceButtonLabel] = useState("Price" + priceButtonValue);
@@ -31,13 +45,13 @@ const Filters = ({ category, isResetFiltersPressed, setIsResetFiltersPressed }) 
 
     switch (field) {
       case "labels[price]":
-        setPriceButtonLabel("Price - " + value.charAt(0).toUpperCase());
+        setPriceButtonLabel("Price - " + value.match(/\b([a-z])/g).join(""));
         break;
       case "labels[rating]":
-        setRatingButtonLabel("Rating - " + value.charAt(0).toUpperCase());
+        setRatingButtonLabel("Rating - " + value.match(/\b([a-z])/g).join(""));
         break;
       case "labels[numReviews]":
-        setNumReviewsButtonLabel("No. of Reviews - " + value.charAt(0).toUpperCase());
+        setNumReviewsButtonLabel("No. of Reviews - " + value.match(/\b([a-z])/g).join(""));
         break;
       default:
         break;
@@ -58,6 +72,14 @@ const Filters = ({ category, isResetFiltersPressed, setIsResetFiltersPressed }) 
   return (
     <>
       <DropdownButton id="dropdown-item-button" title={priceButtonLabel} className="m-3">
+        <Dropdown.Item
+          as="button"
+          onClick={() => {
+            filter("labels[price]", "extra small");
+          }}
+        >
+          extra small
+        </Dropdown.Item>
         <Dropdown.Item
           as="button"
           onClick={() => {
@@ -82,16 +104,24 @@ const Filters = ({ category, isResetFiltersPressed, setIsResetFiltersPressed }) 
         >
           large
         </Dropdown.Item>
+        <Dropdown.Item
+          as="button"
+          onClick={() => {
+            filter("labels[price]", "extra large");
+          }}
+        >
+          extra large
+        </Dropdown.Item>
       </DropdownButton>
       <DropdownButton id="dropdown-item-button" title={ratingButtonLabel} className="m-3">
-        <Dropdown.Item
+        {/* <Dropdown.Item
           as="button"
           onClick={() => {
             filter("labels[rating]", "small");
           }}
         >
           small
-        </Dropdown.Item>
+        </Dropdown.Item> */}
         <Dropdown.Item
           as="button"
           onClick={() => {
@@ -100,14 +130,14 @@ const Filters = ({ category, isResetFiltersPressed, setIsResetFiltersPressed }) 
         >
           medium
         </Dropdown.Item>
-        <Dropdown.Item
+        {/* <Dropdown.Item
           as="button"
           onClick={() => {
             filter("labels[rating]", "large");
           }}
         >
           large
-        </Dropdown.Item>
+        </Dropdown.Item> */}
       </DropdownButton>
       <DropdownButton id="dropdown-item-button" title={numReviewsButtonLabel} className="m-3">
         <Dropdown.Item

@@ -10,7 +10,7 @@ from rnn_model import *
 # os.environ["PATH"] += os.pathsep + "C:/Program Files/Graphviz/bin/"
 
 
-test_sentences = np.array([sys.argv[1]])
+test_sentences = np.array(["Awful service"])
 
 test_sentences_indices = sentences_to_indices(
     test_sentences, words_to_indices, sentence_max_len

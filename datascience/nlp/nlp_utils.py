@@ -8,12 +8,19 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from dotenv import dotenv_values
+# from dotenv import dotenv_values
 from nltk import ngrams
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer, WordNetLemmatizer
 
-config = dotenv_values(".env")
+# config = dotenv_values(".env")
+config = {
+    "NLP_RNN_NUM_TRAIN_EXAMPLES" : "67",
+    "NLP_RNN_NUM_TEST_EXAMPLES" : "33",
+    "KNN_K" : "3",
+    "PATH_TO_KNN_PY" : "/datascience/clustering/knn.py",
+    "PATH_TO_SENTIMENT_ANALYSIS_PY" : "/datascience/nlp/sentiment_analysis.py"
+}
 
 sentiments_dictionary = {
     0: "Poor",
