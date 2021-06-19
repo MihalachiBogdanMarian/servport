@@ -125,6 +125,7 @@ strong {
 /* services page */
 
 .service-card {
+    width: -webkit-fill-available;
     border: 1px solid black;
     box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
     img {
@@ -294,10 +295,11 @@ strong {
     cursor: pointer;
 }
 
-.react-time-picker__wrapper {
+div.react-time-picker__wrapper {
+    padding: 0 10px;
     border: transparent;
     color: #55595c;
-    background-color: #f7f7f9;
+    background-color: #eceeef;
 }
 
 .start-date-input,
@@ -322,4 +324,8 @@ strong {
         background-color: transparent;
         border-color: rgba(255, 0, 0, 0.267);
     }
+}
+
+.scheduler-container {
+    height: 500px;
 }
