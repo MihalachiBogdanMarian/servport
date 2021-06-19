@@ -46,8 +46,8 @@ const PostService = ({ history }) => {
   const [availabilityPeriods, setAvailabilityPeriods] = useState([]);
   const [startDate, setStartDate] = useState(moment());
   const [endDate, setEndDate] = useState(moment());
-  const [startTime, setStartTime] = useState(new Date("24:00"));
-  const [endTime, setEndTime] = useState(new Date("23:59"));
+  const [startTime, setStartTime] = useState(new Date(0, 0, 0, 24, 0));
+  const [endTime, setEndTime] = useState(new Date(0, 0, 0, 23, 59));
 
   const getOptionValue = useCallback((option) => option.value, []);
   const getOptionLabel = useCallback((option) => option.label, []);

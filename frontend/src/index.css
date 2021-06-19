@@ -292,10 +292,11 @@ strong {
   cursor: pointer;
 }
 
-.react-time-picker__wrapper {
+div.react-time-picker__wrapper {
+  padding: 0 10px;
   border: transparent;
   color: #55595c;
-  background-color: #f7f7f9;
+  background-color: #eceeef;
 }
 
 .start-date-input,
@@ -320,4 +321,11 @@ strong {
   color: red;
   background-color: transparent;
   border-color: rgba(255, 0, 0, 0.267);
+<<<<<<< HEAD
+=======
+}
+
+.scheduler-container {
+  height: 500px;
+>>>>>>> 056ac5293dee09ef9b3d8eccfee62b73c380fa9b
 }/*# sourceMappingURL=index.css.map */

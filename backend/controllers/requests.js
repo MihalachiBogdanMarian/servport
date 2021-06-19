@@ -26,7 +26,9 @@ const addRequestServiceOffers = asyncHandler(async(req, res, next) => {
         user: req.user._id,
         requestServices,
         paymentMethod,
-        price: requestServices.reduce((rs1, rs2) => rs1.price + rs2.price),
+        price: requestServices.length === 1 ?
+            requestServices[0].price :
+            requestServices.reduce((rs1, rs2) => rs1.price + rs2.price),
     };
 
     request = await Request.create(request);

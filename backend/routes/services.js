@@ -29,7 +29,15 @@ router.route("/myservices").get(protect, getMyServices);
 
 router
     .route("/:id")
+<<<<<<< HEAD
     .get(checkObjectIds(["id"]), checkDocumentExistence(Service, "id", "user", "name phone email avatar trustScore"), getService)
+=======
+    .get(
+        checkObjectIds(["id"]),
+        checkDocumentExistence(Service, "id", "user", "name phone email avatar trustScore"),
+        getService
+    )
+>>>>>>> 056ac5293dee09ef9b3d8eccfee62b73c380fa9b
     .put(
         checkObjectIds(["id"]),
         protect,

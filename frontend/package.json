@@ -7,6 +7,7 @@
         "axios": "^0.21.1",
         "moment": "^2.29.1",
         "react": "^17.0.2",
+        "react-big-calendar": "^0.33.5",
         "react-bootstrap": "^1.6.1",
         "react-confirm-alert": "^2.7.0",
         "react-dnd": "^5.0.0",

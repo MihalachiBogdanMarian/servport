@@ -70,17 +70,34 @@ const AvailabilityPeriodsFormControl = ({
           <button
             className="btn btn-success"
             type="button"
-            onClick={() =>
+            onClick={() => {
+              console.log(startTime);
               setAvailabilityPeriods([
                 ...availabilityPeriods,
                 {
                   startTime: startDate
                     .toDate()
-                    .setHours(parseInt(startTime.split(":")[0]), parseInt(startTime.split(":")[1])),
-                  endTime: endDate.toDate().setHours(parseInt(endTime.split(":")[0]), parseInt(endTime.split(":")[1])),
+                    .setHours(
+                      typeof startTime.getHours === "function"
+                        ? parseInt(startTime.getHours())
+                        : parseInt(startTime.split(":")[0]),
+                      typeof startTime.getHours === "function"
+                        ? parseInt(startTime.getMinutes())
+                        : parseInt(startTime.split(":")[1])
+                    ),
+                  endTime: endDate
+                    .toDate()
+                    .setHours(
+                      typeof endTime.getHours === "function"
+                        ? parseInt(endTime.getHours())
+                        : parseInt(endTime.split(":")[0]),
+                      typeof endTime.getHours === "function"
+                        ? parseInt(endTime.getMinutes())
+                        : parseInt(endTime.split(":")[1])
+                    ),
                 },
-              ])
-            }
+              ]);
+            }}
           >
             Add
           </button>
@@ -89,9 +106,9 @@ const AvailabilityPeriodsFormControl = ({
 
       <DatePickerRange startMoment={startDate} endMoment={endDate} onChange={handleChange} showSeconds={false} />
 
-      <ul className="list-group availability-periods-list m-3">
-        {availabilityPeriods.length !== 0 &&
-          availabilityPeriods.map((availabilityPeriod, index) => (
+      {availabilityPeriods.length !== 0 && (
+        <ul className="list-group availability-periods-list m-3">
+          {availabilityPeriods.map((availabilityPeriod, index) => (
             <li key={index} className="list-group-item availability-periods-list-item">
               {formatDate(availabilityPeriod.startTime, dateOptions2) +
                 " - " +
@@ -106,7 +123,8 @@ const AvailabilityPeriodsFormControl = ({
               </button>
             </li>
           ))}
-      </ul>
+        </ul>
+      )}
     </>
   );
 };
