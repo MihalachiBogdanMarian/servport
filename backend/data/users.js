@@ -28,11 +28,11 @@ dotenv.config();
 // });
 // await user.save();
 
-const NUM_USERS = 5;
-const NUM_ADMINS = 1;
+// const NUM_USERS = 5;
+// const NUM_ADMINS = 1;
 
-// const NUM_USERS = 497;
-// const NUM_ADMINS = 3;
+const NUM_USERS = 497;
+const NUM_ADMINS = 3;
 
 let users = [];
 

@@ -11,7 +11,7 @@ import plotly.graph_objs as go
 import plotly.io as pio
 import seaborn as sns
 from bson.objectid import ObjectId
-from dotenv import dotenv_values
+# from dotenv import dotenv_values
 from IPython.display import display
 from kneed import KneeLocator
 from plotly.offline import iplot
@@ -21,7 +21,8 @@ from sklearn.manifold import TSNE  # T-Distributed Stochastic Neighbor Embedding
 from sklearn.metrics import silhouette_score
 from sklearn.preprocessing import StandardScaler  # used for feature scaling
 
-config = dotenv_values(".env")
+# config = dotenv_values(".env")
+config = {"MONGO_URI": "mongodb://127.0.0.1:27017/servport"}
 
 
 def timer_decorator(function):
@@ -353,11 +354,11 @@ def plot_data_t_sne(clustered_dataframe, verbose=1, perplexity=50, n_iter=300):
 # labels assigned to each cluster/service due to previous manual observations/analysis
 def clusters_to_labels(k):
     clusters_to_labels = {
-        0: {"price": "small", "rating": "small", "numReviews": "small"},
-        1: {"price": "medium", "rating": "small", "numReviews": "small"},
-        2: {"price": "large", "rating": "small", "numReviews": "medium"},
-        3: {"price": "small", "rating": "medium", "numReviews": "small"},
-        4: {"price": "medium", "rating": "medium", "numReviews": "large"},
+        0: {"price": "extra large", "rating": "large", "numReviews": "small"},
+        1: {"price": "medium", "rating": "large", "numReviews": "large"},
+        2: {"price": "large", "rating": "medium", "numReviews": "medium"},
+        3: {"price": "extra small", "medium": "medium", "numReviews": "small"},
+        4: {"price": "small", "rating": "large", "numReviews": "large"},
         5: {"price": "large", "rating": "medium", "numReviews": "small"},
         6: {"price": "small", "rating": "large", "numReviews": "medium"},
         7: {"price": "medium", "rating": "large", "numReviews": "medium"},

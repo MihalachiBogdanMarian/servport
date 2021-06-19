@@ -174,39 +174,39 @@ ServiceSchema.pre("save", function(next) {
 });
 
 // geocode & create locations field (provided more request to the API can be made)
-// ServiceSchema.pre("save", async function(next) {
-//     if (!this.isModified("addresses")) {
-//         next();
-//     } else {
-//         try {
-//             const getLocations = () => {
-//                 const promises = this.addresses.map(async(address) => {
-//                     const location = await geocoder.geocode(address);
-//                     return {
-//                         type: "Point",
-//                         coordinates: [location[0].longitude, location[0].latitude],
-//                         formattedAddress: location[0].formattedAddress,
-//                         street: location[0].streetName,
-//                         city: location[0].city,
-//                         state: location[0].stateCode,
-//                         zipcode: location[0].zipcode,
-//                         country: location[0].countryCode,
-//                     };
-//                 });
-//                 return Promise.all(promises);
-//             };
+ServiceSchema.pre("save", async function(next) {
+    if (!this.isModified("addresses")) {
+        next();
+    } else {
+        try {
+            const getLocations = () => {
+                const promises = this.addresses.map(async(address) => {
+                    const location = await geocoder.geocode(address);
+                    return {
+                        type: "Point",
+                        coordinates: [location[0].longitude, location[0].latitude],
+                        formattedAddress: location[0].formattedAddress,
+                        street: location[0].streetName,
+                        city: location[0].city,
+                        state: location[0].stateCode,
+                        zipcode: location[0].zipcode,
+                        country: location[0].countryCode,
+                    };
+                });
+                return Promise.all(promises);
+            };
 
-//             const locations = await getLocations();
-//             this.locations = locations;
-//         } catch (error) {
-//             console.log(error.message);
-//         }
+            const locations = await getLocations();
+            this.locations = locations;
+        } catch (error) {
+            console.log(error.message);
+        }
 
-//         // this.addresses = undefined;
+        // this.addresses = undefined;
 
-//         next();
-//     }
-// });
+        next();
+    }
+});
 
 // recompute the number of reviews and the main rating when the array of reviews is changing
 ServiceSchema.pre("save", function(next) {
@@ -224,31 +224,31 @@ ServiceSchema.pre("save", function(next) {
 });
 
 // check if any of the services vector numeric fields has changed
-// ServiceSchema.pre("save", function(next) {
-//     if (!this.isModified("price") &&
-//         !this.isModified("rating") &&
-//         !this.isModified("numReviews") &&
-//         !this.isModified("numViews") &&
-//         !this.isModified("numInterested") &&
-//         !this.isModified("availabilityPeriods")
-//     ) {
-//         this.clusteringFieldsModified = false;
-//         next();
-//     } else {
-//         this.clusteringFieldsModified = true;
-//         next();
-//     }
-// });
+ServiceSchema.pre("save", function(next) {
+    if (!this.isModified("price") &&
+        !this.isModified("rating") &&
+        !this.isModified("numReviews") &&
+        !this.isModified("numViews") &&
+        !this.isModified("numInterested") &&
+        !this.isModified("availabilityPeriods")
+    ) {
+        this.clusteringFieldsModified = false;
+        next();
+    } else {
+        this.clusteringFieldsModified = true;
+        next();
+    }
+});
 
 // reassign the cluster if any of the services vector numeric fields has changed
-// ServiceSchema.post("save", async function(doc, next) {
-//     if (doc.clusteringFieldsModified) {
-//         await knn(doc._id, next);
-//         next();
-//     } else {
-//         next();
-//     }
-// });
+ServiceSchema.post("save", async function(doc, next) {
+    if (doc.clusteringFieldsModified) {
+        await knn(doc._id, next);
+        next();
+    } else {
+        next();
+    }
+});
 
 // recompute the trust score for the user possessing this service when the rating is changing
 ServiceSchema.post("save", async function(doc, next) {
