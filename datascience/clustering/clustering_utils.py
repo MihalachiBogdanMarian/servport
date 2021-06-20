@@ -56,7 +56,7 @@ def get_service_vectors(with_clusters=False):
         if not with_clusters:
             service_vector = np.zeros([5], dtype="float")
         else:
-            service_vector = np.zeros([7], dtype="float")
+            service_vector = np.zeros([6], dtype="float")
 
         # AVG_PRICE
         service_vector[0] = float(

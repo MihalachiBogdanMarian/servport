@@ -22,7 +22,7 @@ model = keras.models.load_model("datascience/nlp/sentiment_analysis_model")
 # plot_model(model, to_file="lstmbrnn.png", show_shapes=True, show_layer_names=True)
 
 response = {
-    "sentiment": label_to_sentiment(np.argmax(model.predict(test_sentences_indices)[0]))
+    "sentiment": label_to_sentiment(np.argmax(model.predict(np.reshape(test_sentences_indices, (sentence_max_len,)))[0]))
 }
 
 print(json.dumps(response))

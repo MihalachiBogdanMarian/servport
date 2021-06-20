@@ -224,31 +224,31 @@ ServiceSchema.pre("save", function(next) {
 });
 
 // check if any of the services vector numeric fields has changed
-ServiceSchema.pre("save", function(next) {
-    if (!this.isModified("price") &&
-        !this.isModified("rating") &&
-        !this.isModified("numReviews") &&
-        !this.isModified("numViews") &&
-        !this.isModified("numInterested") &&
-        !this.isModified("availabilityPeriods")
-    ) {
-        this.clusteringFieldsModified = false;
-        next();
-    } else {
-        this.clusteringFieldsModified = true;
-        next();
-    }
-});
+// ServiceSchema.pre("save", function(next) {
+//     if (!this.isModified("price") &&
+//         !this.isModified("rating") &&
+//         !this.isModified("numReviews") &&
+//         !this.isModified("numViews") &&
+//         !this.isModified("numInterested") &&
+//         !this.isModified("availabilityPeriods")
+//     ) {
+//         this.clusteringFieldsModified = false;
+//         next();
+//     } else {
+//         this.clusteringFieldsModified = true;
+//         next();
+//     }
+// });
 
 // reassign the cluster if any of the services vector numeric fields has changed
-ServiceSchema.post("save", async function(doc, next) {
-    if (doc.clusteringFieldsModified) {
-        await knn(doc._id, next);
-        next();
-    } else {
-        next();
-    }
-});
+// ServiceSchema.post("save", async function(doc, next) {
+//     if (doc.clusteringFieldsModified) {
+//         await knn(doc._id, next);
+//         next();
+//     } else {
+//         next();
+//     }
+// });
 
 // recompute the trust score for the user possessing this service when the rating is changing
 ServiceSchema.post("save", async function(doc, next) {

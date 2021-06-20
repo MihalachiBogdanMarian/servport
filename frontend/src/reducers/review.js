@@ -11,6 +11,7 @@ import {
     SERVICE_REMOVE_REVIEW_REQUEST,
     SERVICE_REMOVE_REVIEW_RESET,
     SERVICE_REMOVE_REVIEW_SUCCESS,
+    SERVICE_STAR_REVIEW_SUCCESS,
 } from "../constants/review";
 
 export const getServiceReviews = (state = { currentServiceReviews: [] }, action) => {
@@ -28,7 +29,7 @@ export const getServiceReviews = (state = { currentServiceReviews: [] }, action)
     }
 };
 
-export const addReview = (state = { success: false, message: "" }, action) => {
+export const addReview = (state = { success: false, message: "", stars: null }, action) => {
     switch (action.type) {
         case SERVICE_ADD_REVIEW_REQUEST:
             return {...state, loading: true };
@@ -37,6 +38,13 @@ export const addReview = (state = { success: false, message: "" }, action) => {
                 loading: false,
                 success: action.payload.success,
                 message: action.payload.message,
+            };
+        case SERVICE_STAR_REVIEW_SUCCESS:
+            return {
+                loading: false,
+                success: action.payload.success,
+                message: action.payload.message,
+                stars: action.payload.stars,
             };
         case SERVICE_ADD_REVIEW_FAIL:
             return { loading: false, success: false, error: action.payload };

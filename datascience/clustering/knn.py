@@ -2,12 +2,16 @@ import json
 import sys
 
 import numpy as np
-from dotenv import dotenv_values
+# from dotenv import dotenv_values
 
 from clustering_utils import *
 from vectorized_kmeans import *
 
-config = dotenv_values(".env")
+# config = dotenv_values(".env")
+config = {
+    "MONGO_URI": "mongodb://127.0.0.1:27017/servport",
+    "KNN_K": "3"
+}
 
 
 def knn(clustered_data, new_service_id, k):

@@ -3,10 +3,11 @@ import pprint
 import matplotlib.pyplot as plt
 import numpy as np
 from bson.objectid import ObjectId
-from dotenv import dotenv_values
+# from dotenv import dotenv_values
 from pymongo import MongoClient
 
-config = dotenv_values(".env")
+# config = dotenv_values(".env")
+config = {"MONGO_URI": "mongodb://127.0.0.1:27017/servport"}
 
 # print("Welcome to ServPort")
 

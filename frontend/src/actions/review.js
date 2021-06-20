@@ -8,6 +8,9 @@ import {
     SERVICE_REMOVE_REVIEW_FAIL,
     SERVICE_REMOVE_REVIEW_REQUEST,
     SERVICE_REMOVE_REVIEW_SUCCESS,
+    SERVICE_STAR_REVIEW_FAIL,
+    SERVICE_STAR_REVIEW_REQUEST,
+    SERVICE_STAR_REVIEW_SUCCESS,
 } from "../constants/review";
 import api from "../utils/api";
 import getErrorMessage from "../utils/getErrorMessage";
@@ -40,9 +43,35 @@ export const addReview = (id, title, comment) => async(dispatch) => {
             type: SERVICE_ADD_REVIEW_SUCCESS,
             payload: data,
         });
+        const newReviewId = data.review._id.toString();
+
+        const { data: starReviewData } = await api.put(`/services/${id}/reviews/${newReviewId}/stars`);
+
+        dispatch({
+            type: SERVICE_STAR_REVIEW_SUCCESS,
+            payload: starReviewData,
+        });
     } catch (error) {
         dispatch({
             type: SERVICE_ADD_REVIEW_FAIL,
+            payload: getErrorMessage(error, true),
+        });
+    }
+};
+
+export const starReview = (serviceId, reviewId) => async(dispatch) => {
+    try {
+        dispatch({ type: SERVICE_STAR_REVIEW_REQUEST });
+
+        const { data } = await api.delete(`/services/${serviceId}/reviews/${reviewId}/stars`);
+
+        dispatch({
+            type: SERVICE_STAR_REVIEW_SUCCESS,
+            payload: data,
+        });
+    } catch (error) {
+        dispatch({
+            type: SERVICE_STAR_REVIEW_FAIL,
             payload: getErrorMessage(error, true),
         });
     }

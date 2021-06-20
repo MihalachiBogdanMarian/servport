@@ -15,11 +15,11 @@ from nltk.stem import PorterStemmer, WordNetLemmatizer
 
 # config = dotenv_values(".env")
 config = {
-    "NLP_RNN_NUM_TRAIN_EXAMPLES" : "67",
-    "NLP_RNN_NUM_TEST_EXAMPLES" : "33",
-    "KNN_K" : "3",
-    "PATH_TO_KNN_PY" : "/datascience/clustering/knn.py",
-    "PATH_TO_SENTIMENT_ANALYSIS_PY" : "/datascience/nlp/sentiment_analysis.py"
+    "NLP_RNN_NUM_TRAIN_EXAMPLES": "667",
+    "NLP_RNN_NUM_TEST_EXAMPLES": "333",
+    "KNN_K": "3",
+    "PATH_TO_KNN_PY": "/datascience/clustering/knn.py",
+    "PATH_TO_SENTIMENT_ANALYSIS_PY": "/datascience/nlp/sentiment_analysis.py"
 }
 
 sentiments_dictionary = {

@@ -1,18 +1,18 @@
 import React from "react";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 
 const Scheduler = () => {
-  const loggedInUser = useSelector((state) => state.loggedInUser);
-  const { userDetails } = loggedInUser;
+  // const loggedInUser = useSelector((state) => state.loggedInUser);
+  // const { userDetails } = loggedInUser;
 
-  const events = userDetails.schedules.map((schedule) => {
-    return {
-      id: schedule._id,
-      title: schedule.title + " - " + schedule.executionAddress,
-      start: schedule.availabilityPeriod.startTime,
-      end: schedule.availabilityPeriod.endTime,
-    };
-  });
+  // const events = userDetails.schedules.map((schedule) => {
+  //   return {
+  //     id: schedule._id,
+  //     title: schedule.title + " - " + schedule.executionAddress,
+  //     start: schedule.availabilityPeriod.startTime,
+  //     end: schedule.availabilityPeriod.endTime,
+  //   };
+  // });
 
   return (
     <>

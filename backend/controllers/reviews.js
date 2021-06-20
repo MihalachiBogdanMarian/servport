@@ -32,27 +32,27 @@ const addReview = asyncHandler(async(req, res, next) => {
         return next(new ErrorResponse("Service already reviewed", 400));
     }
 
-    const sentiment = await sentimentAnalysis(comment, next);
-    let stars;
-    switch (sentiment) {
-        case "Poor":
-            stars = 1;
-            break;
-        case "Fair":
-            stars = 2;
-            break;
-        case "Good":
-            stars = 3;
-            break;
-        case "Very Good":
-            stars = 4;
-            break;
-        case "Excellent":
-            stars = 5;
-            break;
-        default:
-            break;
-    }
+    // const sentiment = await sentimentAnalysis(comment, next);
+    // let stars;
+    // switch (sentiment) {
+    //     case "Poor":
+    //         stars = 1;
+    //         break;
+    //     case "Fair":
+    //         stars = 2;
+    //         break;
+    //     case "Good":
+    //         stars = 3;
+    //         break;
+    //     case "Very Good":
+    //         stars = 4;
+    //         break;
+    //     case "Excellent":
+    //         stars = 5;
+    //         break;
+    //     default:
+    //         break;
+    // }
 
     const review = {
         title,
@@ -65,7 +65,9 @@ const addReview = asyncHandler(async(req, res, next) => {
 
     await service.save();
 
-    res.status(201).json({ success: true, message: "Review added" });
+    const newReview = service.reviews.find((review) => review.user.toString() === req.user._id.toString());
+
+    res.status(201).json({ success: true, review: newReview, message: "Review added" });
 });
 
 // @desc    remove review from service
@@ -108,7 +110,7 @@ const starReview = asyncHandler(async(req, res, next) => {
         return next(new ErrorResponse(`No review with the id of ${req.params.reviewId}`, 404));
     }
 
-    const myReview = review.user.toString() === req.user._id.toString();
+    const myReview = review.user._id.toString() === req.user._id.toString();
 
     if (!myReview) {
         return next(new ErrorResponse("Cannot star someone elses review", 400));
@@ -141,7 +143,7 @@ const starReview = asyncHandler(async(req, res, next) => {
 
     await service.save();
 
-    res.status(201).json({ success: true, sentiment, stars, review });
+    res.status(201).json({ success: true, sentiment, stars, review, message: "Review starred" });
 });
 
 export { getReviews, addReview, removeReview, starReview };

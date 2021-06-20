@@ -9,6 +9,7 @@ import Message from "../components/Message";
 import Rating from "../components/Rating";
 import { SERVICE_ADD_REVIEW_RESET, SERVICE_REMOVE_REVIEW_RESET } from "../constants/review";
 import Loader from "./Loader";
+import SmallLoader from "./SmallLoader";
 
 const Reviews = ({ serviceId, matchServiceId }) => {
   const [title, setTitle] = useState("");
@@ -30,6 +31,7 @@ const Reviews = ({ serviceId, matchServiceId }) => {
     success: successAddReviewStatus,
     message: successAddReviewMessage,
     error: errorAddReviewStatus,
+    stars,
   } = addReviewStatus;
   const removeReviewStatus = useSelector((state) => state.removeReviewStatus);
   const { success: successRemoveReviewStatus, message: successRemoveReviewMessage } = removeReviewStatus;
@@ -169,7 +171,16 @@ const Reviews = ({ serviceId, matchServiceId }) => {
                   </Col>
                 </Row>
                 <br></br>
-                <Rating value={myReview.rating} />
+                {myReview.rating ? (
+                  <Rating value={myReview.rating} />
+                ) : stars ? (
+                  <Rating value={stars} />
+                ) : (
+                  <div className="computing-rating-container">
+                    <span>Computing rating...</span>
+                    <SmallLoader />
+                  </div>
+                )}
                 <br></br>
                 <p>{myReview.comment}</p>
               </ListGroup.Item>

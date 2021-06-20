@@ -237,6 +237,10 @@ strong {
   color: black;
 }
 
+.computing-rating-container {
+  display: flex;
+}
+
 /* profile page */
 .profile-img-container {
   text-align: center;
