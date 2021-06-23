@@ -126,6 +126,7 @@ strong {
 
 .service-card {
     width: -webkit-fill-available;
+    width: -moz-available;
     border: 1px solid black;
     box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
     img {
@@ -330,6 +331,8 @@ div.react-time-picker__wrapper {
     }
 }
 
-.scheduler-container {
-    height: 500px;
+.completed-container {
+    padding: 5px;
+    display: flex;
+    justify-content: flex-end;
 }

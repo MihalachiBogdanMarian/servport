@@ -1,4 +1,8 @@
 import {
+    USER_SET_SCHEDULE_COMPLETED_FAIL,
+    USER_SET_SCHEDULE_COMPLETED_REQUEST,
+    USER_SET_SCHEDULE_COMPLETED_RESET,
+    USER_SET_SCHEDULE_COMPLETED_SUCCESS,
     USER_UPDATE_PROFILE_INFO_FAIL,
     USER_UPDATE_PROFILE_INFO_REQUEST,
     USER_UPDATE_PROFILE_INFO_RESET,
@@ -43,6 +47,25 @@ export const uploadProfilePicture = (state = { success: false, message: "", avat
             return { loading: false, success: false, error: action.payload };
         case USER_UPLOAD_PROFILE_PICTURE_RESET:
             return { success: false, message: "", avatar: "" };
+        default:
+            return state;
+    }
+};
+
+export const setScheduleCompleted = (state = { success: false, message: "" }, action) => {
+    switch (action.type) {
+        case USER_SET_SCHEDULE_COMPLETED_REQUEST:
+            return {...state, loading: true };
+        case USER_SET_SCHEDULE_COMPLETED_SUCCESS:
+            return {
+                loading: false,
+                success: action.payload.success,
+                message: action.payload.message,
+            };
+        case USER_SET_SCHEDULE_COMPLETED_FAIL:
+            return { loading: false, success: false, error: action.payload };
+        case USER_SET_SCHEDULE_COMPLETED_RESET:
+            return { success: false, message: "" };
         default:
             return state;
     }

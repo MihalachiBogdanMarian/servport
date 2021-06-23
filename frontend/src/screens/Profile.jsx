@@ -4,7 +4,7 @@ import { Container, Nav, NavItem, NavLink, Row, TabContent, TabPane } from "reac
 import EditProfile from "../components/EditProfile";
 import MyServices from "../components/MyServices";
 import PostService from "../components/PostService";
-import Scheduler from "../components/Scheduler";
+import MyScheduler from "../components/MyScheduler";
 
 const Profile = ({ match, history }) => {
   let initialTab = null;
@@ -85,7 +85,7 @@ const Profile = ({ match, history }) => {
               <PostService history={history}></PostService>
             </TabPane>
             <TabPane tabId="4">
-              <Scheduler></Scheduler>
+              <MyScheduler></MyScheduler>
             </TabPane>
           </TabContent>
         </div>

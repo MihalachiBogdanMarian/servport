@@ -1,4 +1,7 @@
 import {
+    USER_SET_SCHEDULE_COMPLETED_FAIL,
+    USER_SET_SCHEDULE_COMPLETED_REQUEST,
+    USER_SET_SCHEDULE_COMPLETED_SUCCESS,
     USER_UPDATE_PROFILE_INFO_FAIL,
     USER_UPDATE_PROFILE_INFO_REQUEST,
     USER_UPDATE_PROFILE_INFO_SUCCESS,
@@ -54,5 +57,23 @@ export const uploadProfilePicture = (id, file, setUploadPercentage) => async(dis
             payload: getErrorMessage(error, true),
         });
         setUploadPercentage(0);
+    }
+};
+
+export const setScheduleCompleted = (userId, scheduleId) => async(dispatch) => {
+    try {
+        dispatch({ type: USER_SET_SCHEDULE_COMPLETED_REQUEST });
+
+        const { data } = await api.get(`/users/${userId}/schedule/${scheduleId}`);
+
+        dispatch({
+            type: USER_SET_SCHEDULE_COMPLETED_SUCCESS,
+            payload: data,
+        });
+    } catch (error) {
+        dispatch({
+            type: USER_SET_SCHEDULE_COMPLETED_FAIL,
+            payload: getErrorMessage(error, true),
+        });
     }
 };

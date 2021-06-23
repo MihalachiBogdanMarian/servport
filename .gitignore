@@ -18,8 +18,7 @@ config/production.json
 /uploads/*
 /datascience/nlp/__pycache__
 /datascience/nlp/glove*
-/datascience/nlp/sentiment_analysis_model
-/datascience/nlp/sentiment_analysis_model_js
+/datascience/nlp/sentiment_analysis_model*
 /datascience/clustering/__pycache__
 /datascience/clustering/t_sne.html
 

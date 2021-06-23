@@ -10,7 +10,7 @@ import {
     getTopRatedServicesPerCategory,
     postServiceOffer,
 } from "./service";
-import { updateProfileInfo, uploadProfilePicture } from "./user";
+import { setScheduleCompleted, updateProfileInfo, uploadProfilePicture } from "./user";
 
 export default combineReducers({
     loggedInUser: getMe,
@@ -21,6 +21,7 @@ export default combineReducers({
     resetPasswordStatus: resetPassword,
     uploadProfilePictureStatus: uploadProfilePicture,
     updateProfileInfoStatus: updateProfileInfo,
+    setScheduleCompletedStatus: setScheduleCompleted,
     request,
     servicesList: getServices,
     myServices: getMyServices,

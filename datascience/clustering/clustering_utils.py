@@ -11,7 +11,7 @@ import plotly.graph_objs as go
 import plotly.io as pio
 import seaborn as sns
 from bson.objectid import ObjectId
-# from dotenv import dotenv_values
+from dotenv import dotenv_values
 from IPython.display import display
 from kneed import KneeLocator
 from plotly.offline import iplot
@@ -21,8 +21,7 @@ from sklearn.manifold import TSNE  # T-Distributed Stochastic Neighbor Embedding
 from sklearn.metrics import silhouette_score
 from sklearn.preprocessing import StandardScaler  # used for feature scaling
 
-# config = dotenv_values(".env")
-config = {"MONGO_URI": "mongodb://127.0.0.1:27017/servport"}
+config = dotenv_values(".env")
 
 
 def timer_decorator(function):

@@ -45,12 +45,14 @@ export const addReview = (id, title, comment) => async(dispatch) => {
         });
         const newReviewId = data.review._id.toString();
 
-        const { data: starReviewData } = await api.put(`/services/${id}/reviews/${newReviewId}/stars`);
+        if (data.message === "Review added") {
+            const { data: starReviewData } = await api.put(`/services/${id}/reviews/${newReviewId}/stars`);
 
-        dispatch({
-            type: SERVICE_STAR_REVIEW_SUCCESS,
-            payload: starReviewData,
-        });
+            dispatch({
+                type: SERVICE_STAR_REVIEW_SUCCESS,
+                payload: starReviewData,
+            });
+        }
     } catch (error) {
         dispatch({
             type: SERVICE_ADD_REVIEW_FAIL,

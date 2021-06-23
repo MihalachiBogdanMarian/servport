@@ -1,3 +1,4 @@
+from keras.backend import sparse_categorical_crossentropy
 from keras.initializers import glorot_uniform
 from keras.layers import LSTM, Activation, Bidirectional, Dense, Dropout, Input
 from keras.layers.embeddings import Embedding
@@ -8,7 +9,7 @@ from tensorflow import keras
 from nlp_utils import *
 
 X_train, Y_train, X_test, Y_test = read_preprocessed_dataset(
-    "backend/data/reviews.json"
+    "backend/data/reviewsUniform.json"
 )
 
 # get the max length of a sentence from the dataset

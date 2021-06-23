@@ -1,5 +1,5 @@
 import tf from "@tensorflow/tfjs";
-// import tfjsnode from "@tensorflow/tfjs-node";
+import tfjsnode from "@tensorflow/tfjs-node";
 import { spawn } from "child_process";
 import colors from "colors";
 import dotenv from "dotenv";
@@ -13,10 +13,10 @@ import { formatDate } from "./utils/utilities.js";
 
 dotenv.config();
 
-connectDB();
+// connectDB();
 
 tf;
-// tfjsnode;
+tfjsnode;
 spawn;
 path;
 mongoose;
@@ -95,19 +95,19 @@ formatDate;
 // })();
 
 /* LOAD KERAS MODEL AND PREDICT */
-// let model;
-// (async() => {
-//     try {
-//         model = await tf.loadLayersModel("file://../datascience/nlp/sentiment_analysis_model_js/model.json");
-//     } catch (error) {
-//         console.error(error);
-//     }
-// })();
+let model;
+(async() => {
+    try {
+        model = await tf.loadLayersModel("file://../servport/datascience/nlp/sentiment_analysis_model_js/model.json");
 
-// const sentence = "Horrible product, simply awful!";
+        const sentence = "Horrible product, simply awful!";
 
-// let prediction;
-// (async() => {
-//     prediction = await model.predict(sentence);
-// })();
-// console.log(prediction);
+        let prediction;
+        (async() => {
+            prediction = await model.predict(sentence);
+        })();
+        console.log(prediction);
+    } catch (error) {
+        console.error(error);
+    }
+})();
