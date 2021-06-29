@@ -11,7 +11,7 @@ import { SERVICE_ADD_REVIEW_RESET, SERVICE_REMOVE_REVIEW_RESET } from "../consta
 import Loader from "./Loader";
 import SmallLoader from "./SmallLoader";
 
-const Reviews = ({ serviceId, matchServiceId }) => {
+const Reviews = ({ ownership, serviceId, matchServiceId }) => {
   const [title, setTitle] = useState("");
   const [comment, setComment] = useState("");
   const [myReview, setMyReview] = useState(undefined);
@@ -112,43 +112,47 @@ const Reviews = ({ serviceId, matchServiceId }) => {
     <>
       <h2>Reviews</h2>
       <ListGroup variant="flush">
-        <ListGroup.Item>
-          <h2>Write a Customer Review</h2>
-          {successAddReviewStatus && <Message variant="success">{successAddReviewMessage}</Message>}
-          {loadingAddReviewStatus && <Loader />}
-          {errorAddReviewStatus && <Message variant="danger">{errorAddReviewStatus}</Message>}
-          {userDetails ? (
-            <Form onSubmit={submitHandler}>
-              <Form.Group controlId="title">
-                <Form.Label>Title</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter title"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                ></Form.Control>
-              </Form.Group>
-              <Form.Group controlId="comment">
-                <Form.Label>Comment</Form.Label>
-                <Form.Control
-                  as="textarea"
-                  row="3"
-                  placeholder="Enter comment"
-                  value={comment}
-                  onChange={(e) => setComment(e.target.value)}
-                ></Form.Control>
-              </Form.Group>
-              <Button disabled={loadingAddReviewStatus} type="submit" variant="primary">
-                Submit
-              </Button>
-            </Form>
-          ) : (
-            <Message variant="success">
-              Please <Link to="/login">SIGN IN</Link> to write a review
-            </Message>
-          )}
-        </ListGroup.Item>
-        {successRemoveReviewStatus && <Message variant="success">{successRemoveReviewMessage}</Message>}
+        {!ownership && (
+          <>
+            <ListGroup.Item>
+              <h2>Write a Customer Review</h2>
+              {successAddReviewStatus && <Message variant="success">{successAddReviewMessage}</Message>}
+              {loadingAddReviewStatus && <Loader />}
+              {errorAddReviewStatus && <Message variant="danger">{errorAddReviewStatus}</Message>}
+              {userDetails ? (
+                <Form onSubmit={submitHandler}>
+                  <Form.Group controlId="title">
+                    <Form.Label>Title</Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder="Enter title"
+                      value={title}
+                      onChange={(e) => setTitle(e.target.value)}
+                    ></Form.Control>
+                  </Form.Group>
+                  <Form.Group controlId="comment">
+                    <Form.Label>Comment</Form.Label>
+                    <Form.Control
+                      as="textarea"
+                      row="3"
+                      placeholder="Enter comment"
+                      value={comment}
+                      onChange={(e) => setComment(e.target.value)}
+                    ></Form.Control>
+                  </Form.Group>
+                  <Button disabled={loadingAddReviewStatus} type="submit" variant="primary">
+                    Submit
+                  </Button>
+                </Form>
+              ) : (
+                <Message variant="success">
+                  Please <Link to="/login">SIGN IN</Link> to write a review
+                </Message>
+              )}
+            </ListGroup.Item>
+            {successRemoveReviewStatus && <Message variant="success">{successRemoveReviewMessage}</Message>}
+          </>
+        )}
         {userDetails && currentServiceReviews ? (
           currentServiceReviews.length === 0 ? (
             <Message variant="success">No Reviews</Message>

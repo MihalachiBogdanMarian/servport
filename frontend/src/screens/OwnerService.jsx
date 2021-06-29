@@ -21,7 +21,7 @@ const themeConfig = {
   },
 };
 
-const Service = ({ history, match }) => {
+const OwnerService = ({ history, match }) => {
   const serviceId = match.params.id;
 
   const dispatch = useDispatch();
@@ -37,9 +37,6 @@ const Service = ({ history, match }) => {
   const { userDetails } = loggedInUser;
   const serviceDetails = useSelector((state) => state.serviceDetails);
   const { loading, error, currentService, percentage } = serviceDetails;
-  // const pageAndFilters = useSelector((state) => state.pageAndFilters);
-  // const { pageNumber } = pageAndFilters;
-  // const pricePercentage = useSelector((state) => state.pricePercentage);
 
   const getOptionValue = useCallback((option) => option.value, []);
   const getOptionLabel = useCallback((option) => option.label, []);
@@ -81,18 +78,6 @@ const Service = ({ history, match }) => {
     }
   }, [dispatch, currentService, userDetails, paymentPermissionReceived]);
 
-  // useEffect(() => {
-  //   dispatch(getPricePercentage(serviceId));
-  // }, [dispatch, serviceId, userDetails]);
-
-  useEffect(() => {
-    if (currentService && currentService.user && userDetails) {
-      if (currentService.user._id === userDetails._id) {
-        history.push(`/services/${currentService._id}/own`);
-      }
-    }
-  }, [history, currentService, userDetails]);
-
   return (
     <>
       {loading ? (
@@ -125,7 +110,7 @@ const Service = ({ history, match }) => {
                 className="shadow-button"
                 onClick={() => {
                   // history.push(`/services/page/${pageNumber}/category/${currentService.category.replace("&", "%26")}`);
-                  history.goBack();
+                  history.go(-2);
                 }}
               >
                 GO BACK
@@ -186,7 +171,7 @@ const Service = ({ history, match }) => {
             </Row>
             <Row>
               <Col xs={12} md={6} className="order-md-1 order-2">
-                <Reviews ownership={false} serviceId={currentService._id} matchServiceId={serviceId}></Reviews>
+                <Reviews ownership={true} serviceId={currentService._id} matchServiceId={serviceId}></Reviews>
               </Col>
               <Col xs={12} md={6} className="order-md-2 order-1">
                 <p>
@@ -265,4 +250,4 @@ const Service = ({ history, match }) => {
   );
 };
 
-export default Service;
+export default OwnerService;

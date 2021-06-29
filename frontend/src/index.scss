@@ -185,6 +185,10 @@ strong {
 
 /* specific service page */
 
+.pagination {
+    flex-wrap: wrap;
+}
+
 .trust-score-div {
     display: flex;
 }

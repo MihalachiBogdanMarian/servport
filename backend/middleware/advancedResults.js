@@ -95,7 +95,7 @@ const advancedResults = (model, populate) => async(req, res, next) => {
     }
 
     // pagination
-    const { pagination, results } = await getPagination(req, query, populate);
+    const { pagination, results } = await getPagination(req, model, query, populate);
 
     res.advancedResults = {
         success: true,

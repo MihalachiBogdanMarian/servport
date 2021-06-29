@@ -1,6 +1,15 @@
 import {
     ADD_FILTER,
     CHANGE_PAGE_NUMBER,
+    SERVICE_ADD_AVAILABILITY_PERIODS_FAIL,
+    SERVICE_ADD_AVAILABILITY_PERIODS_REQUEST,
+    SERVICE_ADD_AVAILABILITY_PERIODS_SUCCESS,
+    SERVICE_ADD_PAYMENT_USERS_FAIL,
+    SERVICE_ADD_PAYMENT_USERS_REQUEST,
+    SERVICE_ADD_PAYMENT_USERS_SUCCESS,
+    SERVICE_DELETE_FAIL,
+    SERVICE_DELETE_REQUEST,
+    SERVICE_DELETE_SUCCESS,
     SERVICE_GET_MY_SERVICES_FAIL,
     SERVICE_GET_MY_SERVICES_REQUEST,
     SERVICE_GET_MY_SERVICES_SUCCESS,
@@ -25,6 +34,15 @@ import {
     SERVICE_POST_FAIL,
     SERVICE_POST_REQUEST,
     SERVICE_POST_SUCCESS,
+    SERVICE_REMOVE_AVAILABILITY_PERIODS_FAIL,
+    SERVICE_REMOVE_AVAILABILITY_PERIODS_REQUEST,
+    SERVICE_REMOVE_AVAILABILITY_PERIODS_SUCCESS,
+    SERVICE_UPDATE_FAIL,
+    SERVICE_UPDATE_REQUEST,
+    SERVICE_UPDATE_SUCCESS,
+    SERVICE_UPLOAD_IMAGES_FAIL,
+    SERVICE_UPLOAD_IMAGES_REQUEST,
+    SERVICE_UPLOAD_IMAGES_SUCCESS,
 } from "../constants/service";
 import store from "../store";
 import api from "../utils/api";
@@ -228,3 +246,132 @@ export const postServiceOffer =
             });
         }
     };
+
+export const updateService =
+    (id, title, description, category, price, images, availabilityPeriods, addresses) => async(dispatch) => {
+        try {
+            dispatch({ type: SERVICE_UPDATE_REQUEST });
+
+            const { data } = await api.put(`/services/${id}`, {
+                title,
+                description,
+                category,
+                price,
+                images,
+                availabilityPeriods,
+                addresses,
+            });
+
+            dispatch({
+                type: SERVICE_UPDATE_SUCCESS,
+                payload: data.data,
+            });
+        } catch (error) {
+            dispatch({
+                type: SERVICE_UPDATE_FAIL,
+                payload: getErrorMessage(error, true),
+            });
+        }
+    };
+
+export const deleteService = (id) => async(dispatch) => {
+    try {
+        dispatch({ type: SERVICE_DELETE_REQUEST });
+
+        const { data } = await api.delete(`/services/${id}`);
+
+        dispatch({
+            type: SERVICE_DELETE_SUCCESS,
+            payload: data,
+        });
+    } catch (error) {
+        dispatch({
+            type: SERVICE_DELETE_FAIL,
+            payload: getErrorMessage(error, true),
+        });
+    }
+};
+
+export const addAvailabilityPeriods = (id, availabilityPeriods) => async(dispatch) => {
+    try {
+        dispatch({ type: SERVICE_ADD_AVAILABILITY_PERIODS_REQUEST });
+
+        const { data } = await api.post(`/services/${id}/availabilityperiods`, { availabilityPeriods });
+
+        dispatch({
+            type: SERVICE_ADD_AVAILABILITY_PERIODS_SUCCESS,
+            payload: data.data,
+        });
+    } catch (error) {
+        dispatch({
+            type: SERVICE_ADD_AVAILABILITY_PERIODS_FAIL,
+            payload: getErrorMessage(error, true),
+        });
+    }
+};
+
+export const removeAvailabilityPeriods = (id, availabilityPeriodIds) => async(dispatch) => {
+    try {
+        dispatch({ type: SERVICE_REMOVE_AVAILABILITY_PERIODS_REQUEST });
+
+        const { data } = await api.delete(`/services/${id}/availabilityperiods`);
+
+        dispatch({
+            type: SERVICE_REMOVE_AVAILABILITY_PERIODS_SUCCESS,
+            payload: data.data,
+        });
+    } catch (error) {
+        dispatch({
+            type: SERVICE_REMOVE_AVAILABILITY_PERIODS_FAIL,
+            payload: getErrorMessage(error, true),
+        });
+    }
+};
+
+export const addUsersToPayment = (id, phonesAndPrices, emailsAndPrices) => async(dispatch) => {
+    try {
+        dispatch({ type: SERVICE_ADD_PAYMENT_USERS_REQUEST });
+
+        const { data } = await api.put(`/services/${id}/payment`);
+
+        dispatch({
+            type: SERVICE_ADD_PAYMENT_USERS_SUCCESS,
+            payload: data.data,
+        });
+    } catch (error) {
+        dispatch({
+            type: SERVICE_ADD_PAYMENT_USERS_FAIL,
+            payload: getErrorMessage(error, true),
+        });
+    }
+};
+
+export const uploadServiceImages = (id, files, setUploadPercentage) => async(dispatch) => {
+    try {
+        dispatch({ type: SERVICE_UPLOAD_IMAGES_REQUEST });
+
+        const formData = new FormData();
+        formData.append("files", files);
+
+        const { data } = await api.put(`/services/${id}/images`, formData, {
+            headers: { "Content-Type": "multipart/form-data" },
+            onUploadProgress: (progressEvent) => {
+                setUploadPercentage(parseInt(Math.round((progressEvent.loaded * 100) / progressEvent.total)));
+            },
+        });
+
+        // clear progress bar percentage
+        setTimeout(() => setUploadPercentage(0), 3000);
+
+        dispatch({
+            type: SERVICE_UPLOAD_IMAGES_SUCCESS,
+            payload: data.data,
+        });
+    } catch (error) {
+        dispatch({
+            type: SERVICE_UPLOAD_IMAGES_FAIL,
+            payload: getErrorMessage(error, true),
+        });
+        setUploadPercentage(0);
+    }
+};

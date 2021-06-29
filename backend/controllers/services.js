@@ -34,7 +34,7 @@ const addService = asyncHandler(async(req, res, next) => {
 const getMyServices = asyncHandler(async(req, res, next) => {
     let query = Service.find({ user: req.user._id }).sort({ createdAt: -1 });
 
-    const { pagination, results } = await getPagination(req, query, "", "2");
+    const { pagination, results } = await getPagination(req, Service, query, "", "2");
 
     res.status(200).json({ success: true, count: results.length, pagination, data: results });
 });
@@ -398,7 +398,7 @@ const getServicesInDistanceRadius = asyncHandler(async(req, res, next) => {
         },
     });
 
-    const { pagination, results } = await getPagination(req, query);
+    const { pagination, results } = await getPagination(req, Service, query);
 
     res.status(200).json({ success: true, count: results.length, pagination, data: results });
 });
@@ -413,7 +413,7 @@ const getServicesByDescription = asyncHandler(async(req, res, next) => {
         score: { $meta: "textScore" },
     });
 
-    const { pagination, results } = await getPagination(req, query);
+    const { pagination, results } = await getPagination(req, Service, query);
 
     res.status(200).json({ success: true, count: results.length, pagination, data: results });
 });

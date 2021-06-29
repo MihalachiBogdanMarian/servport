@@ -71,7 +71,6 @@ const AvailabilityPeriodsFormControl = ({
             className="btn btn-success"
             type="button"
             onClick={() => {
-              console.log(startTime);
               setAvailabilityPeriods([
                 ...availabilityPeriods,
                 {
