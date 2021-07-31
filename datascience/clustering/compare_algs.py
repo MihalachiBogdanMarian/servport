@@ -1,5 +1,6 @@
-from evaluate_algs import *
 import json
+
+from evaluate_algs import *
 
 # ELBOW METHOD
 

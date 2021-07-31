@@ -32,6 +32,7 @@ const addReview = asyncHandler(async(req, res, next) => {
         return next(new ErrorResponse("Service already reviewed", 400));
     }
 
+    /* SENTIMENT ANALYSIS COMPONENT */
     // const sentiment = await sentimentAnalysis(comment, next);
     // let stars;
     // switch (sentiment) {

@@ -17,7 +17,8 @@ from kneed import KneeLocator
 from plotly.offline import iplot
 from pymongo import MongoClient
 from scipy.spatial import distance
-from sklearn.manifold import TSNE  # T-Distributed Stochastic Neighbor Embedding
+from sklearn.manifold import \
+    TSNE  # T-Distributed Stochastic Neighbor Embedding
 from sklearn.metrics import silhouette_score
 from sklearn.preprocessing import StandardScaler  # used for feature scaling
 
@@ -364,45 +365,6 @@ def clusters_to_labels(k):
         8: {},
         9: {},
         10: {},
-        11: {},
-        12: {},
-        13: {},
-        14: {},
-        15: {},
-        16: {},
-        17: {},
-        18: {},
-        19: {},
-        20: {},
-        21: {},
-        22: {},
-        23: {},
-        24: {},
-        25: {},
-        26: {},
-        27: {},
-        28: {},
-        29: {},
-        30: {},
-        31: {},
-        32: {},
-        33: {},
-        34: {},
-        35: {},
-        36: {},
-        37: {},
-        38: {},
-        39: {},
-        40: {},
-        41: {},
-        42: {},
-        43: {},
-        44: {},
-        45: {},
-        46: {},
-        47: {},
-        48: {},
-        49: {},
     }
 
     # clusters_to_labels = {}

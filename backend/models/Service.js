@@ -223,6 +223,7 @@ ServiceSchema.pre("save", function(next) {
     }
 });
 
+/* CLUSTERING COMPONENT - CALL KNN IF CLUSTERING RELATED ATTRIBUTES HAVE CHANGED */
 // check if any of the services vector numeric fields has changed
 // ServiceSchema.pre("save", function(next) {
 //     if (!this.isModified("price") &&

@@ -5,7 +5,6 @@ import colors from "colors";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import path from "path";
-import connectDB from "./config/db.js";
 import Request from "./models/Request.js";
 import Service from "./models/Service.js";
 import User from "./models/User.js";

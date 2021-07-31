@@ -2,9 +2,9 @@ import classnames from "classnames";
 import React, { useState } from "react";
 import { Container, Nav, NavItem, NavLink, Row, TabContent, TabPane } from "reactstrap";
 import EditProfile from "../components/EditProfile";
+import MyScheduler from "../components/MyScheduler";
 import MyServices from "../components/MyServices";
 import PostService from "../components/PostService";
-import MyScheduler from "../components/MyScheduler";
 
 const Profile = ({ match, history }) => {
   let initialTab = null;

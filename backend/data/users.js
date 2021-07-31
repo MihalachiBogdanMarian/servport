@@ -24,7 +24,7 @@ dotenv.config();
 //     phone: "0727855271",
 //     password: "123456",
 //     isAdmin: true,
-//     address: "Valea Seaca, Neamt",
+//     address: "Nowhere, Neamt",
 // });
 // await user.save();
 
